@@ -1,0 +1,31 @@
+# TODO: move it to root level and combine with other services
+
+version: '3.8'
+
+services:
+  reservation_db:
+    image: postgres:14.7-alpine
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432"
+
+  reservation_api:
+    restart: always
+    build:
+      context: .
+    command: flask run --host 0.0.0.0 --port 8000
+    volumes:
+      - ./src:/opt/reservation_service/src:z
+      - ./migrations:/opt/reservation_service/migrations:z
+      - ./db:/opt/reservation_service/db:z
+    env_file:
+      - .env.dev
+    ports:
+      - "8000:8000"
+    depends_on:
+      - reservation_db
+
+networks:
+  rsww_backend_network:
+    driver: bridge
