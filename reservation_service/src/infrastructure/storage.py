@@ -5,16 +5,14 @@ from sqlalchemy.orm import Session, sessionmaker
 
 class SQLAlchemyEngine:
     def __init__(self, config: Config) -> None:
-        self.config = config
         self.engine = create_engine(config["SQLALCHEMY_DATABASE_URI"])
 
     def __call__(self, *args, **kwargs) -> Engine:
         return self.engine
 
 
-class SqlAlchemyReadOnlyEngine:
+class SQLAlchemyReadOnlyEngine:
     def __init__(self, config: Config) -> None:
-        self.config = config
         self.engine = create_engine(config["SQLALCHEMY_BINDS"]["readonly"])
 
     def __call__(self, *args, **kwargs) -> Engine:
@@ -31,7 +29,7 @@ class SessionFactory:
 
 class ReadOnlySessionFactory:
     def __init__(
-        self, sqlalchemy_read_only_engine: SqlAlchemyReadOnlyEngine
+        self, sqlalchemy_read_only_engine: SQLAlchemyReadOnlyEngine
     ) -> None:
         self._sqlalchemy_read_only_engine = sqlalchemy_read_only_engine
 

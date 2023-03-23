@@ -41,4 +41,4 @@ class Module(BaseModule):
                 f"is not a subclass of {type.__name__}"
             )
 
-        self.binder.bind(type_, TypeHinted(implementation))
+        self.binder.bind(t, TypeHinted(implementation))

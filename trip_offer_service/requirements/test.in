@@ -1,0 +1,4 @@
+-c base.txt
+pytest
+pytest-factoryboy
+pytest-flask

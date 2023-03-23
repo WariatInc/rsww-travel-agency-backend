@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  pg_db:
+    image: postgres:14.7-alpine
+    environment:
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432"
+
+  mongo_db:
+    image: mongo:6.0.5
+    restart: unless-stopped
+    command: mongod --auth
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: mongodb_admin
+      MONGO_INITDB_ROOT_PASSWORD: mongodb
+    ports:
+      - "27017:27017"
+
+  reservation_api:
+    restart: always
+    build:
+      context: reservation_service
+    command: flask run --host 0.0.0.0 --port 8000
+    volumes:
+      - ./reservation_service/src:/opt/reservation_service/src:z
+      - ./reservation_service/migrations:/opt/reservation_service/migrations:z
+      - ./reservation_service/db:/opt/reservation_service/db:z
+    env_file:
+      - reservation_service/.env.dev
+    ports:
+      - "8000:8000"
+    depends_on:
+      - pg_db
+
+  trip_offer_api:
+    restart: always
+    build:
+      context: trip_offer_service
+    command: flask run --host 0.0.0.0 --port 8010
+    volumes:
+      - ./trip_offer_service/src:/opt/trip_offer_service/src:z
+      - ./trip_offer_service/db:/opt/trip_offer_service/db:z
+    env_file:
+      - trip_offer_service/.env.dev
+    ports:
+      - "8010:8010"
+    depends_on:
+      - mongo_db
+
+networks:
+  rsww_backend_network:
+    driver: bridge
