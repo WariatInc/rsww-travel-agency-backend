@@ -3,11 +3,9 @@ from pytest_factoryboy import register
 
 from src.app import create_app
 from src.config import TestConfig
-
 from src.infrastructure.storage import MongoClient
 
 from . import factories as ft
-
 
 for factory_name in dir(ft):
     factory = getattr(ft, factory_name)

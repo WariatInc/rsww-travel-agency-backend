@@ -6,10 +6,7 @@ flask==2.2.3
     # via
     #   -r requirements/base.in
     #   flask-injector
-    #   flask-pymongo
 flask-injector==0.14.0
-    # via -r requirements/base.in
-flask-pymongo==2.3.0
     # via -r requirements/base.in
 importlib-metadata==6.1.0
     # via flask
@@ -40,9 +37,7 @@ packaging==23.0
     #   marshmallow
     #   webargs
 pymongo==4.3.3
-    # via
-    #   -r requirements/base.in
-    #   flask-pymongo
+    # via -r requirements/base.in
 webargs==8.2.0
     # via -r requirements/base.in
 werkzeug==2.2.3

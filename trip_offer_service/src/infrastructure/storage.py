@@ -1,6 +1,7 @@
+from typing import TYPE_CHECKING
+
 from flask import Config
 from pymongo import MongoClient as _MongoClient
-from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
     from pymongo.database import Database

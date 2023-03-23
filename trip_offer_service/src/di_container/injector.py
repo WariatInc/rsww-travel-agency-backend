@@ -31,14 +31,14 @@ class Module(BaseModule):
         self.binder = binder
         super().__call__(binder)
 
-    def bind(self, t: Any, implementation: Optional[Any] = None) -> None:
+    def bind(self, type_: Any, implementation: Optional[Any] = None) -> None:
         if not implementation:
-            implementation = t
+            implementation = type_
 
         if inspect.isclass(implementation):
-            assert issubclass(implementation, t), (
+            assert issubclass(implementation, type_), (
                 f"{implementation.__name__} "
                 f"is not a subclass of {type.__name__}"
             )
 
-        self.binder.bind(t, TypeHinted(implementation))
+        self.binder.bind(type_, TypeHinted(implementation))
