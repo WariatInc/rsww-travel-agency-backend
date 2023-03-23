@@ -1,0 +1,53 @@
+click==8.1.3
+    # via flask
+dnspython==2.3.0
+    # via pymongo
+flask==2.2.3
+    # via
+    #   -r requirements/base.in
+    #   flask-injector
+    #   flask-pymongo
+flask-injector==0.14.0
+    # via -r requirements/base.in
+flask-pymongo==2.3.0
+    # via -r requirements/base.in
+importlib-metadata==6.1.0
+    # via flask
+injector==0.20.1
+    # via
+    #   -r requirements/base.in
+    #   flask-injector
+itsdangerous==2.1.2
+    # via flask
+jinja2==3.1.2
+    # via flask
+markupsafe==2.1.2
+    # via
+    #   jinja2
+    #   werkzeug
+marshmallow==3.19.0
+    # via
+    #   -r requirements/base.in
+    #   marshmallow-jsonschema
+    #   marshmallow-oneofschema
+    #   webargs
+marshmallow-jsonschema==0.13.0
+    # via -r requirements/base.in
+marshmallow-oneofschema==3.0.1
+    # via -r requirements/base.in
+packaging==23.0
+    # via
+    #   marshmallow
+    #   webargs
+pymongo==4.3.3
+    # via
+    #   -r requirements/base.in
+    #   flask-pymongo
+webargs==8.2.0
+    # via -r requirements/base.in
+werkzeug==2.2.3
+    # via
+    #   -r requirements/base.in
+    #   flask
+zipp==3.15.0
+    # via importlib-metadata

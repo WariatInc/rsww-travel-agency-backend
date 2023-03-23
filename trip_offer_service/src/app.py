@@ -2,10 +2,8 @@ from typing import Optional
 
 from flask import Flask
 from flask_injector import FlaskInjector, FlaskModule
-from flask_migrate import Migrate
 from injector import Injector, inject
 
-import src.extensions as ext
 from src.config import Config, DefaultConfig
 from src.di_container.modules import all_modules
 from src.utils import import_from
@@ -45,10 +43,6 @@ def configure_app(app: Flask, config: Optional[Config]) -> None:
 
 
 def configure_extensions(app: Flask) -> None:
-    ext.db.init_app(app)
-
-    Migrate(app, ext.db)
-
     FlaskInjector(app, injector=app.injector)
 
 

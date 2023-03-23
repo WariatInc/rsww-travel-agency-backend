@@ -6,7 +6,7 @@ from src.infrastructure.storage import (
     ReadOnlySessionFactory,
     SessionFactory,
     SQLAlchemyEngine,
-    SqlAlchemyReadOnlyEngine,
+    SQLAlchemyReadOnlyEngine,
 )
 
 __all__ = ["InfrastructureModule"]
@@ -26,5 +26,5 @@ class InfrastructureModule(Module):
     @singleton
     def provide_sqlalchemy_read_only_engine(
         self, config: Config
-    ) -> SqlAlchemyReadOnlyEngine:
-        return SqlAlchemyReadOnlyEngine(config)
+    ) -> SQLAlchemyReadOnlyEngine:
+        return SQLAlchemyReadOnlyEngine(config)
