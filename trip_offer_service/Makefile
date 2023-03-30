@@ -80,7 +80,7 @@ mongosh: $(STATE_API_BUILD)
 	docker-compose --compatibility --project-name $(PROJECT_NAME) run --rm trip_offer_api mongosh --host=mongo_db --port=27017 --username=mongodb_admin --password=mongodb trip_offer_mongo --authenticationDatabase="admin"
 
 rabbitmq: $(STATE_RABBITMQ_INIT)
-	docker-compose --compatibility --project-name $(PROJECT_NAME) run --rm rabbitmq
+	docker-compose --project-name $(PROJECT_NAME) up -d rabbitmq
 
 api_bash:
 	docker container exec --interactive --tty $(call get_container_id, $(PROJECT_NAME)_trip_offer_api) bash
