@@ -7,6 +7,9 @@ services:
     ports:
       - 5672:5672
       - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq_admin
+      RABBITMQ_DEFAULT_PASS: rabbitmq
     networks:
       - rsww_backend_network
 
@@ -46,6 +49,7 @@ services:
       - "8000:8000"
     depends_on:
       - pg_db
+      - rabbitmq
     networks:
       - rsww_backend_network
 
@@ -63,6 +67,7 @@ services:
       - "8010:8010"
     depends_on:
       - mongo_db
+      - rabbitmq
     networks:
       - rsww_backend_network
 
