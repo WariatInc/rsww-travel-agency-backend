@@ -1,12 +1,26 @@
 version: '3.8'
 
 services:
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq_admin
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+    networks:
+      - rsww_backend_network
+
   pg_db:
     image: postgres:14.7-alpine
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
       - "5432:5432"
+    networks:
+      - rsww_backend_network
 
   mongo_db:
     image: mongo:6.0.5
@@ -17,6 +31,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: mongodb
     ports:
       - "27017:27017"
+    networks:
+      - rsww_backend_network
 
   reservation_api:
     restart: always
@@ -33,6 +49,9 @@ services:
       - "8000:8000"
     depends_on:
       - pg_db
+      - rabbitmq
+    networks:
+      - rsww_backend_network
 
   trip_offer_api:
     restart: always
@@ -48,6 +67,9 @@ services:
       - "8010:8010"
     depends_on:
       - mongo_db
+      - rabbitmq
+    networks:
+      - rsww_backend_network
 
 networks:
   rsww_backend_network:
