@@ -35,6 +35,4 @@ class TestConfig(DefaultConfig):
     TESTING = True
 
     MONGO_DB_NAME = "trip_offer_test_mongo"
-    MONGO_URI = (
-        "mongodb://trip_offer_test:trip_offer_test@mongo_db:27017/trip_offer_test_mongo"
-    )
+    MONGO_URI = "mongodb://trip_offer_test:trip_offer_test@mongo_db:27017/trip_offer_test_mongo"
