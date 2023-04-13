@@ -7,3 +7,4 @@ marshmallow
 marshmallow-jsonschema
 marshmallow-oneofschema
 pymongo[srv]
+pika

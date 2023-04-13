@@ -10,8 +10,9 @@ class TestUpsertExampleCommand:
     @pytest.fixture(autouse=True)
     def setup(self) -> None:
         self.example_repository_mock = mock.MagicMock()
+        self.example_publisher = mock.MagicMock()
         self.upsert_example_command = UpsertExampleCommand(
-            self.example_repository_mock
+            self.example_repository_mock, self.example_publisher
         )
 
     def test_upsert_command(self) -> None:
@@ -19,3 +20,4 @@ class TestUpsertExampleCommand:
         self.upsert_example_command(**data)
 
         self.example_repository_mock.upsert.assert_called_once_with(data)
+        self.example_publisher.publish.assert_called_once_with(data)
