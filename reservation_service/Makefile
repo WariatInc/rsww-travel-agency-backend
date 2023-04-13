@@ -87,6 +87,9 @@ build_api $(STATE_API_BUILD): $(STATE_DIR) $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 run_api: $(STATE_DB_UPGRADED)
 	docker-compose --project-name $(PROJECT_NAME) up reservation_api
 
+run_api_daemon: $(STATE_DB_UPGRADED)
+	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate reservation_api
+
 psql: $(STATE_API_BUILD)
 	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api psql --host=pg_db --dbname=reservation_pg --username=reservation
 
