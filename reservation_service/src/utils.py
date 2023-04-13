@@ -5,11 +5,7 @@ from typing import Any, Callable
 
 def extend(class_to_extend: Any) -> Any:
     def decorator(class_to_extend_with: Any) -> Any:
-        setattr(
-            class_to_extend,
-            class_to_extend_with.__name__,
-            class_to_extend_with,
-        )
+        setattr(class_to_extend, class_to_extend_with.__name__, class_to_extend_with)
         return class_to_extend_with
 
     return decorator

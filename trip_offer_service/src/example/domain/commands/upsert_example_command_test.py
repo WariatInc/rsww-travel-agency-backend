@@ -10,9 +10,7 @@ class TestUpsertExampleCommand:
     @pytest.fixture(autouse=True)
     def setup(self) -> None:
         self.example_repository_mock = mock.MagicMock()
-        self.upsert_example_command = UpsertExampleCommand(
-            self.example_repository_mock
-        )
+        self.upsert_example_command = UpsertExampleCommand(self.example_repository_mock)
 
     def test_upsert_command(self) -> None:
         data = dict(uniq_id=uuid4(), title="test", author="test")
