@@ -18,9 +18,7 @@ class TestExampleResource:
         uniq_id = uuid4()
         data = dict(author="test", title="test")
 
-        with app.test_request_context(
-            f"/api/examples/example/{uniq_id}", json=data
-        ):
+        with app.test_request_context(f"/api/examples/example/{uniq_id}", json=data):
             response = self.resource.post(uniq_id=uniq_id, **data)
 
             assert response[1] == HTTPStatus.CREATED
@@ -38,15 +36,9 @@ class TestExamplesResource:
         self.resource = ExamplesResource(self.get_example_list_query_mock)
 
     def test_examples_resource_get(self, app: pytest.fixture) -> None:
-        example_dto1 = ExampleDto(
-            uniq_id=uuid4(), title="test1", author="test1"
-        )
-        example_dto2 = ExampleDto(
-            uniq_id=uuid4(), title="test2", author="test2"
-        )
-        example_dto3 = ExampleDto(
-            uniq_id=uuid4(), title="test3", author="test3"
-        )
+        example_dto1 = ExampleDto(uniq_id=uuid4(), title="test1", author="test1")
+        example_dto2 = ExampleDto(uniq_id=uuid4(), title="test2", author="test2")
+        example_dto3 = ExampleDto(uniq_id=uuid4(), title="test3", author="test3")
 
         self.get_example_list_query_mock.return_value = [
             example_dto1,

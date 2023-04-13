@@ -6,11 +6,7 @@ from typing import Any, Callable
 
 def extend(class_to_extend: Any) -> Any:
     def decorator(class_to_extend_with: Any) -> Any:
-        setattr(
-            class_to_extend,
-            class_to_extend_with.__name__,
-            class_to_extend_with,
-        )
+        setattr(class_to_extend, class_to_extend_with.__name__, class_to_extend_with)
         return class_to_extend_with
 
     return decorator
@@ -33,7 +29,5 @@ def get_class_members(cls: Any) -> list[tuple[str, Any]]:
     return [
         member
         for member in inspect.getmembers(cls)
-        if all(
-            [not member[0].startswith("_"), not inspect.ismethod(member[1])]
-        )
+        if all([not member[0].startswith("_"), not inspect.ismethod(member[1])])
     ]

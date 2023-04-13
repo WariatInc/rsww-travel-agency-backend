@@ -10,14 +10,12 @@ class DefaultConfig(Config):
     PROJECT = "reservation_service"
     TESTING = False
 
-    SQLALCHEMY_DATABASE_URI = (
-        "postgresql://{user}:{password}@{host}:{port}/{db}".format(
-            user=os.environ.get("PG_USER"),
-            password=os.environ.get("PG_PASSWORD"),
-            host=os.environ.get("PG_HOST"),
-            port=os.environ.get("PG_PORT"),
-            db=os.environ.get("PG_DB"),
-        )
+    SQLALCHEMY_DATABASE_URI = "postgresql://{user}:{password}@{host}:{port}/{db}".format(
+        user=os.environ.get("PG_USER"),
+        password=os.environ.get("PG_PASSWORD"),
+        host=os.environ.get("PG_HOST"),
+        port=os.environ.get("PG_PORT"),
+        db=os.environ.get("PG_DB"),
     )
 
     SQLALCHEMY_BINDS = {
@@ -39,7 +37,9 @@ class TestConfig(DefaultConfig):
     ENVIRONMENT = "test"
     TESTING = True
 
-    SQLALCHEMY_DATABASE_URI = "postgresql://reservation_test:reservation_test@db:5432/reservation_pg_test"
+    SQLALCHEMY_DATABASE_URI = (
+        "postgresql://reservation_test:reservation_test@db:5432/reservation_pg_test"
+    )
 
     SQLALCHEMY_BINDS = {
         "readonly": "postgresql://reservation_test_readonly:reservation_test@db:5432/reservation_pg_test"

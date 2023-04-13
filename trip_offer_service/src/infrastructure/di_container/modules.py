@@ -15,7 +15,5 @@ class InfrastructureModule(Module):
 
     @provider
     @singleton
-    def provide_mongo_readonly_client(
-        self, config: Config
-    ) -> MongoReadOnlyClient:
+    def provide_mongo_readonly_client(self, config: Config) -> MongoReadOnlyClient:
         return MongoReadOnlyClient(config)

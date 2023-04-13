@@ -6,10 +6,7 @@ from webargs.flaskparser import use_kwargs
 
 from src.api import Resource
 from src.api.blueprint import Blueprint
-from src.example.domain.ports import (
-    IGetExamplesListQuery,
-    IUpsertExampleCommand,
-)
+from src.example.domain.ports import IGetExamplesListQuery, IUpsertExampleCommand
 from src.example.schema import ExampleUpsertSchema
 
 
@@ -35,7 +32,4 @@ class Api(Blueprint):
     name = "examples"
     import_name = __name__
 
-    resources = [
-        (ExampleResource, "/example/<uuid:uniq_id>"),
-        (ExamplesResource, "/"),
-    ]
+    resources = [(ExampleResource, "/example/<uuid:uniq_id>"), (ExamplesResource, "/")]
