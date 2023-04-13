@@ -1,4 +1,7 @@
-deploy: run_rabbitmq to_service res_service
+deploy:
+	docker-compose up
+
+deploy_daemon: run_rabbitmq to_service res_service
 
 run_rabbitmq: 
 	docker-compose up -d --no-recreate rabbitmq
