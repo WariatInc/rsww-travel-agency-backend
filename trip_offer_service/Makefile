@@ -70,6 +70,9 @@ init_test_db $(STATE_TEST_DB_INIT): $(STATE_API_BUILD)  $(DB_TEST_INIT_JS)
 run_api: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
 	docker-compose --project-name $(PROJECT_NAME) up trip_offer_api
 
+run_api_daemon: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
+	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate trip_offer_api
+
 install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(BASE_DEPS)
 	$(PIP) install -r $(TEST_DEPS)
