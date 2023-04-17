@@ -37,4 +37,4 @@ RABBITMQ_PASSWORD=rabbitmq
 #
 Please run the command in root directory:
 
-```sudo make deploy_-_full```
+```sudo make deploy_full```
