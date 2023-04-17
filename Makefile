@@ -27,7 +27,8 @@ run_rabbitmq:
 
 init_rabbitmq_exchange:
 	sleep 10
-	docker exec -it rabbitmq rabbitmqadmin declare exchange name=example type=fanout -u rabbitmq_admin -p rabbitmq
+	docker exec -it rabbitmq rabbitmqadmin declare exchange name=Offer type=fanout -u rabbitmq_admin -p rabbitmq
+	docker exec -it rabbitmq rabbitmqadmin declare exchange name=Reservation type=fanout -u rabbitmq_admin -p rabbitmq
 
 to_db:
 	$(MAKE) -C ./trip_offer_service -f ./Makefile init_db
