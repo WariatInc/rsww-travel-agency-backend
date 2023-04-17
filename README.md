@@ -12,6 +12,10 @@ PG_PASSWORD=reservation
 PG_DB=reservation_pg
 PG_HOST=pg_db
 PG_PORT=5432
+RABBITMQ_HOST=rabbitmq
+RABBITMQ_PORT=5672
+RABBITMQ_USER=rabbitmq_admin
+RABBITMQ_PASSWORD=rabbitmq
 ```
 
 Sample ```trip_offer_service/.env.dev``` file: 
@@ -25,8 +29,12 @@ MONGO_PASSWORD=trip_offer
 MONGO_DB=trip_offer_mongo
 MONGO_HOST=mongo_db
 MONGO_PORT=27017
+RABBITMQ_HOST=rabbitmq
+RABBITMQ_PORT=5672
+RABBITMQ_USER=rabbitmq_admin
+RABBITMQ_PASSWORD=rabbitmq
 ```
 #
 Please run the command in root directory:
 
-```sudo make deploy```
+```sudo make deploy_-_full```

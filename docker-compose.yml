@@ -76,3 +76,5 @@ services:
 
 networks:
   rsww_backend_network:
+    name: rsww_backend_network
+    driver: bridge

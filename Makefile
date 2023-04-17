@@ -16,3 +16,8 @@ res_db:
 
 res_service:
 	$(MAKE) -C ./reservation_service -f ./Makefile run_api_daemon
+
+ALL_CONTAINERS_IDS := $(shell docker ps -aq)
+
+clean: 
+	docker stop $(ALL_CONTAINERS_IDS) && docker rm $(ALL_CONTAINERS_IDS)
