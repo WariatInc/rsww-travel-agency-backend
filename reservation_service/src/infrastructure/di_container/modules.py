@@ -1,5 +1,6 @@
 from flask import Config
 from injector import Binder, provider, singleton
+from pika import BlockingConnection, ConnectionParameters, PlainCredentials
 
 from src.di_container.injector import Module
 from src.infrastructure.storage import (
@@ -28,3 +29,18 @@ class InfrastructureModule(Module):
         self, config: Config
     ) -> SQLAlchemyReadOnlyEngine:
         return SQLAlchemyReadOnlyEngine(config)
+
+    @provider
+    @singleton
+    def provide_rabbitmq_connection(
+        self, config: Config
+    ) -> BlockingConnection:
+        credentials = PlainCredentials(
+            config.get("RABBITMQ_USER"), config.get("RABBITMQ_PASSWORD")
+        )
+        parameters = ConnectionParameters(
+            host=config.get("RABBITMQ_HOST"),
+            port=config.get("RABBITMQ_PORT"),
+            credentials=credentials,
+        )
+        return BlockingConnection(parameters)

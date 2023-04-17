@@ -1,4 +1,5 @@
-from injector import Binder
+from injector import Binder, provider, singleton
+from pika import BlockingConnection
 
 from src.di_container.injector import Module
 from src.example.api import ExampleResource, ExamplesResource
@@ -10,6 +11,9 @@ from src.example.domain.ports import (
     IUpsertExampleCommand,
 )
 from src.example.domain.queries import GetExamplesListQuery
+from src.example.infrastructure.message_broker.publisher import (
+    ExamplePublisher,
+)
 from src.example.infrastructure.storage.repository import ExampleRepository
 from src.example.infrastructure.storage.views import ExamplesView
 
@@ -31,3 +35,10 @@ class ExampleModule(Module):
 
         # queries
         self.bind(IGetExamplesListQuery, GetExamplesListQuery)
+
+    @provider
+    @singleton
+    def provide_example_publisher(
+        self, connection: BlockingConnection
+    ) -> ExamplePublisher:
+        return ExamplePublisher(connection)
