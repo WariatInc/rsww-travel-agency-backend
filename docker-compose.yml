@@ -10,11 +10,13 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: rabbitmq_admin
       RABBITMQ_DEFAULT_PASS: rabbitmq
+    hostname: rabbitmq
     networks:
       - rsww_backend_network
 
   pg_db:
     image: postgres:14.7-alpine
+    container_name: pg_db
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
@@ -24,6 +26,7 @@ services:
 
   mongo_db:
     image: mongo:6.0.5
+    container_name: mongo_db
     restart: unless-stopped
     command: mongod --auth
     environment:
@@ -35,6 +38,7 @@ services:
       - rsww_backend_network
 
   reservation_api:
+    container_name: reservation_api
     restart: always
     build:
       context: reservation_service
@@ -53,6 +57,7 @@ services:
       - rsww_backend_network
 
   trip_offer_api:
+    container_name: trip_offer_api
     restart: always
     build:
       context: trip_offer_service
@@ -71,4 +76,3 @@ services:
 
 networks:
   rsww_backend_network:
-    driver: bridge
