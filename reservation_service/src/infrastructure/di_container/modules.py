@@ -32,9 +32,7 @@ class InfrastructureModule(Module):
 
     @provider
     @singleton
-    def provide_rabbitmq_connection(
-        self, config: Config
-    ) -> BlockingConnection:
+    def provide_rabbitmq_connection(self, config: Config) -> BlockingConnection:
         credentials = PlainCredentials(
             config.get("RABBITMQ_USER"), config.get("RABBITMQ_PASSWORD")
         )
