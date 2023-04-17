@@ -54,7 +54,7 @@ class TestExamplesResource:
             example_dto3,
         ]
 
-        with app.test_request_context(f"/api/examples/"):
+        with app.test_request_context("/api/examples/"):
             response = self.resource.get()
 
             assert response[1] == HTTPStatus.OK
