@@ -73,6 +73,23 @@ services:
       - mongo_db
     networks:
       - rsww_backend_network
+    
+  tour_operator:
+    restart: always
+    build:
+      context: tour_operator_service
+    command: python3 main.py
+    volumes:
+      - ./tour_operator_service/src:/opt/tour_operator/src:z
+      - ./tour_operator_service/db:/opt/tour_operator/db:z
+    env_file:
+      - tour_operator_service/.env.dev
+    ports:
+      - "8020:8020"
+    depends_on:
+      - pg_db
+    networks:
+      - rsww_backend_network
 
 networks:
   rsww_backend_network:
