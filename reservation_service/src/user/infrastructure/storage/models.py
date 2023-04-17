@@ -1,12 +1,13 @@
 from uuid import uuid4
+
 from src.extensions import db
 
 
 class UserIdentity(db.BaseModel):
-    __tablename__ = 'user_identity'
+    __tablename__ = "user_identity"
 
     __table_args__ = (
-       db.PrimaryKeyConstraint("gid", name="user_identity_pkey"),
+        db.PrimaryKeyConstraint("gid", name="user_identity_pkey"),
     )
 
     gid = db.Column(db.UUID(), default=uuid4)
@@ -16,7 +17,7 @@ class UserIdentity(db.BaseModel):
 
 
 class User(db.BaseModel):
-    __tablename__ = 'user'
+    __tablename__ = "user"
 
     __table_args__ = (
         db.PrimaryKeyConstraint("id", name="user_pkey"),

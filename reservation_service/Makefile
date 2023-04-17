@@ -99,7 +99,7 @@ install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(DEV_DEPS)
 
 api_bash:
-	docker container exec --interactive --tty $(call get_container_id, $(PROJECT_NAME)_reservation_api) bash
+	docker container exec --interactive --tty $(call get_container_id, $(PROJECT_NAME)-reservation_api) bash
 
 lint:
 	$(ISORT) .
