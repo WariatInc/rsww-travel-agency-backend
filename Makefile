@@ -28,11 +28,6 @@ run_rabbitmq:
 init_rabbitmq_exchange:
 	docker exec -it rabbitmq rabbitmqadmin declare exchange name=example type=fanout -u rabbitmq_admin -p rabbitmq
 
-ALL_CONTAINERS_IDS := $(shell docker ps -aq)
-
-clean: 
-	docker stop $(ALL_CONTAINERS_IDS) && docker rm $(ALL_CONTAINERS_IDS)
-
 to_db:
 	$(MAKE) -C ./trip_offer_service -f ./Makefile init_db
 
@@ -44,3 +39,11 @@ res_db:
 
 res_service:
 	$(MAKE) -C ./reservation_service -f ./Makefile run_api_daemon
+
+ALL_CONTAINERS_IDS := $(shell docker ps -aq)
+
+clean: 
+	docker stop $(ALL_CONTAINERS_IDS) && docker rm $(ALL_CONTAINERS_IDS)
+
+list_container_networks:
+	docker container inspect $(ALL_CONTAINERS_IDS) --format '{{json .NetworkSettings.Networks}}'
