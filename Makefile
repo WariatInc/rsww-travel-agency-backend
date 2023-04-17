@@ -18,14 +18,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-deploy: run_rabbitmq to_service res_service init_rabbitmq_exchange ## Deploy all services
+deploy: run_rabbitmq init_rabbitmq_exchange to_service res_service ## Deploy all services
 
-deploy_full: run_rabbitmq to_db to_service res_db res_service init_rabbitmq_exchange ## Deploy all services with db initialization
+deploy_full: run_rabbitmq init_rabbitmq_exchange to_db to_service res_db res_service ## Deploy all services with db initialization
 
 run_rabbitmq: 
 	docker-compose up -d --no-recreate rabbitmq
 
 init_rabbitmq_exchange:
+	sleep 10
 	docker exec -it rabbitmq rabbitmqadmin declare exchange name=example type=fanout -u rabbitmq_admin -p rabbitmq
 
 to_db:
