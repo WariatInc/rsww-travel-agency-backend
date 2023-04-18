@@ -1,6 +1,8 @@
+from src.di_container.injector import Module
 from src.infrastructure.di_container.modules import InfrastructureModule
 from src.tour_operator import TourOperatorService
-from injector import singleton
+from injector import singleton, Binder
+from src.config import Config
 
 all_modules = [InfrastructureModule]
 

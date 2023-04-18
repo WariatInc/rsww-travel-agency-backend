@@ -1,7 +1,10 @@
-from src.tour_operator import TourOperatorService
+from src.app import create_app
+
 
 def main() -> None:
-    pass
+    app = create_app()
+    app.run()
+
 
 if __name__ == "__main__":
     main()
