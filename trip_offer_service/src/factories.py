@@ -1,6 +1,5 @@
 from inspect import isclass
 from typing import Any
-from uuid import uuid4
 
 from factory import Factory, faker
 

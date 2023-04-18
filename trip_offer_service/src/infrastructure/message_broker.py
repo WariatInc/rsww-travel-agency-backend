@@ -4,8 +4,6 @@ from json import JSONEncoder
 from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
-from pika.exceptions import ChannelWrongStateError
-
 if TYPE_CHECKING:
     from pika import BlockingConnection
 

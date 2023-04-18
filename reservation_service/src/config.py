@@ -44,7 +44,9 @@ class TestConfig(DefaultConfig):
     ENVIRONMENT = "test"
     TESTING = True
 
-    SQLALCHEMY_DATABASE_URI = "postgresql://reservation_test:reservation_test@db:5432/reservation_pg_test"
+    SQLALCHEMY_DATABASE_URI = (
+        "postgresql://reservation_test:reservation_test@db:5432/reservation_pg_test"
+    )
 
     SQLALCHEMY_BINDS = {
         "readonly": "postgresql://reservation_test_readonly:reservation_test@db:5432/reservation_pg_test"
