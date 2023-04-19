@@ -9,7 +9,9 @@ if TYPE_CHECKING:
 
 class MongoClient:
     def __init__(self, config: Config) -> None:
-        self.client = _MongoClient(config["MONGO_URI"], uuidRepresentation="standard")
+        self.client = _MongoClient(
+            config["MONGO_URI"], uuidRepresentation="standard"
+        )
         self.db_name = config["MONGO_DB_NAME"]
 
     def __call__(self) -> _MongoClient:

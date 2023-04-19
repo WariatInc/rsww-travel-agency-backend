@@ -8,7 +8,9 @@ from src.reservation.domain.dtos import ReservationDto
 
 class IReservationRepository(ABC):
     @abstractmethod
-    def create_reservation(self, user_id: UUID, offer_id: UUID) -> None:
+    def create_reservation(
+        self, user_id: UUID, offer_id: UUID
+    ) -> ReservationDto:
         raise NotImplementedError
 
     @abstractmethod

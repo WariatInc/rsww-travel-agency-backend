@@ -1,5 +1,5 @@
 from typing import Optional
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from sqlalchemy.orm import Session
 
@@ -14,16 +14,21 @@ class ReservationRepository(IReservationRepository):
     def __init__(self, session: Session):
         self._session = session
 
-    def create_reservation(self, user_id: UUID, offer_id: UUID) -> None:
-        reservation = Reservation(user_id=user_id, offer_id=offer_id)
+    def create_reservation(
+        self, user_id: UUID, offer_id: UUID
+    ) -> ReservationDto:
+        reservation = Reservation(
+            id=uuid4(), user_id=user_id, offer_id=offer_id
+        )
         self._session.add(reservation)
+        return reservation_dto_factory(reservation)
 
     def set_reservation_state(
         self, reservation_id: UUID, state: ReservationState
     ) -> None:
         self._session.query(Reservation).filter(
             Reservation.id == reservation_id
-        ).update({Reservation.state: state.value})
+        ).update({Reservation.state: state})
 
     def get_reservation(
         self, reservation_id: UUID

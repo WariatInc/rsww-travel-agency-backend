@@ -1,4 +1,5 @@
-from injector import Binder
+from injector import Binder, provider, singleton
+from pika import BlockingConnection
 
 from src.di_container.injector import Module
 from src.reservation.api import ReservationsResource
@@ -14,6 +15,9 @@ from src.reservation.domain.ports import (
     IReservationUnitOfWork,
 )
 from src.reservation.domain.queries import GetUserReservationQuery
+from src.reservation.infrastructure.message_broker.producer import (
+    ReservationPublisher,
+)
 from src.reservation.infrastructure.storage.unit_of_work import (
     ReservationUnitOfWork,
 )
@@ -37,3 +41,10 @@ class ReservationModule(Module):
 
         # Views
         self.bind(IReservationListView, ReservationListView)
+
+    @provider
+    @singleton
+    def provide_reservation_publisher(
+        self, connection: BlockingConnection
+    ) -> ReservationPublisher:
+        return ReservationPublisher(connection)

@@ -16,18 +16,18 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.9.13
 
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install black flake8
+        pip install black==23.1.0 flake8
 
     - name: Check code quality with flake8
       run: flake8 --ignore=E501 .
 
     - name: Check code formatting with black
-      run: black --check .
+      run: black --check --line-length 79 --target-version py39 . 
 
     - name: Fail if any of the checks fail
       run: |

@@ -2,7 +2,7 @@ from functools import wraps
 from http import HTTPStatus
 from typing import Callable
 
-from flask import Response, make_response
+from flask import make_response
 from marshmallow import Schema, missing
 
 non_nullable = dict(required=True, allow_none=False)

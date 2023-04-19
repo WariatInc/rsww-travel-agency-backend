@@ -1,13 +1,11 @@
 from http import HTTPStatus
-from typing import Union
 from uuid import UUID
 
-from flask import Response
 from webargs.flaskparser import use_kwargs
 
 from src.api.blueprint import Blueprint, Resource
 from src.api.error import custom_error
-from src.api.schema import use_schema
+from src.api.schema import EmptySchema, use_schema
 from src.auth.login import auth_required
 from src.reservation.domain.exceptions import (
     ActorIsNotReservationOwner,
@@ -34,8 +32,9 @@ class ReservationsResource(Resource):
         self.get_user_reservations_query = get_user_reservations_query
 
     @auth_required
+    @use_schema(EmptySchema, HTTPStatus.OK)
     @use_kwargs(ReservationPostSchema, location="json")
-    def post(self, offer_id: UUID) -> Union[Response, tuple[dict, int]]:
+    def post(self, offer_id: UUID):
         try:
             self.create_reservation_command(offer_id)
         except ReservationExistInPendingOrAcceptedStateException:
@@ -44,7 +43,7 @@ class ReservationsResource(Resource):
                 HTTPStatus.BAD_REQUEST,
             )
 
-        return {}, HTTPStatus.CREATED
+        return {}
 
     @auth_required
     @use_schema(ReservationListSchema, HTTPStatus.OK)
@@ -59,7 +58,8 @@ class ReservationCancelResource(Resource):
         self.cancel_reservation_command = cancel_reservation_command
 
     @auth_required
-    def post(self, reservation_id: UUID) -> Union[Response, tuple[dict, int]]:
+    @use_schema(EmptySchema, HTTPStatus.OK)
+    def post(self, reservation_id: UUID):
         try:
             self.cancel_reservation_command(reservation_id)
         except ReservationAlreadyCancelled:
@@ -77,7 +77,7 @@ class ReservationCancelResource(Resource):
                 HTTPStatus.BAD_REQUEST,
             )
 
-        return {}, HTTPStatus.OK
+        return {}
 
 
 class Api(Blueprint):

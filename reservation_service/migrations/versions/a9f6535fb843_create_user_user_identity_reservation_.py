@@ -1,7 +1,7 @@
 """Create user user_identity reservation tables
 
 Revision ID: a9f6535fb843
-Revises: 
+Revises:
 Create Date: 2023-04-18 19:26:31.143431
 
 """

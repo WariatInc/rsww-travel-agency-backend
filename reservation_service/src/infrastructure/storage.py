@@ -28,7 +28,9 @@ class SessionFactory:
 
 
 class ReadOnlySessionFactory:
-    def __init__(self, sqlalchemy_read_only_engine: SQLAlchemyReadOnlyEngine) -> None:
+    def __init__(
+        self, sqlalchemy_read_only_engine: SQLAlchemyReadOnlyEngine
+    ) -> None:
         self._sqlalchemy_read_only_engine = sqlalchemy_read_only_engine
 
     def create_session(self) -> Session:

@@ -6,3 +6,7 @@ class ReservationState(StrEnum):
     rejected = auto()
     accepted = auto()
     cancelled = auto()
+
+
+class Exchanges(StrEnum):
+    Reservation = auto()
