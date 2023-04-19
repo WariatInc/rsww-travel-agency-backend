@@ -11,7 +11,7 @@ class Reservation(db.BaseModel):
         db.PrimaryKeyConstraint("id", name="reservation_pkey"),
         db.ForeignKeyConstraint(
             ["user_id"],
-            ["user.id"],
+            ["users.id"],
             name="reservation_user_fkey",
             ondelete="CASCADE",
             onupdate="NO ACTION",
@@ -24,8 +24,8 @@ class Reservation(db.BaseModel):
     state = db.Column(
         db.Enum(ReservationState, name="reservation_states"),
         nullable=False,
-        default=ReservationState.PENDING,
+        default=ReservationState.pending.value,
     )
 
     user_id = db.Column(db.UUID(), nullable=False)
-    user = db.relationship("user", back_populates="reservations")
+    user = db.relationship("User", back_populates="reservations")

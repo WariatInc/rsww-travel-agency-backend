@@ -1,7 +1,6 @@
 from typing import Optional
 from uuid import UUID
 
-import sqlalchemy as sqla
 from sqlalchemy.orm import Session
 
 from src.consts import ReservationState
@@ -37,20 +36,18 @@ class ReservationRepository(IReservationRepository):
             return reservation_dto_factory(reservation)
 
     def check_if_offer_reservation_exits_in_pending_or_accepted_state(
-        self, user_id: UUID, offer_id: UUID
+        self, offer_id: UUID
     ) -> bool:
-        return (
+        return self._session.query(
             self._session.query(Reservation)
             .filter(
                 Reservation.offer_id == offer_id,
-                Reservation.user_id == user_id,
                 Reservation.state.in_(
                     [
-                        ReservationState.PENDING.value,
-                        ReservationState.ACCEPTED.value,
+                        ReservationState.pending.value,
+                        ReservationState.accepted.value,
                     ]
                 ),
             )
-            .exist()
-            .scalar()
-        )
+            .exists()
+        ).scalar()

@@ -17,7 +17,7 @@ class UserIdentity(db.BaseModel):
 
 
 class User(db.BaseModel):
-    __tablename__ = "user"
+    __tablename__ = "users"
 
     __table_args__ = (
         db.PrimaryKeyConstraint("id", name="user_pkey"),
@@ -26,4 +26,4 @@ class User(db.BaseModel):
 
     id = db.Column(db.UUID(), nullable=False, default=uuid4)
     gid = db.Column(db.UUID(), nullable=False)
-    reservations = db.relationship("reservation", back_populates="user")
+    reservations = db.relationship("Reservation", back_populates="user")

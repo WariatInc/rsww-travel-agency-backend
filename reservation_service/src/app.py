@@ -1,11 +1,13 @@
+from http import HTTPStatus
 from typing import Optional
 
-from flask import Flask
+from flask import Flask, Response
 from flask_injector import FlaskInjector, FlaskModule
 from flask_migrate import Migrate
 from injector import Injector, inject
 
 import src.extensions as ext
+from src.api.error import validation_error
 from src.config import Config, DefaultConfig
 from src.di_container.modules import all_modules
 from src.utils import import_from
@@ -32,6 +34,7 @@ def create_app(
     configure_injector(app)
     configure_blueprints(app)
     configure_extensions(app)
+    configure_handlers(app)
 
     return app
 
@@ -63,3 +66,11 @@ def configure_blueprints(app: Flask) -> None:
         inject(blueprint.__init__)
         instance = app.injector.create_object(blueprint)
         instance.register()
+
+
+def configure_handlers(app: Flask) -> None:
+    @app.errorhandler(HTTPStatus.UNPROCESSABLE_ENTITY)
+    def handle_unprocessable_entity(err: Exception) -> Response:
+        exc = getattr(err, "exc")
+        messages = getattr(exc, "messages", None)
+        return validation_error(messages)

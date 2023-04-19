@@ -13,7 +13,7 @@ class ReservationUnitOfWork(IReservationUnitOfWork):
         self._session = self._session_factory.create_session()
         self.reservation_repository = ReservationRepository(self._session)
 
-    def __exit__(self, **kwargs) -> None:
+    def __exit__(self, *args) -> None:
         self._session.close()
 
     def commit(self) -> None:

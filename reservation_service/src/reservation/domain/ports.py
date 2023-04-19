@@ -25,7 +25,7 @@ class IReservationRepository(ABC):
 
     @abstractmethod
     def check_if_offer_reservation_exits_in_pending_or_accepted_state(
-        self, user_id: UUID, reservation_id: UUID
+        self, offer_id: UUID
     ) -> bool:
         raise NotImplementedError
 
@@ -44,11 +44,23 @@ class IReservationUnitOfWork(ABC):
 
 class ICreateReservationCommand(ABC):
     @abstractmethod
-    def __call__(self, user_id: UUID, offer_id: UUID) -> None:
+    def __call__(self, offer_id: UUID) -> None:
         raise NotImplementedError
 
 
 class ICancelReservationCommand(ABC):
     @abstractmethod
     def __call__(self, reservation_id: UUID) -> None:
+        raise NotImplementedError
+
+
+class IReservationListView(ABC):
+    @abstractmethod
+    def get_list(self, user_id: UUID) -> list[ReservationDto]:
+        raise NotImplementedError
+
+
+class IGetUserReservationsQuery(ABC):
+    @abstractmethod
+    def get(self) -> list[ReservationDto]:
         raise NotImplementedError

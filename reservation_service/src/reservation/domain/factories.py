@@ -11,4 +11,5 @@ def reservation_dto_factory(reservation: "Reservation") -> ReservationDto:
         id=reservation.id,
         state=reservation.state,
         offer_id=reservation.offer_id,
+        user_id=reservation.user_id,
     )
