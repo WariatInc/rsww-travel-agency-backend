@@ -23,3 +23,4 @@ htmlcov/
 *,cover
 
 .state
+reservation_service/db/reservation_db.gz

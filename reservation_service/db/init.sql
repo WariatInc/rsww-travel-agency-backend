@@ -7,8 +7,6 @@ GRANT ALL ON database reservation_pg TO reservation;
 ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL ON tables TO reservation;
 
 DROP USER if EXISTS reservation_readonly;
-CREATE USER "reservation_readonly" WITH password  'reservation';
+CREATE USER "reservation_readonly" WITH password 'reservation';
 GRANT CONNECT ON DATABASE reservation_pg TO reservation_readonly;
-GRANT USAGE ON SCHEMA public TO reservation_readonly;
-GRANT SELECT ON ALL tables IN SCHEMA public TO reservation_readonly;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT ON tables TO reservation_readonly;
+GRANT pg_read_all_data TO reservation_readonly;

@@ -33,5 +33,7 @@ def get_class_members(cls: Any) -> list[tuple[str, Any]]:
     return [
         member
         for member in inspect.getmembers(cls)
-        if all([not member[0].startswith("_"), not inspect.ismethod(member[1])])
+        if all(
+            [not member[0].startswith("_"), not inspect.ismethod(member[1])]
+        )
     ]
