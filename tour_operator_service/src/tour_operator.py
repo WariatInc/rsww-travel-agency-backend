@@ -1,7 +1,10 @@
 from typing import TYPE_CHECKING
-if TYPE_CHECKING: 
+
+if TYPE_CHECKING:
     from src.config import Config
+
 from injector import Injector, inject
+
 from src.infrastructure.storage import SessionFactory
 
 

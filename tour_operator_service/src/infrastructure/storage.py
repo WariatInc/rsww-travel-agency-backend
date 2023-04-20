@@ -1,6 +1,7 @@
-from src.config import Config
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session, sessionmaker
+
+from src.config import Config
 
 
 class SQLAlchemyEngine:
@@ -9,6 +10,7 @@ class SQLAlchemyEngine:
 
     def __call__(self, *args, **kwargs) -> Engine:
         return self.engine
+
 
 class SessionFactory:
     def __init__(self, sqlalchemy_engine: SQLAlchemyEngine) -> None:

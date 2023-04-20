@@ -1,13 +1,11 @@
-from injector import Injector 
+from injector import Injector
+
 from src.config import Config, DefaultConfig
+from src.di_container.modules import AppModule, all_modules
 from src.tour_operator import TourOperatorService
-from src.di_container.modules import all_modules, AppModule
 
 
-def create_app(
-    config: Config = DefaultConfig
-) -> TourOperatorService:
-
+def create_app(config: Config = DefaultConfig) -> TourOperatorService:
     app = TourOperatorService()
 
     configure_app(app, config)
@@ -22,5 +20,5 @@ def configure_injector(app: TourOperatorService) -> None:
     app.set_injector(injector)
 
 
-def configure_app(app:TourOperatorService, config: Config) -> None:
+def configure_app(app: TourOperatorService, config: Config) -> None:
     app.apply_config(config=config)

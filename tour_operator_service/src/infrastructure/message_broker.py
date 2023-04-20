@@ -6,7 +6,8 @@ from uuid import UUID
 
 if TYPE_CHECKING:
     from pika import BlockingConnection
-    from src.consts import EXCHANGES
+
+    from src.consts import Exchanges
 
 
 class ClassJSONEncoder(JSONEncoder):
