@@ -1,7 +1,5 @@
 alembic==1.10.3
     # via -r requirements/base.in
-greenlet==2.0.2
-    # via sqlalchemy
 injector==0.20.1
     # via -r requirements/base.in
 mako==1.2.4

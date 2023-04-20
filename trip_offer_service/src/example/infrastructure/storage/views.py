@@ -15,4 +15,6 @@ class ExamplesView(IExamplesView):
         self.collection: "Collection[Example]" = mongo_client.get_db().example
 
     def get_list(self) -> list[ExampleDto]:
-        return [example_dto_factory(example) for example in self.collection.find()]
+        return [
+            example_dto_factory(example) for example in self.collection.find()
+        ]

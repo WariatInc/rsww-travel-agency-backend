@@ -37,7 +37,8 @@ class Module(BaseModule):
 
         if inspect.isclass(implementation):
             assert issubclass(implementation, type_), (
-                f"{implementation.__name__} " f"is not a subclass of {type.__name__}"
+                f"{implementation.__name__} "
+                f"is not a subclass of {type.__name__}"
             )
 
         self.binder.bind(type_, TypeHinted(implementation))
