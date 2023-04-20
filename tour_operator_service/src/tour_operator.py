@@ -16,4 +16,6 @@ class TourOperatorService:
         self.injector = injector
 
     def run(self) -> None:
-        session_factory = self.injector.get(SessionFactory)
+        print("Started")
+        while True:
+            pass

@@ -21,7 +21,7 @@ class ClassJSONEncoder(JSONEncoder):
 
 
 class RabbitMQPublisher:
-    exchange: "EXCHANGES"
+    exchange: "Exchanges"
     encoder: type[JSONEncoder] = ClassJSONEncoder
     routing_key: str = ""
 

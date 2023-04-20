@@ -82,6 +82,7 @@ services:
     volumes:
       - ./tour_operator_service/src:/opt/tour_operator/src:z
       - ./tour_operator_service/db:/opt/tour_operator/db:z
+      - ./tour_operator_service/migrations:/opt/tour_operator/migrations:z
     env_file:
       - tour_operator_service/.env.dev
     ports:

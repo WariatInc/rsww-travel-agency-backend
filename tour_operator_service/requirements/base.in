@@ -2,3 +2,4 @@ sqlalchemy
 injector
 psycopg2
 alembic
+pika
