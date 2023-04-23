@@ -27,6 +27,19 @@ run_rabbitmq:
 
 init_rabbitmq_exchange:
 	sleep 10
+
+	docker exec -it rabbitmq rabbitmqctl add_user trip_offer_user password
+	docker exec -it rabbitmq rabbitmqctl add_user reservation_user password
+	docker exec -it rabbitmq rabbitmqctl add_user tour_operator_user password
+
+	docker exec -it rabbitmq rabbitmqctl set_permissions -p / trip_offer_user ".*" ".*" ".*"
+	docker exec -it rabbitmq rabbitmqctl set_permissions -p / reservation_user ".*" ".*" ".*"
+	docker exec -it rabbitmq rabbitmqctl set_permissions -p / tour_operator_user  ".*" ".*" ".*"
+
+	docker exec -it rabbitmq rabbitmqctl set_user_tags trip_offer_user management
+	docker exec -it rabbitmq rabbitmqctl set_user_tags reservation_user management
+	docker exec -it rabbitmq rabbitmqctl set_user_tags tour_operator_user management
+
 	docker exec -it rabbitmq rabbitmqadmin declare exchange name=Offer type=fanout -u rabbitmq_admin -p rabbitmq
 	docker exec -it rabbitmq rabbitmqadmin declare exchange name=Reservation type=fanout -u rabbitmq_admin -p rabbitmq
 
