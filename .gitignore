@@ -24,3 +24,4 @@ htmlcov/
 
 .state
 reservation_service/db/reservation_db.gz
+tour_operator_service/db/to_db.gz
