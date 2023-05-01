@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from typing import Optional
 from uuid import UUID
 
-from src.consts import ReservationState
 from src.reservation.domain.dtos import ReservationDto
 
 
@@ -14,8 +13,8 @@ class IReservationRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def set_reservation_state(
-        self, reservation_id: UUID, state: ReservationState
+    def update_reservation(
+        self, reservation_id: UUID, **update_kwargs
     ) -> None:
         raise NotImplementedError
 
@@ -53,6 +52,12 @@ class ICreateReservationCommand(ABC):
 class ICancelReservationCommand(ABC):
     @abstractmethod
     def __call__(self, reservation_id: UUID) -> None:
+        raise NotImplementedError
+
+
+class IUpdateReservationCommand(ABC):
+    @abstractmethod
+    def __call__(self, reservation_id: UUID, **update_kwargs) -> None:
         raise NotImplementedError
 
 

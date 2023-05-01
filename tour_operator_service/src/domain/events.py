@@ -4,10 +4,15 @@ from uuid import UUID, uuid4
 
 
 @dataclass
-class DomainEvent:
+class Event:
     id: UUID
     time: datetime
     type: str
+
+
+@dataclass
+class DomainEvent(Event):
+    pass
 
 
 def event_factory(event_class: type[DomainEvent], **kwargs) -> DomainEvent:

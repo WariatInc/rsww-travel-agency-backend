@@ -1,11 +1,12 @@
 from injector import Binder, provider, singleton
-from pika import BlockingConnection
 
 from src.di_container.injector import Module
+from src.infrastructure.message_broker import RabbitMQConnectionFactory
 from src.reservation.api import ReservationsResource
 from src.reservation.domain.commands import (
     CancelReservationCommand,
     CreateReservationCommand,
+    UpdateReservationCommand,
 )
 from src.reservation.domain.ports import (
     ICancelReservationCommand,
@@ -13,6 +14,7 @@ from src.reservation.domain.ports import (
     IGetUserReservationsQuery,
     IReservationListView,
     IReservationUnitOfWork,
+    IUpdateReservationCommand,
 )
 from src.reservation.domain.queries import GetUserReservationQuery
 from src.reservation.infrastructure.message_broker.producer import (
@@ -32,6 +34,7 @@ class ReservationModule(Module):
         # Commands
         self.bind(ICreateReservationCommand, CreateReservationCommand)
         self.bind(ICancelReservationCommand, CancelReservationCommand)
+        self.bind(IUpdateReservationCommand, UpdateReservationCommand)
 
         # Queries
         self.bind(IGetUserReservationsQuery, GetUserReservationQuery)
@@ -45,6 +48,6 @@ class ReservationModule(Module):
     @provider
     @singleton
     def provide_reservation_publisher(
-        self, connection: BlockingConnection
+        self, connection_factory: RabbitMQConnectionFactory
     ) -> ReservationPublisher:
-        return ReservationPublisher(connection)
+        return ReservationPublisher(connection_factory)

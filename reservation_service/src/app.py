@@ -35,7 +35,6 @@ def create_app(
     configure_blueprints(app)
     configure_extensions(app)
     configure_handlers(app)
-
     return app
 
 

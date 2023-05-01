@@ -10,3 +10,7 @@ class ReservationState(StrEnum):
 
 class Exchanges(StrEnum):
     Reservation = auto()
+
+
+class Queues(StrEnum):
+    reservation_service_reservation_queue = auto()

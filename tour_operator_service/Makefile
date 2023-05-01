@@ -86,6 +86,9 @@ build_app $(STATE_APP_BUILD): $(STATE_DIR) $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 run_app: $(STATE_APP_BUILD) $(STATE_DB_INIT)
 	docker-compose --project-name $(PROJECT_NAME) up tour_operator
 
+start_reservation_consumer:
+	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator python3 src/offer/infrastructure/message_broker/consumer.py
+
 run_app_daemon: $(STATE_APP_BUILD) $(STATE_DB_INIT)
 	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate tour_operator
 

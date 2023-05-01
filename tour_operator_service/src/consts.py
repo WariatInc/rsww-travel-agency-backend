@@ -6,6 +6,10 @@ class Exchanges(StrEnum):
     Reservation = auto()
 
 
+class Queues(StrEnum):
+    tour_operator_reservation_queue = auto()
+
+
 class Transport(StrEnum):
     self = auto()
     plane = auto()
