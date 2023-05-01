@@ -34,5 +34,5 @@ class OfferRepository(IOfferRepository):
         return self._session.query(
             self._session.query(Offer)
             .filter(Offer.id == offer_id, Offer.available)
-            .exist()
+            .exists()
         ).scalar()

@@ -23,12 +23,12 @@ class ReservationRepository(IReservationRepository):
         self._session.add(reservation)
         return reservation_dto_factory(reservation)
 
-    def set_reservation_state(
-        self, reservation_id: UUID, state: ReservationState
+    def update_reservation(
+        self, reservation_id: UUID, **update_kwargs
     ) -> None:
         self._session.query(Reservation).filter(
             Reservation.id == reservation_id
-        ).update({Reservation.state: state})
+        ).update(update_kwargs)
 
     def get_reservation(
         self, reservation_id: UUID

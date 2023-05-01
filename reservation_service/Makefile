@@ -17,7 +17,7 @@ DEV_DEPS = $(DEPS_DIR)/dev.txt
 DB_DIR = db
 DB_INIT_SQL = $(DB_DIR)/init.sql
 DB_TEST_INIT_SQL = $(DB_DIR)/test_init.sql
-DB_DUMP = $(DB_DIR)/db.gz
+DB_DUMP = $(DB_DIR)/reservation_db.gz
 
 VENV_BIN ?= python3 -m venv
 VENV_DIR = venv
@@ -88,6 +88,9 @@ build_api $(STATE_API_BUILD): $(STATE_DIR) $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 
 run_api: $(STATE_DB_UPGRADED)
 	docker-compose --project-name $(PROJECT_NAME) up reservation_api
+
+start_reservation_consumer:
+	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api python3 src/reservation/infrastructure/message_broker/consumer.py
 
 run_api_daemon: $(STATE_DB_UPGRADED)
 	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate reservation_api

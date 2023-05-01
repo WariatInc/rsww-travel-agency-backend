@@ -1,8 +1,8 @@
 from injector import Binder, provider, singleton
-from pika import BlockingConnection, ConnectionParameters, PlainCredentials
 
 from src.config import Config
 from src.di_container.injector import Module
+from src.infrastructure.message_broker import RabbitMQConnectionFactory
 from src.infrastructure.storage import SessionFactory, SQLAlchemyEngine
 
 
@@ -16,16 +16,7 @@ class InfrastructureModule(Module):
         return SQLAlchemyEngine(config)
 
     @provider
-    @singleton
-    def provide_rabbitmq_connection(
+    def provide_rabbitmq_connection_factory(
         self, config: Config
-    ) -> BlockingConnection:
-        credentials = PlainCredentials(
-            config.RABBITMQ_USER, config.RABBITMQ_PASSWORD
-        )
-        parameters = ConnectionParameters(
-            host=config.RABBITMQ_HOST,
-            port=config.RABBITMQ_PORT,
-            credentials=credentials,
-        )
-        return BlockingConnection(parameters)
+    ) -> RabbitMQConnectionFactory:
+        return RabbitMQConnectionFactory(config)

@@ -41,7 +41,7 @@ class CancelReservationCommand(ICancelReservationCommand):
         validate_if_reservation_can_be_cancelled(reservation)
 
         with self._uow:
-            self._uow.reservation_repository.set_reservation_state(
+            self._uow.reservation_repository.update_reservation(
                 reservation_id=reservation.id, state=ReservationState.cancelled
             )
             self._uow.commit()
