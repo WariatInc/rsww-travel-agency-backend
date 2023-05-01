@@ -9,7 +9,7 @@ class ReservationState(StrEnum):
 
 
 class Exchanges(StrEnum):
-    Reservation = auto()
+    reservation = auto()
 
 
 class Queues(StrEnum):

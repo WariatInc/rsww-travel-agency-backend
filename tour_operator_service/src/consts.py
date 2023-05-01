@@ -2,8 +2,8 @@ from src.enum import StrEnum, auto
 
 
 class Exchanges(StrEnum):
-    Offer = auto()
-    Reservation = auto()
+    offer = auto()
+    reservation = auto()
 
 
 class Queues(StrEnum):
