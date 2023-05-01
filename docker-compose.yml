@@ -61,7 +61,7 @@ services:
     restart: always
     build:
       context: payment_service
-    command: flask run --host 0.0.0.0 --port 8020
+    command: flask run --host 0.0.0.0 --port 8030
     volumes:
       - ./payment_service/src:/opt/payment_service/src:z
       - ./payment_service/migrations:/opt/payment_service/migrations:z
@@ -69,7 +69,7 @@ services:
     env_file:
       - payment_service/.env.dev
     ports:
-      - "8020:8020"
+      - "8030:8030"
     networks:
       - rsww_backend_network
 

@@ -44,7 +44,9 @@ class TestConfig(DefaultConfig):
     ENVIRONMENT = "test"
     TESTING = True
 
-    SQLALCHEMY_DATABASE_URI = "postgresql://payment_test:payment_test@db:5432/payment_pg_test"
+    SQLALCHEMY_DATABASE_URI = (
+        "postgresql://payment_test:payment_test@db:5432/payment_pg_test"
+    )
 
     SQLALCHEMY_BINDS = {
         "readonly": "postgresql://payment_test_readonly:payment_test@db:5432/payment_pg_test"

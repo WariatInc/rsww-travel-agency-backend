@@ -17,6 +17,7 @@ from src.reservation.domain.ports import IUpdateReservationCommand
 from src.reservation.infrastructure.storage.unit_of_work import (
     ReservationUnitOfWork,
 )
+from src.reservation.infrastructure.message_broker.producer import ReservationPublisher
 
 if TYPE_CHECKING:
     from pika.adapters.blocking_connection import (
@@ -37,6 +38,18 @@ class ReservationConsumer(RabbitMQConsumer):
         self._update_reservation_command = update_reservation_command
         super().__init__(connection)
 
+    def _consume_reservation_checked_event(self, payload: dict[str, str]) -> None:
+        event = ReservationCheckedEvent.from_rabbitmq_message(
+            payload
+        )
+        logger.info(
+            msg=f"Consuming event: {event.type} with id: {event.id}"
+        )
+        self._update_reservation_command(
+            event.reservation_id, state=event.reservation_state
+        )
+        logger.info(msg=f"Event with id: {event.id} successfully consumed")
+
     def _callback(
         self,
         channel: "BlockingChannel",
@@ -46,16 +59,7 @@ class ReservationConsumer(RabbitMQConsumer):
     ) -> None:
         event_payload = json.loads(body.decode())
         if event_payload.get("type") == ReservationCheckedEvent.__name__:
-            event = ReservationCheckedEvent.from_rabbitmq_message(
-                event_payload
-            )
-            logger.info(
-                msg=f"Consuming event: {event.type} with id: {event.id}"
-            )
-            self._update_reservation_command(
-                event.reservation_id, state=event.reservation_state
-            )
-            logger.info(msg=f"Event with id: {event.id} successfully consumed")
+            self._consume_reservation_checked_event(event_payload)
 
         self.channel.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -68,7 +72,8 @@ def _consume() -> None:
     session_factory = SessionFactory(SQLAlchemyEngine(config))
 
     update_reservation_command = UpdateReservationCommand(
-        ReservationUnitOfWork(session_factory)
+        uow=ReservationUnitOfWork(session_factory),
+        publisher=ReservationPublisher(connection_factory)
     )
 
     consumer = ReservationConsumer(

@@ -3,8 +3,8 @@ from src.infrastructure.message_broker import RabbitMQPublisher
 
 
 class OfferPublisher(RabbitMQPublisher):
-    exchange = Exchanges.Offer
+    exchange = Exchanges.offer
 
 
 class ReservationPublisher(RabbitMQPublisher):
-    exchange = Exchanges.Reservation
+    exchange = Exchanges.reservation
