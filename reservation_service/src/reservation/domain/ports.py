@@ -25,7 +25,7 @@ class IReservationRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def check_if_offer_reservation_exits_in_pending_or_accepted_state(
+    def check_if_offer_reservation_exits_in_pending_accepted_or_paid_state(
         self, offer_id: UUID
     ) -> bool:
         raise NotImplementedError

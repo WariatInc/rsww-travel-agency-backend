@@ -5,14 +5,14 @@ from typing import TYPE_CHECKING
 from flask import Config
 
 from src.config import DefaultConfig
-from src.consts import Queues
+from src.consts import Queues, ReservationState
 from src.infrastructure.message_broker import (
     RabbitMQConnectionFactory,
     RabbitMQConsumer,
 )
 from src.infrastructure.storage import SessionFactory, SQLAlchemyEngine
+from src.payment.domain.events import ItemPaidEvent
 from src.reservation.domain.commands import UpdateReservationCommand
-from src.reservation.domain.events import ReservationCheckedEvent
 from src.reservation.domain.ports import IUpdateReservationCommand
 from src.reservation.infrastructure.message_broker.producer import (
     ReservationPublisher,
@@ -29,8 +29,8 @@ if TYPE_CHECKING:
     from pika.spec import Basic, BasicProperties
 
 
-class ReservationConsumer(RabbitMQConsumer):
-    queue = Queues.reservation_service_reservation_queue
+class PaymentConsumer(RabbitMQConsumer):
+    queue = Queues.reservation_service_payment_queue
 
     def __init__(
         self,
@@ -40,14 +40,14 @@ class ReservationConsumer(RabbitMQConsumer):
         self._update_reservation_command = update_reservation_command
         super().__init__(connection)
 
-    def _consume_reservation_checked_event(
-        self, payload: dict[str, str]
-    ) -> None:
-        event = ReservationCheckedEvent.from_rabbitmq_message(payload)
+    def _consume_item_paid_event(self, payload: dict[str, str]) -> None:
+        event = ItemPaidEvent.from_rabbitmq_message(payload)
         logger.info(msg=f"Consuming event: {event.type} with id: {event.id}")
-        self._update_reservation_command(
-            event.reservation_id, state=event.reservation_state
-        )
+        if event.item_type == "reservation":
+            self._update_reservation_command(
+                event.item_id, state=ReservationState.paid
+            )
+
         logger.info(msg=f"Event with id: {event.id} successfully consumed")
 
     def _callback(
@@ -58,8 +58,8 @@ class ReservationConsumer(RabbitMQConsumer):
         body: bytes,
     ) -> None:
         event_payload = json.loads(body.decode())
-        if event_payload.get("type") == ReservationCheckedEvent.__name__:
-            self._consume_reservation_checked_event(event_payload)
+        if event_payload.get("type") == ItemPaidEvent.__name__:
+            self._consume_item_paid_event(event_payload)
 
         self.channel.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -76,7 +76,7 @@ def _consume() -> None:
         publisher=ReservationPublisher(connection_factory),
     )
 
-    consumer = ReservationConsumer(
+    consumer = PaymentConsumer(
         connection_factory.create_connection(), update_reservation_command
     )
 
@@ -86,7 +86,7 @@ def _consume() -> None:
 
 if __name__ == "__main__":
     logging.basicConfig(
-        format="Reservation service reservation consumer | %(name)s - %(levelname)s - %(asctime)s - %(message)s",
+        format="Reservation service payment consumer | %(name)s - %(levelname)s - %(asctime)s - %(message)s",
         level=logging.INFO,
     )
     logger = logging.getLogger(__name__)

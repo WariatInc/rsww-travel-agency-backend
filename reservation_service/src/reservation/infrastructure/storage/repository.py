@@ -40,7 +40,7 @@ class ReservationRepository(IReservationRepository):
         ):
             return reservation_dto_factory(reservation)
 
-    def check_if_offer_reservation_exits_in_pending_or_accepted_state(
+    def check_if_offer_reservation_exits_in_pending_accepted_or_paid_state(
         self, offer_id: UUID
     ) -> bool:
         return self._session.query(
@@ -49,8 +49,9 @@ class ReservationRepository(IReservationRepository):
                 Reservation.offer_id == offer_id,
                 Reservation.state.in_(
                     [
-                        ReservationState.pending.value,
-                        ReservationState.accepted.value,
+                        ReservationState.pending,
+                        ReservationState.accepted,
+                        ReservationState.paid,
                     ]
                 ),
             )

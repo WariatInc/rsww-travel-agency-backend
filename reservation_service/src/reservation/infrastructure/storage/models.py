@@ -22,9 +22,9 @@ class Reservation(db.BaseModel):
     id = db.Column(db.UUID(), nullable=False, default=uuid4)
     offer_id = db.Column(db.UUID(), nullable=False)
     state = db.Column(
-        db.Enum(ReservationState, name="reservation_states"),
+        db.Enum(ReservationState, name="reservation_state"),
         nullable=False,
-        default=ReservationState.pending.value,
+        default=ReservationState.pending,
     )
 
     user_id = db.Column(db.UUID(), nullable=False)

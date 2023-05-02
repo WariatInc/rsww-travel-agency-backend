@@ -5,7 +5,9 @@ class ReservationException(DomainException):
     pass
 
 
-class ReservationExistInPendingOrAcceptedStateException(ReservationException):
+class ReservationExistInPendingAcceptedOrPaidStateException(
+    ReservationException
+):
     pass
 
 
@@ -14,6 +16,10 @@ class ReservationNotFound(ReservationException):
 
 
 class ReservationAlreadyCancelled(ReservationException):
+    pass
+
+
+class ReservationIsPaid(ReservationException):
     pass
 
 

@@ -7,9 +7,13 @@ from src.reservation_read_store.domain.commands import (
 from src.reservation_read_store.domain.ports import (
     IReservationReadStoreSynchronizationCommand,
     IReservationReadStoreUnitOfWork,
+    IReservationReadStoreView,
 )
 from src.reservation_read_store.infrastructure.storage.unit_of_work import (
     ReservationReadStoreUnitOfWork,
+)
+from src.reservation_read_store.infrastructure.storage.views import (
+    ReservationReadStoreView,
 )
 
 
@@ -25,3 +29,6 @@ class ReservationReadStoreModule(Module):
         self.bind(
             IReservationReadStoreUnitOfWork, ReservationReadStoreUnitOfWork
         )
+
+        # Views
+        self.bind(IReservationReadStoreView, ReservationReadStoreView)

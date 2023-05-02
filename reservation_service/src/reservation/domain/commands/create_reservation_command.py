@@ -5,7 +5,7 @@ from src.domain.events import event_factory
 from src.domain.factories import actor_dto_factory
 from src.reservation.domain.events import ReservationCreatedEvent
 from src.reservation.domain.exceptions import (
-    ReservationExistInPendingOrAcceptedStateException,
+    ReservationExistInPendingAcceptedOrPaidStateException,
 )
 from src.reservation.domain.ports import (
     ICreateReservationCommand,
@@ -27,10 +27,10 @@ class CreateReservationCommand(ICreateReservationCommand):
         actor = actor_dto_factory(current_user)
 
         with self._uow:
-            if self._uow.reservation_repository.check_if_offer_reservation_exits_in_pending_or_accepted_state(
+            if self._uow.reservation_repository.check_if_offer_reservation_exits_in_pending_accepted_or_paid_state(
                 offer_id
             ):
-                raise ReservationExistInPendingOrAcceptedStateException
+                raise ReservationExistInPendingAcceptedOrPaidStateException
 
             reservation = self._uow.reservation_repository.create_reservation(
                 user_id=actor.id, offer_id=offer_id

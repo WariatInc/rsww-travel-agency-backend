@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 from uuid import UUID
 
 if TYPE_CHECKING:
     from src.consts import ReservationState
+    from src.reservation_read_store.domain.dtos import ReservationDto
 
 
 class IReservationReadStoreRepository(ABC):
@@ -31,4 +32,12 @@ class IReservationReadStoreSynchronizationCommand(ABC):
     def __call__(
         self, reservation_id: UUID, state: "ReservationState"
     ) -> None:
+        raise NotImplementedError
+
+
+class IReservationReadStoreView(ABC):
+    @abstractmethod
+    def get_reservation(
+        self, reservation_id: UUID
+    ) -> Optional["ReservationDto"]:
         raise NotImplementedError

@@ -20,3 +20,9 @@ class ReservationState(StrEnum):
 
 class PaymentItem(StrEnum):
     reservation = auto()
+
+
+class PaymentState(StrEnum):
+    finalized = auto()
+    rejected = auto()
+    pending = auto()

@@ -1,7 +1,7 @@
 """Create reservation_read_store table
 
 Revision ID: 39d3a5821d2e
-Revises: 
+Revises:
 Create Date: 2023-05-01 21:33:33.980072
 
 """
