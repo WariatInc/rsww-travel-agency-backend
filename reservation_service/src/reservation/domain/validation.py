@@ -4,6 +4,7 @@ from src.reservation.domain.dtos import ReservationDto
 from src.reservation.domain.exceptions import (
     ActorIsNotReservationOwner,
     ReservationAlreadyCancelled,
+    ReservationIsPaid,
 )
 
 
@@ -22,3 +23,6 @@ def validate_if_reservation_can_be_cancelled(
         ReservationState.rejected,
     ]:
         raise ReservationAlreadyCancelled
+
+    if reservation.state == ReservationState.paid:
+        raise ReservationIsPaid

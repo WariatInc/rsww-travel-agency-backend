@@ -56,6 +56,23 @@ services:
     networks:
       - rsww_backend_network
 
+  payment_api:
+    container_name: payment_api
+    restart: always
+    build:
+      context: payment_service
+    command: flask run --host 0.0.0.0 --port 8030
+    volumes:
+      - ./payment_service/src:/opt/payment_service/src:z
+      - ./payment_service/migrations:/opt/payment_service/migrations:z
+      - ./payment_service/db:/opt/payment_service/db:z
+    env_file:
+      - payment_service/.env.dev
+    ports:
+      - "8030:8030"
+    networks:
+      - rsww_backend_network
+
   trip_offer_api:
     container_name: trip_offer_api
     restart: always

@@ -10,7 +10,8 @@ from src.auth.login import auth_required
 from src.reservation.domain.exceptions import (
     ActorIsNotReservationOwner,
     ReservationAlreadyCancelled,
-    ReservationExistInPendingOrAcceptedStateException,
+    ReservationExistInPendingAcceptedOrPaidStateException,
+    ReservationIsPaid,
     ReservationNotFound,
 )
 from src.reservation.domain.ports import (
@@ -37,9 +38,9 @@ class ReservationsResource(Resource):
     def post(self, offer_id: UUID):
         try:
             self.create_reservation_command(offer_id)
-        except ReservationExistInPendingOrAcceptedStateException:
+        except ReservationExistInPendingAcceptedOrPaidStateException:
             return custom_error(
-                ERROR.reservation_exist_in_pending_or_accepted_state_error.value,
+                ERROR.reservation_exist_in_pending_accepted_or_paid_state_error.value,
                 HTTPStatus.BAD_REQUEST,
             )
 
@@ -74,6 +75,11 @@ class ReservationCancelResource(Resource):
         except ActorIsNotReservationOwner:
             return custom_error(
                 ERROR.actor_is_not_reservation_owner_error,
+                HTTPStatus.BAD_REQUEST,
+            )
+        except ReservationIsPaid:
+            return custom_error(
+                ERROR.reservation_is_paid_cannot_be_cancelled,
                 HTTPStatus.BAD_REQUEST,
             )
 

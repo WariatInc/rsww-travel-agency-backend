@@ -92,11 +92,14 @@ run_api: $(STATE_DB_UPGRADED)
 start_reservation_consumer:
 	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api python3 src/reservation/infrastructure/message_broker/consumer.py
 
+start_payment_consumer:
+	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api python3 src/payment/infrastructure/message_broker/consumer.py
+
 run_api_daemon: $(STATE_DB_UPGRADED)
 	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate reservation_api
 
 psql: $(STATE_API_BUILD)
-	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api psql --host=pg_db --dbname=reservation_pg --username=postgres
+	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api psql --host=pg_db --dbname=reservation_pg --username=reservation
 
 install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(BASE_DEPS)
@@ -104,7 +107,7 @@ install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(DEV_DEPS)
 
 api_bash:
-	docker container exec --interactive --tty $(call get_container_id, $(PROJECT_NAME)-reservation_api) bash
+	docker container exec --interactive --tty $(call get_container_id, $(PROJECT_NAME)_reservation_api) bash
 
 lint:
 	$(ISORT) .

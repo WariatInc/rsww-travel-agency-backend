@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 from uuid import UUID
 
 from src.consts import ReservationState
@@ -11,6 +11,12 @@ from src.domain.events import DomainEvent, Event
 class ReservationCreatedEvent(DomainEvent):
     offer_id: UUID
     reservation_id: UUID
+
+
+@dataclass
+class ReservationUpdatedEvent(DomainEvent):
+    reservation_id: UUID
+    details: dict[str, Any]
 
 
 @dataclass
