@@ -1,5 +1,5 @@
-from typing import Any
 from dataclasses import dataclass, fields
+from typing import Any
 from uuid import UUID
 
 
@@ -23,15 +23,13 @@ class Offer:
 
     @staticmethod
     def from_json(json_data: dict[str, Any]) -> "Offer":
-        return Offer(**{
-            field.name: json_data[field.name]
-            for field in fields(Offer) 
-        })
+        return Offer(
+            **{field.name: json_data[field.name] for field in fields(Offer)}
+        )
 
     def to_json(self) -> dict[str, Any]:
         return {
-            field.name: getattr(self, field.name)
-            for field in fields(Offer) 
+            field.name: getattr(self, field.name) for field in fields(Offer)
         }
 
 
@@ -46,16 +44,18 @@ class SimpleOffer:
     arrival_date: str
     departure_date: str
     is_available: str
-    
+
     @staticmethod
     def from_json(json_data: dict[str, Any]) -> "SimpleOffer":
-        return SimpleOffer(**{
-            field.name: json_data[field.name]
-            for field in fields(SimpleOffer) 
-        })
+        return SimpleOffer(
+            **{
+                field.name: json_data[field.name]
+                for field in fields(SimpleOffer)
+            }
+        )
 
     def to_json(self) -> dict[str, Any]:
         return {
             field.name: getattr(self, field.name)
-            for field in fields(SimpleOffer) 
+            for field in fields(SimpleOffer)
         }

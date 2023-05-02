@@ -16,7 +16,7 @@ class DefaultConfig(Config):
         password=os.environ.get("MONGO_PASSWORD"),
         host=os.environ.get("MONGO_HOST"),
         port=os.environ.get("MONGO_PORT"),
-        db_name=MONGO_DB_NAME
+        db_name=MONGO_DB_NAME,
     )
     MONGO_READONLY_URI = (
         "mongodb://{user}_readonly:{password}@{host}:{port}/{db_name}".format(
@@ -24,7 +24,7 @@ class DefaultConfig(Config):
             password=os.environ.get("MONGO_PASSWORD"),
             host=os.environ.get("MONGO_HOST"),
             port=os.environ.get("MONGO_PORT"),
-            db_name=MONGO_DB_NAME
+            db_name=MONGO_DB_NAME,
         )
     )
 

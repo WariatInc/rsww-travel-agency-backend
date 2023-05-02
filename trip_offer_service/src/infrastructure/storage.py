@@ -12,8 +12,7 @@ class MongoClient:
         db_name = config["MONGO_DB_NAME"]
 
         self.client = _MongoClient(
-            config["MONGO_URI"],
-            uuidRepresentation="standard"
+            config["MONGO_URI"], uuidRepresentation="standard"
         )
         self.db = getattr(self.client, db_name)
 
@@ -27,8 +26,7 @@ class MongoReadOnlyClient:
 
         print(config["MONGO_READONLY_URI"])
         self.client = _MongoClient(
-            config["MONGO_READONLY_URI"],
-            uuidRepresentation="standard"
+            config["MONGO_READONLY_URI"], uuidRepresentation="standard"
         )
         self.db = getattr(self.client, db_name)
 
