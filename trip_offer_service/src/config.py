@@ -10,26 +10,25 @@ class DefaultConfig(Config):
     PROJECT = "trip_offer_service"
     TESTING = False
 
-    MONGO_URI = "mongodb://{user}:{password}@{host}:{port}/{db}".format(
+    MONGO_URI = "mongodb://{user}:{password}@{host}:{port}".format(
         user=os.environ.get("MONGO_USER"),
         password=os.environ.get("MONGO_PASSWORD"),
         host=os.environ.get("MONGO_HOST"),
         port=os.environ.get("MONGO_PORT"),
-        db=os.environ.get("MONGO_DB"),
     )
     MONGO_READONLY_URI = (
-        "mongodb://{user}_readonly:{password}@{host}:{port}/{db}".format(
+        "mongodb://{user}:{password}@{host}:{port}".format(
             user=os.environ.get("MONGO_USER"),
             password=os.environ.get("MONGO_PASSWORD"),
             host=os.environ.get("MONGO_HOST"),
             port=os.environ.get("MONGO_PORT"),
-            db=os.environ.get("MONGO_DB"),
         )
     )
 
     MONGO_DB_NAME = os.environ.get("MONGO_DB")
+    MONGO_VIEW_COLLECTION_NAME = "offer_view"
 
-    BLUEPRINTS = ["src.example.api"]
+    BLUEPRINTS = ["src.offer.api"]
 
     RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST")
     RABBITMQ_PORT = os.environ.get("RABBITMQ_PORT")

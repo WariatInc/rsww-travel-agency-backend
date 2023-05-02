@@ -57,3 +57,4 @@ def configure_blueprints(app: Flask) -> None:
         inject(blueprint.__init__)
         instance = app.injector.create_object(blueprint)
         instance.register()
+        print(f"Registered: {blueprint}")
