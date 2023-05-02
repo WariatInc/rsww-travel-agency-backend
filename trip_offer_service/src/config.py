@@ -10,22 +10,24 @@ class DefaultConfig(Config):
     PROJECT = "trip_offer_service"
     TESTING = False
 
-    MONGO_URI = "mongodb://{user}:{password}@{host}:{port}".format(
+    MONGO_DB_NAME = os.environ.get("MONGO_DB")
+    MONGO_URI = "mongodb://{user}:{password}@{host}:{port}/{db_name}".format(
         user=os.environ.get("MONGO_USER"),
         password=os.environ.get("MONGO_PASSWORD"),
         host=os.environ.get("MONGO_HOST"),
         port=os.environ.get("MONGO_PORT"),
+        db_name=MONGO_DB_NAME
     )
     MONGO_READONLY_URI = (
-        "mongodb://{user}:{password}@{host}:{port}".format(
+        "mongodb://{user}_readonly:{password}@{host}:{port}/{db_name}".format(
             user=os.environ.get("MONGO_USER"),
             password=os.environ.get("MONGO_PASSWORD"),
             host=os.environ.get("MONGO_HOST"),
             port=os.environ.get("MONGO_PORT"),
+            db_name=MONGO_DB_NAME
         )
     )
 
-    MONGO_DB_NAME = os.environ.get("MONGO_DB")
     MONGO_VIEW_COLLECTION_NAME = "offer_view"
 
     BLUEPRINTS = ["src.offer.api"]

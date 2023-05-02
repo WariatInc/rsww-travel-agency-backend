@@ -1,4 +1,4 @@
-from typing import Self, Any
+from typing import Any
 from dataclasses import dataclass, fields
 from uuid import UUID
 
@@ -22,7 +22,7 @@ class Offer:
     is_available: str
 
     @staticmethod
-    def from_json(json_data: dict[str, Any]) -> Self:
+    def from_json(json_data: dict[str, Any]) -> "Offer":
         return Offer(**{
             field.name: json_data[field.name]
             for field in fields(Offer) 
@@ -48,7 +48,7 @@ class SimpleOffer:
     is_available: str
     
     @staticmethod
-    def from_json(json_data: dict[str, Any]) -> Self:
+    def from_json(json_data: dict[str, Any]) -> "SimpleOffer":
         return SimpleOffer(**{
             field.name: json_data[field.name]
             for field in fields(SimpleOffer) 
