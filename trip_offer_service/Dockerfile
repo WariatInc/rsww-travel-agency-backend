@@ -72,4 +72,4 @@ COPY . /opt/trip_offer_service
 RUN set -ex \
     && pip --no-cache-dir --disable-pip-version-check install -e .
 
-RUN unzip -o /opt/trip_offer_service/db/dump/mongodb_dump.zip -d /opt/trip_offer_service/db/dump/ 
+RUN unzip -o /opt/trip_offer_service/db/dump/mongodb_dump.zip -d /opt/trip_offer_service/db/dump/

@@ -1,5 +1,4 @@
-from dataclasses import dataclass, fields
-from typing import Any
+from dataclasses import dataclass
 from uuid import UUID
 
 
