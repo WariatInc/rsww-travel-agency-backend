@@ -28,7 +28,7 @@ class OfferResource(Resource):
         if offer is None:
             return custom_error(
                 f"Provided UUID={uuid} could not be found.",
-                HTTPStatus.BAD_REQUEST,
+                HTTPStatus.NOT_FOUND,
             )
 
         return jsonify(OfferSchema().dump(offer))
