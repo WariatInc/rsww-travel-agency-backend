@@ -1,7 +1,7 @@
+from http import HTTPStatus
 from math import ceil
 from typing import Optional
 from uuid import UUID
-from http import HTTPStatus
 
 import marshmallow as ma
 from flask import jsonify, request
@@ -28,7 +28,7 @@ class OfferResource(Resource):
         if offer is None:
             return custom_error(
                 f"Provided UUID={uuid} could not be found.",
-                HTTPStatus.BAD_REQUEST 
+                HTTPStatus.BAD_REQUEST,
             )
 
         return jsonify(OfferSchema().dump(offer))

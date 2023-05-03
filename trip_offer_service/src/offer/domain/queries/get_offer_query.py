@@ -21,6 +21,5 @@ class GetOfferQuery(IGetOfferQuery):
         )
 
         return (
-            OfferSchema().load(result, unknown=ma.EXCLUDE)
-            if result else None
+            OfferSchema().load(result, unknown=ma.EXCLUDE) if result else None
         )
