@@ -1,7 +1,8 @@
+import marshmallow as ma
+
 from src.offer.infrastructure.queries.search import SearchOptions
 from src.offer.infrastructure.storage.offer import Offer, SimpleOffer
 
-import marshmallow as ma
 
 class SearchOptionsSchema(ma.Schema):
     page = ma.fields.Int()
@@ -41,6 +42,7 @@ class OfferSchema(ma.Schema):
     @ma.post_load
     def create_offer(self, data, **_):
         return Offer(**data)
+
 
 class SimpleOfferSchema(ma.Schema):
     offer_id = ma.fields.UUID()

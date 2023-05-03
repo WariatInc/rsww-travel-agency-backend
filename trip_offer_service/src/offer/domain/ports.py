@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from uuid import UUID
 from typing import Optional
+from uuid import UUID
 
 from src.offer.infrastructure.queries.search import SearchOptions
 from src.offer.infrastructure.storage.offer import Offer, SimpleOffer

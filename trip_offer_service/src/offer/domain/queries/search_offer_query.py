@@ -2,11 +2,11 @@ from dataclasses import fields
 from datetime import datetime
 
 from src.consts import Collections
-from src.offer.schema import SimpleOfferSchema
 from src.infrastructure.storage import MongoReadOnlyClient
 from src.offer.domain.ports import ISearchOfferQuery
 from src.offer.infrastructure.queries.search import SearchOptions
 from src.offer.infrastructure.storage.offer import SimpleOffer
+from src.offer.schema import SimpleOfferSchema
 
 
 class SearchOfferQuery(ISearchOfferQuery):
@@ -25,7 +25,9 @@ class SearchOfferQuery(ISearchOfferQuery):
             query["operator"] = options.operator
         if options.date_start:
             query["departure_date"] = {
-                "$gt": datetime.combine(options.date_start, datetime.min.time())
+                "$gt": datetime.combine(
+                    options.date_start, datetime.min.time()
+                )
             }
         if options.date_end:
             query["arrival_date"] = {
@@ -51,7 +53,9 @@ class SearchOfferQuery(ISearchOfferQuery):
 
     def count_offers(self, options: SearchOptions) -> int:
         query = self._build_query(options)
-        return self.client.get_db()[self.collection_name].count_documents(query) 
+        return self.client.get_db()[self.collection_name].count_documents(
+            query
+        )
 
     def search_offers(self, options: SearchOptions) -> list[SimpleOffer]:
         query = self._build_query(options)

@@ -21,6 +21,7 @@ class Offer:
     room_type: str
     is_available: str
 
+
 @dataclass
 class SimpleOffer:
     offer_id: UUID
