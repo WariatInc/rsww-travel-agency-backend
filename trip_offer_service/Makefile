@@ -23,6 +23,8 @@ PIP_COMPILE = $(VENV_DIR)/bin/pip-compile
 DB_DIR = db
 DB_INIT_JS = $(DB_DIR)/init.js
 DB_TEST_INIT_JS = $(DB_DIR)/test_init.js
+DB_DUMP = $(DB_DIR)/dump
+DB_BOOTSTRAP = $(DB_DUMP)/rsww
 
 ISORT = $(VENV_DIR)/bin/isort
 BLACK = $(VENV_DIR)/bin/black
@@ -66,6 +68,9 @@ init_test_db $(STATE_TEST_DB_INIT): $(STATE_API_BUILD)  $(DB_TEST_INIT_JS)
 	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api wait-for-it mongo_db:27017
 	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api mongosh --host=mongo_db --port=27017 --username=mongodb_admin --password=mongodb --authenticationDatabase="admin" --file=$(DB_TEST_INIT_JS)
 	touch $(STATE_TEST_DB_INIT)
+
+bootstrap_db: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
+	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api mongorestore -d trip_offer_mongo --host=mongo_db --port=27017 --username=mongodb_admin --password=mongodb --authenticationDatabase="admin" $(DB_BOOTSTRAP)
 
 run_api: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
 	docker-compose --project-name $(PROJECT_NAME) up trip_offer_api
