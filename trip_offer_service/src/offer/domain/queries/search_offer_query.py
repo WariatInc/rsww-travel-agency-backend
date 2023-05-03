@@ -68,5 +68,4 @@ class SearchOfferQuery(ISearchOfferQuery):
             .limit(options.page_size)
         )
 
-        schema = SimpleOfferSchema()
-        return schema.load(results, many=True)
+        return SimpleOfferSchema().load(results, many=True)

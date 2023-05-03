@@ -16,12 +16,11 @@ class GetOfferQuery(IGetOfferQuery):
         self.client = client
 
     def get_offer(self, offer_id: UUID) -> Optional[Offer]:
-        schema = OfferSchema()
         result = self.client.get_db()[self.collection_name].find_one(
             {"offer_id": str(offer_id)}
         )
+
         return (
-            result
-            if result is None
-            else schema.load(result, unknown=ma.EXCLUDE)
+            OfferSchema().load(result, unknown=ma.EXCLUDE)
+            if result else None
         )

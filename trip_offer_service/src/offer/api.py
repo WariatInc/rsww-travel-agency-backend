@@ -1,12 +1,14 @@
 from math import ceil
 from typing import Optional
 from uuid import UUID
+from http import HTTPStatus
 
 import marshmallow as ma
 from flask import jsonify, request
 
 from src.api import Resource
 from src.api.blueprint import Blueprint
+from src.api.error import custom_error, validation_error
 from src.offer.domain.ports import IGetOfferQuery, ISearchOfferQuery
 from src.offer.infrastructure.queries.search import SearchOptions
 from src.offer.infrastructure.storage.offer import Offer, SimpleOffer
@@ -22,12 +24,14 @@ class OfferResource(Resource):
         self.get_offer_query = get_offer_query
 
     def get(self, uuid: UUID):
-        schema = OfferSchema()
         offer: Optional[Offer] = self.get_offer_query.get_offer(uuid)
         if offer is None:
-            return jsonify(ok=False, error=f"Invalid UUID: {uuid}")
+            return custom_error(
+                f"Provided UUID={uuid} could not be found.",
+                HTTPStatus.BAD_REQUEST 
+            )
 
-        return jsonify(ok=True, result=schema.dump(offer))
+        return jsonify(OfferSchema().dump(offer))
 
 
 class SearchOfferResource(Resource):
@@ -36,20 +40,18 @@ class SearchOfferResource(Resource):
 
     def get(self):
         try:
-            schema = SearchOptionsSchema()
-            options: SearchOptions = schema.load(
+            options: SearchOptions = SearchOptionsSchema().load(
                 {name: val for (name, val) in request.args.items()},
                 unknown=ma.EXCLUDE,
             )
         except ma.ValidationError as err:
-            return jsonify(ok=False, error=f"Errors: {err.messages}")
+            return validation_error(err.messages)
+
         number_of_offers = self.query.count_offers(options)
         offers: list[SimpleOffer] = self.query.search_offers(options)
-        schema = SimpleOfferSchema(many=True)
         return jsonify(
-            ok=True,
             max_page=ceil(number_of_offers / options.page_size),
-            result=schema.dump(offers),
+            result=SimpleOfferSchema(many=True).dump(offers),
         )
 
 
