@@ -33,13 +33,14 @@ RUN set -ex \
         make \
         git \
         wget \
-        python3-pip
+        python3-pip \
+        unzip
 
 RUN set -ex \
     && wget -qO - https://www.mongodb.org/static/pgp/server-6.0.asc | apt-key add - \
     && echo "deb [ arch=amd64,arm64 ] https://repo.mongodb.org/apt/ubuntu focal/mongodb-org/6.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-6.0.list \
     && apt-get update \
-    && apt-get install -y mongodb-mongosh
+    && apt-get install -y mongodb-mongosh mongodb-database-tools
 
 
 RUN set -ex \
@@ -70,3 +71,5 @@ COPY . /opt/trip_offer_service
 
 RUN set -ex \
     && pip --no-cache-dir --disable-pip-version-check install -e .
+
+RUN unzip -o /opt/trip_offer_service/db/dump/mongodb_dump.zip -d /opt/trip_offer_service/db/dump/ 

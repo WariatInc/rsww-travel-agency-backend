@@ -12,3 +12,6 @@ class AutoName(Enum):
 
 class EXCHANGES(AutoName):
     example = auto()
+
+class Collections:
+    offer_view = "offer_view"

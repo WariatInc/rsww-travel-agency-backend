@@ -35,6 +35,12 @@ RABBITMQ_USER=rabbitmq_admin
 RABBITMQ_PASSWORD=rabbitmq
 ```
 #
+In order to enusre proper DB bootstraping, please do the following steps:
+
+- Download zip folder from https://drive.google.com/file/d/1i07d8anl8i4g2i2F0N-W9Roch2hL2qxW/view?usp=share_link
+into `trip_offer_service/db/dump/` folder.
+
+#
 Please run the command in root directory:
 
 ```sudo make deploy_full```

@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 from typing import Optional
 
-
 @dataclass
 class SearchOptions:
-    max_offers: int = 200
+    page: int = 0
+    page_size: int = 25
     operator: Optional[str] = None
     country: Optional[str] = None
     city: Optional[str] = None

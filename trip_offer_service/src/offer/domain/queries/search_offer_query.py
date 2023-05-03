@@ -1,8 +1,8 @@
 from dataclasses import fields
 from datetime import datetime
 
-from flask import Config
-
+from src.consts import Collections
+from src.offer.schema import SimpleOfferSchema
 from src.infrastructure.storage import MongoReadOnlyClient
 from src.offer.domain.ports import ISearchOfferQuery
 from src.offer.infrastructure.queries.search import SearchOptions
@@ -10,8 +10,8 @@ from src.offer.infrastructure.storage.offer import SimpleOffer
 
 
 class SearchOfferQuery(ISearchOfferQuery):
-    def __init__(self, config: Config, client: MongoReadOnlyClient) -> None:
-        self.collection_name = config["MONGO_VIEW_COLLECTION_NAME"]
+    def __init__(self, client: MongoReadOnlyClient) -> None:
+        self.collection_name = Collections.offer_view
         self.client = client
 
     @staticmethod
@@ -25,18 +25,18 @@ class SearchOfferQuery(ISearchOfferQuery):
             query["operator"] = options.operator
         if options.date_start:
             query["departure_date"] = {
-                "$gt": datetime.fromisoformat(options.date_start)
+                "$gt": datetime.combine(options.date_start, datetime.min.time())
             }
         if options.date_end:
             query["arrival_date"] = {
-                "$lt": datetime.fromisoformat(options.date_end)
+                "$lt": datetime.combine(options.date_end, datetime.min.time())
             }
         if options.transport:
             query["transport"] = options.transport
         if options.adults:
-            query["number_of_adults"] = {"$gte": int(options.adults)}
+            query["number_of_adults"] = {"$gte": options.adults}
         if options.kids:
-            query["number_of_kids"] = {"$gte": int(options.kids)}
+            query["number_of_kids"] = {"$gte": options.kids}
         if options.room:
             query["room_type"] = options.room
         if options.available:
@@ -49,6 +49,10 @@ class SearchOfferQuery(ISearchOfferQuery):
         projection["_id"] = 0
         return projection
 
+    def count_offers(self, options: SearchOptions) -> int:
+        query = self._build_query(options)
+        return self.client.get_db()[self.collection_name].count_documents(query) 
+
     def search_offers(self, options: SearchOptions) -> list[SimpleOffer]:
         query = self._build_query(options)
         projection = self._build_projection()
@@ -56,7 +60,9 @@ class SearchOfferQuery(ISearchOfferQuery):
         results = (
             self.client.get_db()[self.collection_name]
             .find(query, projection)
-            .limit(options.max_offers)
+            .skip(options.page * options.page_size)
+            .limit(options.page_size)
         )
 
-        return [SimpleOffer.from_json(result) for result in results]
+        schema = SimpleOfferSchema()
+        return schema.load(results, many=True)

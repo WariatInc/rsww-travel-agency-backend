@@ -1,9 +1,12 @@
-import dataclasses
+from typing import Optional
 from uuid import UUID
+from math import ceil
 
 from flask import jsonify, request
+import marshmallow as ma
 
 from src.api import Resource
+from src.offer.schema import SearchOptionsSchema, OfferSchema, SimpleOfferSchema
 from src.api.blueprint import Blueprint
 from src.offer.domain.ports import IGetOfferQuery, ISearchOfferQuery
 from src.offer.infrastructure.queries.search import SearchOptions
@@ -15,30 +18,43 @@ class OfferResource(Resource):
         self.get_offer_query = get_offer_query
 
     def get(self, uuid: UUID):
-        offer: Offer = self.get_offer_query.get_offer(uuid)
-        return jsonify(**offer.to_json())
+        schema = OfferSchema()
+        offer: Optional[Offer] = self.get_offer_query.get_offer(uuid)
+        if offer is None:
+            return jsonify(
+                ok=False,
+                error=f"Invalid UUID: {uuid}"
+            )
+
+        return jsonify(
+            ok=True,
+            result=schema.dump(offer)
+        )
 
 
 class SearchOfferResource(Resource):
     def __init__(self, search_offer_query: ISearchOfferQuery) -> None:
         self.query = search_offer_query
-
+    
     def get(self):
-        possible_options = {
-            field.name for field in dataclasses.fields(SearchOptions)
-        }
-        options = SearchOptions()
-        for option_name, option_val in request.args.items():
-            if option_name not in possible_options:
-                return jsonify(
-                    ok=False, error=f"Invalid option: {option_name}"
-                )
-            setattr(options, option_name, option_val)
-
+        try:
+            schema = SearchOptionsSchema()
+            options: SearchOptions = schema.load({
+                name: val
+                for (name, val) in request.args.items()
+            }, unknown=ma.EXCLUDE)
+        except ma.ValidationError as err:
+            return jsonify(
+                ok=False,
+                error=f"Errors: {err.messages}"
+            )
+        number_of_offers = self.query.count_offers(options)
         offers: list[SimpleOffer] = self.query.search_offers(options)
+        schema = SimpleOfferSchema(many=True)
         return jsonify(
-            result=[offer.to_json() for offer in offers],
             ok=True,
+            max_page=ceil(number_of_offers / options.page_size),
+            result=schema.dump(offers),
         )
 
 
