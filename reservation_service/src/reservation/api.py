@@ -92,5 +92,5 @@ class Api(Blueprint):
 
     resources = [
         (ReservationsResource, "/"),
-        (ReservationCancelResource, "/<uuid:reservation_id>/cancel"),
+        (ReservationCancelResource, "/cancel/<uuid:reservation_id>"),
     ]
