@@ -79,7 +79,7 @@ configure_tour_operator_db:
 	$(MAKE) -C ./tour_operator_service -f ./Makefile init_db
 
 deploy_tour_operator_service:
-	$(MAKE) -C ./tour_operator_service -f ./Makefile run_api_daemon
+	$(MAKE) -C ./tour_operator_service -f ./Makefile run_app_daemon
 
 configure_trip_offer_db:
 	$(MAKE) -C ./trip_offer_service -f ./Makefile init_db
