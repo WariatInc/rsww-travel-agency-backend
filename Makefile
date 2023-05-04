@@ -34,34 +34,34 @@ run_rabbitmq:
 init_rabbitmq_exchange:
 	sleep 10
 
-	docker exec -it rabbitmq rabbitmqctl add_user trip_offer_user password
-	docker exec -it rabbitmq rabbitmqctl add_user reservation_user password
-	docker exec -it rabbitmq rabbitmqctl add_user tour_operator_user password
-	docker exec -it rabbitmq rabbitmqctl add_user payment_user password
+	docker-compose exec rabbitmq rabbitmqctl add_user trip_offer_user password
+	docker-compose exec rabbitmq rabbitmqctl add_user reservation_user password
+	docker-compose exec rabbitmq rabbitmqctl add_user tour_operator_user password
+	docker-compose exec rabbitmq rabbitmqctl add_user payment_user password
 
-	docker exec -it rabbitmq rabbitmqctl set_permissions -p / trip_offer_user ".*" ".*" ".*"
-	docker exec -it rabbitmq rabbitmqctl set_permissions -p / reservation_user ".*" ".*" ".*"
-	docker exec -it rabbitmq rabbitmqctl set_permissions -p / tour_operator_user  ".*" ".*" ".*"
-	docker exec -it rabbitmq rabbitmqctl set_permissions -p / payment_user  ".*" ".*" ".*"
+	docker-compose exec rabbitmq rabbitmqctl set_permissions -p / trip_offer_user ".*" ".*" ".*"
+	docker-compose exec rabbitmq rabbitmqctl set_permissions -p / reservation_user ".*" ".*" ".*"
+	docker-compose exec rabbitmq rabbitmqctl set_permissions -p / tour_operator_user  ".*" ".*" ".*"
+	docker-compose exec rabbitmq rabbitmqctl set_permissions -p / payment_user  ".*" ".*" ".*"
 
-	docker exec -it rabbitmq rabbitmqctl set_user_tags trip_offer_user management
-	docker exec -it rabbitmq rabbitmqctl set_user_tags reservation_user management
-	docker exec -it rabbitmq rabbitmqctl set_user_tags tour_operator_user management
-	docker exec -it rabbitmq rabbitmqctl set_user_tags payment_user management
+	docker-compose exec rabbitmq rabbitmqctl set_user_tags trip_offer_user management
+	docker-compose exec rabbitmq rabbitmqctl set_user_tags reservation_user management
+	docker-compose exec rabbitmq rabbitmqctl set_user_tags tour_operator_user management
+	docker-compose exec rabbitmq rabbitmqctl set_user_tags payment_user management
 
-	docker exec -it rabbitmq rabbitmqadmin declare exchange name=offer type=fanout -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare exchange name=reservation type=fanout -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare exchange name=payment type=fanout -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare exchange name=offer type=fanout -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare exchange name=reservation type=fanout -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare exchange name=payment type=fanout -u rabbitmq_admin -p rabbitmq
 
-	docker exec -it rabbitmq rabbitmqadmin declare queue name=tour_operator_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare queue name=reservation_service_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare queue name=reservation_service_payment_queue durable=true -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare queue name=payment_service_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare queue name=tour_operator_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare queue name=reservation_service_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare queue name=reservation_service_payment_queue durable=true -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare queue name=payment_service_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
 
-	docker exec -it rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="tour_operator_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="reservation_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="payment_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare binding source="payment" destination_type="queue" destination="reservation_service_payment_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="tour_operator_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="reservation_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="payment_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare binding source="payment" destination_type="queue" destination="reservation_service_payment_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
 
 configure_payment_db:
 	$(MAKE) -C ./payment_service -f ./Makefile init_db
