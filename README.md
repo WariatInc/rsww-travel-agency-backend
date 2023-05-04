@@ -14,8 +14,8 @@ PG_HOST=pg_db
 PG_PORT=5432
 RABBITMQ_HOST=rabbitmq
 RABBITMQ_PORT=5672
-RABBITMQ_USER=rabbitmq_admin
-RABBITMQ_PASSWORD=rabbitmq
+RABBITMQ_USER=payment_user
+RABBITMQ_PASSWORD=password
 ```
 
 Sample ```reservation_service/.env.dev``` file: 
@@ -30,8 +30,8 @@ PG_HOST=pg_db
 PG_PORT=5432
 RABBITMQ_HOST=rabbitmq
 RABBITMQ_PORT=5672
-RABBITMQ_USER=rabbitmq_admin
-RABBITMQ_PASSWORD=rabbitmq
+RABBITMQ_USER=reservation_user
+RABBITMQ_PASSWORD=password
 ```
 
 Sample ```tour_operator_service/.env.dev``` file: 
@@ -46,8 +46,8 @@ PG_HOST=pg_db
 PG_PORT=5432
 RABBITMQ_HOST=rabbitmq
 RABBITMQ_PORT=5672
-RABBITMQ_USER=rabbitmq_admin
-RABBITMQ_PASSWORD=rabbitmq
+RABBITMQ_USER=tour_operator_user
+RABBITMQ_PASSWORD=password
 ```
 
 Sample ```trip_offer_service/.env.dev``` file: 
@@ -63,8 +63,8 @@ MONGO_HOST=mongo_db
 MONGO_PORT=27017
 RABBITMQ_HOST=rabbitmq
 RABBITMQ_PORT=5672
-RABBITMQ_USER=rabbitmq_admin
-RABBITMQ_PASSWORD=rabbitmq
+RABBITMQ_USER=trip_offer_user
+RABBITMQ_PASSWORD=password
 ```
 #
 In order to enusre proper DB bootstraping, please do the following steps:
