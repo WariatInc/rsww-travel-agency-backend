@@ -51,7 +51,7 @@ class ICreateReservationCommand(ABC):
 
 class ICancelReservationCommand(ABC):
     @abstractmethod
-    def __call__(self, reservation_id: UUID) -> None:
+    def __call__(self, reservation_id: UUID) -> "ReservationDto":
         raise NotImplementedError
 
 

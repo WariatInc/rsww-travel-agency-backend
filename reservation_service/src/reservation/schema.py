@@ -19,3 +19,7 @@ class ReservationListSchema(ma.Schema):
     reservations = ma.fields.Nested(
         ReservationSchema, many=True, **non_nullable
     )
+
+
+class CreatedReservationSchema(ma.Schema):
+    reservation_id = ma.fields.UUID()
