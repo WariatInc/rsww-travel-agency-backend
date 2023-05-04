@@ -20,7 +20,7 @@
 
 deploy: run_rabbitmq init_rabbitmq_exchange run_postgres run_mongo payment_service reservation_service tour_operator_service trip_offer_service ## Deploy all services
 
-deploy_full: run_rabbitmq init_rabbitmq_exchange run_postgres run_mongo configure_payment_db deploy_payment_service configure_reservation_db deploy_reservation_service configure_tour_operator_db deploy_tour_operator_service configure_trip_offer_db deploy_trip_offer_service ## Deploy all services with db initialization
+deploy_full: run_rabbitmq init_rabbitmq_exchange run_postgres run_mongo configure_payment_db deploy_payment_service configure_reservation_db deploy_reservation_service configure_tour_operator_db deploy_tour_operator_service configure_trip_offer_db deploy_trip_offer_service start_payment_service_reservation_consumer start_reservation_service_reservation_consumer start_reservation_service_payment_consumer start_tour_operator_service_reservation_consumer ## Deploy all services with db initialization
 
 run_postgres: 
 	docker-compose up -d --no-recreate pg_db
@@ -86,6 +86,21 @@ configure_trip_offer_db:
 
 deploy_trip_offer_service:
 	$(MAKE) -C ./trip_offer_service -f ./Makefile run_api_daemon
+
+start_payment_service_reservation_consumer:
+	$(MAKE) -C ./payment_service -f ./Makefile start_reservation_consumer_daemon
+
+start_reservation_service_reservation_consumer:
+	$(MAKE) -C ./reservation_service -f ./Makefile start_reservation_consumer_daemon
+
+start_reservation_service_payment_consumer:
+	$(MAKE) -C ./reservation_service -f ./Makefile start_payment_consumer_daemon
+
+start_tour_operator_service_reservation_consumer:
+	$(MAKE) -C ./tour_operator_service -f ./Makefile start_reservation_consumer_daemon
+
+#start_trip_offer_service_XXX_consumer:
+#	$(MAKE) -C ./trip_offer_service -f ./Makefile start_xxx_consumer_daemon
 
 ALL_CONTAINERS_IDS := $(shell docker ps -aq)
 

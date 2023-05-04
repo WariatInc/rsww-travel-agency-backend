@@ -92,8 +92,14 @@ run_api: $(STATE_DB_UPGRADED)
 start_reservation_consumer:
 	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api python3 src/reservation/infrastructure/message_broker/consumer.py
 
+start_reservation_consumer_daemon:
+	docker-compose --project-name $(PROJECT_NAME) run --name reservation_service_reservation_consumer -d reservation_api python3 src/reservation/infrastructure/message_broker/consumer.py
+
 start_payment_consumer:
 	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api python3 src/payment/infrastructure/message_broker/consumer.py
+
+start_payment_consumer_daemon:
+	docker-compose --project-name $(PROJECT_NAME) run --name reservation_service_payment_consumer -d reservation_api python3 src/payment/infrastructure/message_broker/consumer.py
 
 run_api_daemon: $(STATE_DB_UPGRADED)
 	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate reservation_api

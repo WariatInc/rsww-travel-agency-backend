@@ -90,6 +90,9 @@ run_api: $(STATE_DB_UPGRADED)
 start_reservation_consumer:
 	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api python3 src/reservation_read_store/infrastructure/message_broker/consumer.py
 
+start_reservation_consumer_daemon:
+	docker-compose --project-name $(PROJECT_NAME) run --name payment_service_reservation_consumer -d payment_api python3 src/reservation_read_store/infrastructure/message_broker/consumer.py
+
 run_api_daemon: $(STATE_DB_UPGRADED)
 	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate payment_api
 
