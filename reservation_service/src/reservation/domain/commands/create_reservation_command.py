@@ -1,3 +1,4 @@
+from typing import TYPE_CHECKING
 from uuid import UUID
 
 from src.auth.login import current_user
@@ -15,6 +16,9 @@ from src.reservation.infrastructure.message_broker.producer import (
     ReservationPublisher,
 )
 
+if TYPE_CHECKING:
+    from src.reservation.domain.dtos import ReservationDto
+
 
 class CreateReservationCommand(ICreateReservationCommand):
     def __init__(
@@ -23,7 +27,7 @@ class CreateReservationCommand(ICreateReservationCommand):
         self._uow = uow
         self._publisher = publisher
 
-    def __call__(self, offer_id: UUID) -> None:
+    def __call__(self, offer_id: UUID) -> "ReservationDto":
         actor = actor_dto_factory(current_user)
 
         with self._uow:
@@ -43,3 +47,5 @@ class CreateReservationCommand(ICreateReservationCommand):
             reservation_id=reservation.id,
         )
         self._publisher.publish(event)
+
+        return reservation

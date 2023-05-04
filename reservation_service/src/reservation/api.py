@@ -20,7 +20,11 @@ from src.reservation.domain.ports import (
     IGetUserReservationsQuery,
 )
 from src.reservation.error import ERROR
-from src.reservation.schema import ReservationListSchema, ReservationPostSchema
+from src.reservation.schema import (
+    CreatedReservationSchema,
+    ReservationListSchema,
+    ReservationPostSchema,
+)
 
 
 class ReservationsResource(Resource):
@@ -33,18 +37,18 @@ class ReservationsResource(Resource):
         self.get_user_reservations_query = get_user_reservations_query
 
     @auth_required
-    @use_schema(EmptySchema, HTTPStatus.OK)
+    @use_schema(CreatedReservationSchema, HTTPStatus.OK)
     @use_kwargs(ReservationPostSchema, location="json")
     def post(self, offer_id: UUID):
         try:
-            self.create_reservation_command(offer_id)
+            reservation = self.create_reservation_command(offer_id)
         except ReservationExistInPendingAcceptedOrPaidStateException:
             return custom_error(
                 ERROR.reservation_exist_in_pending_accepted_or_paid_state_error.value,
                 HTTPStatus.BAD_REQUEST,
             )
 
-        return {}
+        return {"reservation_id": reservation.id}
 
     @auth_required
     @use_schema(ReservationListSchema, HTTPStatus.OK)
