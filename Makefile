@@ -18,15 +18,41 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-deploy: run_rabbitmq init_rabbitmq_exchange run_postgres run_mongo payment_service reservation_service tour_operator_service trip_offer_service ## Deploy all services
+deploy: run_rabbitmq \
+        init_rabbitmq_exchange \
+		run_postgres \
+		run_mongo \
+		payment_service \
+		reservation_service \
+		tour_operator_service \
+		trip_offer_service ## Deploy all services
 
-deploy_full: run_rabbitmq init_rabbitmq_exchange run_postgres configure_payment_db deploy_payment_service configure_reservation_db deploy_reservation_service configure_tour_operator_db deploy_tour_operator_service run_mongo configure_trip_offer_db deploy_trip_offer_service start_payment_service_reservation_consumer start_reservation_service_reservation_consumer start_reservation_service_payment_consumer start_tour_operator_service_reservation_consumer ## Deploy all services with db initialization
+deploy_full: run_rabbitmq \
+			 init_rabbitmq_exchange \
+			 run_postgres \
+			 configure_payment_db \
+			 deploy_payment_service \
+			 configure_reservation_db \
+			 deploy_reservation_service \
+			 configure_tour_operator_db \
+			 deploy_tour_operator_service \
+			 run_mongo \
+			 configure_trip_offer_db \
+			 deploy_trip_offer_service \
+			 run_bootstrap_mongo \
+			 start_payment_service_reservation_consumer \
+			 start_reservation_service_reservation_consumer \
+			 start_reservation_service_payment_consumer \
+			 start_tour_operator_service_reservation_consumer ## Deploy all services with db initialization
 
 run_postgres: 
 	docker-compose up -d --no-recreate pg_db
 
 run_mongo: 
 	docker-compose up -d --no-recreate mongo_db
+
+run_bootstrap_mongo:
+	$(MAKE) -C ./trip_offer_service -f ./Makefile bootstrap_db
 
 run_rabbitmq: 
 	docker-compose up -d --no-recreate rabbitmq
