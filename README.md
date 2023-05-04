@@ -1,6 +1,6 @@
 # rsww-travel-agency-backend
 
-In order to run all services please create ```.env.dev``` file in ```reservation_service/``` and ```trip_offer__service/``` directories. 
+In order to run all services please create ```.env.dev``` file in directories listed below. 
 #
 Sample ```payment_service/.env.dev``` file: 
 ```
