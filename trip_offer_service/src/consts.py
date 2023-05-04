@@ -1,18 +1,27 @@
-from enum import Enum, auto
-from typing import Any
+from src.enum import StrEnum, auto
 
 
-class AutoName(Enum):
-    @staticmethod
-    def _generate_next_value_(
-        name: str, start: int, count: int, last_values: list[Any]
-    ) -> Any:
-        return name
-
-
-class EXCHANGES(AutoName):
+class Exchanges(StrEnum):
     example = auto()
+    offer = auto()
 
 
-class Collections:
-    offer_view = "offer_view"
+class Queues(StrEnum):
+    trip_offer_service_offer_queue = auto()
+
+
+class Collections(StrEnum):
+    offer_view = auto()
+
+
+class TransportType(StrEnum):
+    self = auto()
+    bus = auto()
+    plane = auto()
+
+
+class RoomType(StrEnum):
+    standard = auto()
+    family = auto()
+    apartment = auto()
+    studio = auto()

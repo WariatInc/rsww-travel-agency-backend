@@ -75,6 +75,9 @@ bootstrap_db: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
 run_api: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
 	docker-compose --project-name $(PROJECT_NAME) up trip_offer_api
 
+start_offer_consumer:
+	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api python3 src/offer/infrastructure/message_broker/consumer.py
+
 run_api_daemon: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
 	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate trip_offer_api
 

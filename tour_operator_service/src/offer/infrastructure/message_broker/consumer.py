@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from src.config import DefaultConfig
 from src.consts import Queues
@@ -48,6 +48,22 @@ class ReservationConsumer(RabbitMQConsumer):
         self._offer_reservation_command = offer_reservation_command
         super().__init__(connection)
 
+    def _consume_reservation_created_event(
+        self, payload: dict[str, Any]
+    ) -> None:
+        event = ReservationCreatedEvent.from_rabbitmq_message(payload)
+        logger.info(msg=f"Consuming event: {event.type} with id: {event.id}")
+        self._offer_reservation_command(event.offer_id, event.reservation_id)
+        logger.info(msg=f"Event with id: {event.id} successfully consumed")
+
+    def _consume_reservation_cancelled_event(
+        self, payload: dict[str, Any]
+    ) -> None:
+        event = ReservationCancelledEvent.from_rabbitmq_message(payload)
+        logger.info(msg=f"Consuming event: {event.type} with id: {event.id}")
+        self._update_offer_command(event.offer_id, available=True)
+        logger.info(msg=f"Event with id: {event.id} successfully consumed")
+
     def _callback(
         self,
         channel: "BlockingChannel",
@@ -57,26 +73,11 @@ class ReservationConsumer(RabbitMQConsumer):
     ) -> None:
         event_payload = json.loads(body.decode())
         if event_payload.get("type") == ReservationCreatedEvent.__name__:
-            event = ReservationCreatedEvent.from_rabbitmq_message(
-                event_payload
-            )
-            logger.info(
-                msg=f"Consuming event: {event.type} with id: {event.id}"
-            )
-            self._offer_reservation_command(
-                event.offer_id, event.reservation_id
-            )
-            logger.info(msg=f"Event with id: {event.id} successfully consumed")
+            self._consume_reservation_created_event(event_payload)
 
         elif event_payload.get("type") == ReservationCancelledEvent.__name__:
-            event = ReservationCancelledEvent.from_rabbitmq_message(
-                event_payload
-            )
-            logger.info(
-                msg=f"Consuming event: {event.type} with id: {event.id}"
-            )
-            self._update_offer_command(event.offer_id, available=True)
-            logger.info(msg=f"Event with id: {event.id} successfully consumed")
+            self._consume_reservation_cancelled_event(event_payload)
+
         self.channel.basic_ack(delivery_tag=method.delivery_tag)
 
 
@@ -105,7 +106,7 @@ def _consume() -> None:
 
 if __name__ == "__main__":
     logging.basicConfig(
-        format="Tour operator reservation consumer | %(name)s - %(levelname)s - %(asctime)s - %(message)s",
+        format="Tour operator - reservation consumer | %(name)s - %(levelname)s - %(asctime)s - %(message)s",
         level=logging.INFO,
     )
     logger = logging.getLogger(__name__)
