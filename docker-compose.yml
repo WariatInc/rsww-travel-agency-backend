@@ -51,8 +51,6 @@ services:
       - reservation_service/.env.dev
     ports:
       - "8000:8000"
-    depends_on:
-      - pg_db
     networks:
       - rsww_backend_network
 
@@ -86,8 +84,6 @@ services:
       - trip_offer_service/.env.dev
     ports:
       - "8010:8010"
-    depends_on:
-      - mongo_db
     networks:
       - rsww_backend_network
     

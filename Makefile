@@ -18,9 +18,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-deploy: run_rabbitmq init_rabbitmq_exchange payment_service reservation_service tour_operator_service trip_offer_service ## Deploy all services
+deploy: run_rabbitmq init_rabbitmq_exchange run_postgres run_mongo payment_service reservation_service tour_operator_service trip_offer_service ## Deploy all services
 
-deploy_full: run_rabbitmq init_rabbitmq_exchange payment_db payment_service reservation_db reservation_service tour_operator_db tour_operator_service trip_offer_db trip_offer_service ## Deploy all services with db initialization
+deploy_full: run_rabbitmq init_rabbitmq_exchange run_postgres run_mongo configure_payment_db deploy_payment_service configure_reservation_db deploy_reservation_service configure_tour_operator_db deploy_tour_operator_service configure_trip_offer_db deploy_trip_offer_service ## Deploy all services with db initialization
+
+run_postgres: 
+	docker-compose up -d --no-recreate pg_db
+
+run_mongo: 
+	docker-compose up -d --no-recreate mongo_db
 
 run_rabbitmq: 
 	docker-compose up -d --no-recreate rabbitmq
@@ -57,28 +63,28 @@ init_rabbitmq_exchange:
 	docker exec -it rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="payment_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
 	docker exec -it rabbitmq rabbitmqadmin declare binding source="payment" destination_type="queue" destination="reservation_service_payment_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
 
-payment_db:
+configure_payment_db:
 	$(MAKE) -C ./payment_service -f ./Makefile init_db
 
-payment_service:
+deploy_payment_service:
 	$(MAKE) -C ./payment_service -f ./Makefile run_api_daemon
 
-reservation_db:
+configure_reservation_db:
 	$(MAKE) -C ./reservation_service -f ./Makefile init_db
 
-reservation_service:
+deploy_reservation_service:
 	$(MAKE) -C ./reservation_service -f ./Makefile run_api_daemon
 
-tour_operator_db:
+configure_tour_operator_db:
 	$(MAKE) -C ./tour_operator_service -f ./Makefile init_db
 
-tour_operator_service:
+deploy_tour_operator_service:
 	$(MAKE) -C ./tour_operator_service -f ./Makefile run_api_daemon
 
-trip_offer_db:
+configure_trip_offer_db:
 	$(MAKE) -C ./trip_offer_service -f ./Makefile init_db
 
-trip_offer_service:
+deploy_trip_offer_service:
 	$(MAKE) -C ./trip_offer_service -f ./Makefile run_api_daemon
 
 ALL_CONTAINERS_IDS := $(shell docker ps -aq)
