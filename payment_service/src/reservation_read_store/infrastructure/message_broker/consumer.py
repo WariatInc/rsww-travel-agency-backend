@@ -12,13 +12,16 @@ from src.infrastructure.message_broker import (
 )
 from src.infrastructure.storage import SessionFactory, SQLAlchemyEngine
 from src.reservation_read_store.domain.commands import (
+    DeleteReservationFromReadStoreCommand,
     ReservationReadStoreSynchronizationCommand,
 )
 from src.reservation_read_store.domain.events import (
     ReservationCreatedEvent,
+    ReservationDeletedEvent,
     ReservationUpdatedEvent,
 )
 from src.reservation_read_store.domain.ports import (
+    IDeleteReservationFromReadStoreCommand,
     IReservationReadStoreSynchronizationCommand,
 )
 from src.reservation_read_store.infrastructure.storage.unit_of_work import (
@@ -40,9 +43,13 @@ class ReservationConsumer(RabbitMQConsumer):
         self,
         connection: "BlockingConnection",
         reservation_read_store_synchronization_command: IReservationReadStoreSynchronizationCommand,
+        delete_reservation_from_read_store_command: IDeleteReservationFromReadStoreCommand,
     ) -> None:
         self._reservation_read_store_synchronization_command = (
             reservation_read_store_synchronization_command
+        )
+        self._delete_reservation_from_read_store_command = (
+            delete_reservation_from_read_store_command
         )
         super().__init__(connection)
 
@@ -67,6 +74,14 @@ class ReservationConsumer(RabbitMQConsumer):
             )
         logger.info(msg=f"Event with id: {event.id} successfully consumed")
 
+    def _consume_reservation_deleted_event(
+        self, payload: dict[str, str]
+    ) -> None:
+        event = ReservationDeletedEvent.from_rabbitmq_message(payload)
+        logger.info(msg=f"Consuming event: {event.type} with id: {event.id}")
+        self._delete_reservation_from_read_store_command(event.reservation_id)
+        logger.info(msg=f"Event with id: {event.id} successfully consumed")
+
     def _callback(
         self,
         channel: "BlockingChannel",
@@ -80,6 +95,9 @@ class ReservationConsumer(RabbitMQConsumer):
 
         elif event_payload.get("type") == ReservationUpdatedEvent.__name__:
             self._consume_reservation_updated_event(event_payload)
+
+        elif event_payload.get("type") == ReservationDeletedEvent.__name__:
+            self._consume_reservation_deleted_event(event_payload)
 
         self.channel.basic_ack(delivery_tag=method.delivery_tag)
 
@@ -97,9 +115,16 @@ def _consume() -> None:
         )
     )
 
+    delete_reservation_from_read_store_command = (
+        DeleteReservationFromReadStoreCommand(
+            ReservationReadStoreUnitOfWork(session_factory)
+        )
+    )
+
     consumer = ReservationConsumer(
         connection_factory.create_connection(),
         reservation_read_store_synchronization_command,
+        delete_reservation_from_read_store_command,
     )
 
     logger.info(msg="Start consuming")

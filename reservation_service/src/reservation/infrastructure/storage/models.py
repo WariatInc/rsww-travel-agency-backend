@@ -29,3 +29,5 @@ class Reservation(db.BaseModel):
 
     user_id = db.Column(db.UUID(), nullable=False)
     user = db.relationship("User", back_populates="reservations")
+
+    rejection_reason = db.Column(db.String(), nullable=True)

@@ -30,6 +30,11 @@ class ReservationRepository(IReservationRepository):
             Reservation.id == reservation_id
         ).update(update_kwargs)
 
+    def delete_reservation(self, reservation_id: UUID) -> None:
+        self._session.query(Reservation).filter(
+            Reservation.id == reservation_id
+        ).delete()
+
     def get_reservation(
         self, reservation_id: UUID
     ) -> Optional[ReservationDto]:
