@@ -125,8 +125,8 @@ start_reservation_service_payment_consumer:
 start_tour_operator_service_reservation_consumer:
 	$(MAKE) -C ./tour_operator_service -f ./Makefile start_reservation_consumer_daemon
 
-#start_trip_offer_service_XXX_consumer:
-#	$(MAKE) -C ./trip_offer_service -f ./Makefile start_xxx_consumer_daemon
+#start_trip_offer_service_offer_consumer:
+#	$(MAKE) -C ./trip_offer_service -f ./Makefile start_offer_consumer_daemon
 
 ALL_CONTAINERS_IDS := $(shell docker ps -aq)
 
