@@ -51,11 +51,13 @@ init_rabbitmq_exchange:
 	docker exec -it rabbitmq rabbitmqadmin declare queue name=reservation_service_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
 	docker exec -it rabbitmq rabbitmqadmin declare queue name=reservation_service_payment_queue durable=true -u rabbitmq_admin -p rabbitmq
 	docker exec -it rabbitmq rabbitmqadmin declare queue name=payment_service_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
+	docker exec -it rabbitmq rabbitmqadmin declare queue name=trip_offer_service_offer_queue durable=true -u rabbitmq_admin -p rabbitmq
 
 	docker exec -it rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="tour_operator_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
 	docker exec -it rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="reservation_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
 	docker exec -it rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="payment_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
 	docker exec -it rabbitmq rabbitmqadmin declare binding source="payment" destination_type="queue" destination="reservation_service_payment_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
+	docker exec -it rabbitmq rabbitmqadmin declare binding source="offer" destination_type="queue" destination="trip_offer_service_offer_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
 
 to_db:
 	$(MAKE) -C ./trip_offer_service -f ./Makefile init_db

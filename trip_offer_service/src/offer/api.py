@@ -9,9 +9,8 @@ from flask import jsonify, request
 from src.api import Resource
 from src.api.blueprint import Blueprint
 from src.api.error import custom_error, validation_error
+from src.offer.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
 from src.offer.domain.ports import IGetOfferQuery, ISearchOfferQuery
-from src.offer.infrastructure.queries.search import SearchOptions
-from src.offer.infrastructure.storage.offer import Offer, SimpleOffer
 from src.offer.schema import (
     OfferSchema,
     SearchOptionsSchema,
@@ -24,8 +23,8 @@ class OfferResource(Resource):
         self.get_offer_query = get_offer_query
 
     def get(self, uuid: UUID):
-        offer: Optional[Offer] = self.get_offer_query.get_offer(uuid)
-        if offer is None:
+        offer: Optional[OfferDto] = self.get_offer_query.get_offer(uuid)
+        if not offer:
             return custom_error(
                 f"Provided UUID={uuid} could not be found.",
                 HTTPStatus.NOT_FOUND,
@@ -41,14 +40,14 @@ class SearchOfferResource(Resource):
     def get(self):
         try:
             options: SearchOptions = SearchOptionsSchema().load(
-                {name: val for (name, val) in request.args.items()},
+                request.args,
                 unknown=ma.EXCLUDE,
             )
         except ma.ValidationError as err:
             return validation_error(err.messages)
 
         number_of_offers = self.query.count_offers(options)
-        offers: list[SimpleOffer] = self.query.search_offers(options)
+        offers: list[SimpleOfferDto] = self.query.search_offers(options)
         return jsonify(
             max_page=ceil(number_of_offers / options.page_size),
             result=SimpleOfferSchema(many=True).dump(offers),
