@@ -1,0 +1,12 @@
+flask==2.2.3
+sqlalchemy
+flask-sqlalchemy
+injector
+flask-injector
+flask-migrate
+werkzeug
+webargs
+psycopg2
+marshmallow
+marshmallow-jsonschema
+marshmallow-oneofschema
