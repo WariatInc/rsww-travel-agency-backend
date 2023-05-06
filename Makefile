@@ -43,7 +43,8 @@ deploy_full: run_rabbitmq \
 			 start_payment_service_reservation_consumer \
 			 start_reservation_service_reservation_consumer \
 			 start_reservation_service_payment_consumer \
-			 start_tour_operator_service_reservation_consumer ## Deploy all services with db initialization
+			 start_tour_operator_service_reservation_consumer \
+			 start_trip_offer_service_offer_consumer ## Deploy all services with db initialization
 
 run_postgres: 
 	docker-compose up -d --no-recreate pg_db
@@ -83,13 +84,13 @@ init_rabbitmq_exchange:
 	docker-compose exec rabbitmq rabbitmqadmin declare queue name=reservation_service_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
 	docker-compose exec rabbitmq rabbitmqadmin declare queue name=reservation_service_payment_queue durable=true -u rabbitmq_admin -p rabbitmq
 	docker-compose exec rabbitmq rabbitmqadmin declare queue name=payment_service_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
-  docker-compose exec rabbitmq rabbitmqadmin declare queue name=trip_offer_service_offer_queue durable=true -u rabbitmq_admin -p rabbitmq
+    docker-compose exec rabbitmq rabbitmqadmin declare queue name=trip_offer_service_offer_queue durable=true -u rabbitmq_admin -p rabbitmq
   
 	docker-compose exec rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="tour_operator_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
 	docker-compose exec rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="reservation_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
 	docker-compose exec rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="payment_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
 	docker-compose exec rabbitmq rabbitmqadmin declare binding source="payment" destination_type="queue" destination="reservation_service_payment_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
-  docker-compose exec rabbitmq rabbitmqadmin declare binding source="offer" destination_type="queue" destination="trip_offer_service_offer_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
+    docker-compose exec rabbitmq rabbitmqadmin declare binding source="offer" destination_type="queue" destination="trip_offer_service_offer_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
 
 configure_payment_db:
 	$(MAKE) -C ./payment_service -f ./Makefile init_db
@@ -127,8 +128,8 @@ start_reservation_service_payment_consumer:
 start_tour_operator_service_reservation_consumer:
 	$(MAKE) -C ./tour_operator_service -f ./Makefile start_reservation_consumer_daemon
 
-#start_trip_offer_service_offer_consumer:
-#	$(MAKE) -C ./trip_offer_service -f ./Makefile start_offer_consumer_daemon
+start_trip_offer_service_offer_consumer:
+	$(MAKE) -C ./trip_offer_service -f ./Makefile start_offer_consumer_daemon
 
 ALL_CONTAINERS_IDS := $(shell docker ps -aq)
 
