@@ -1,6 +1,7 @@
 import re
 from dataclasses import fields
 from datetime import datetime
+from typing import Any
 
 from src.consts import Collections
 from src.infrastructure.storage import MongoReadOnlyClient
@@ -72,3 +73,9 @@ class SearchOfferQuery(ISearchOfferQuery):
         )
 
         return SimpleOfferSchema().load(results, many=True)
+
+    def get_search_options(self) -> dict[str, Any]:
+        collection = self.client.get_db()[self.collection_name]
+        fields = ["city", "country", "operator", "transport", "room_type"]
+
+        return {field: collection.distinct(field) for field in fields}

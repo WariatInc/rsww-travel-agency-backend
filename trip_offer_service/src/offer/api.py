@@ -54,6 +54,14 @@ class SearchOfferResource(Resource):
         )
 
 
+class SearchOfferOptionsResource(Resource):
+    def __init__(self, search_offer_query: ISearchOfferQuery) -> None:
+        self.query = search_offer_query
+
+    def get(self):
+        return jsonify(self.query.get_search_options())
+
+
 class Api(Blueprint):
     name = "offer"
     import_name = __name__
@@ -61,4 +69,5 @@ class Api(Blueprint):
     resources = [
         (OfferResource, "/get/<uuid:uuid>"),
         (SearchOfferResource, "/search/"),
+        (SearchOfferOptionsResource, "/search/options"),
     ]
