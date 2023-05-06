@@ -108,7 +108,7 @@ def _consume() -> None:
 
 if __name__ == "__main__":
     logging.basicConfig(
-        format="Payment service reservation consumer | %(name)s - %(levelname)s - %(asctime)s - %(message)s",
+        format="Payment service - reservation consumer | %(name)s - %(levelname)s - %(asctime)s - %(message)s",
         level=logging.INFO,
     )
     logger = logging.getLogger(__name__)

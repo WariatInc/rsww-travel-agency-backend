@@ -2,21 +2,26 @@ from abc import ABC, abstractmethod
 from typing import Optional
 from uuid import UUID
 
-from src.offer.infrastructure.queries.search import SearchOptions
-from src.offer.infrastructure.storage.offer import Offer, SimpleOffer
+from src.offer.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
 
 
 class IGetOfferQuery(ABC):
     @abstractmethod
-    def get_offer(offer_id: UUID) -> Optional[Offer]:
+    def get_offer(self, offer_id: UUID) -> Optional[OfferDto]:
         raise NotImplementedError()
 
 
 class ISearchOfferQuery(ABC):
     @abstractmethod
-    def search_offers(options: SearchOptions) -> list[SimpleOffer]:
+    def search_offers(self, options: SearchOptions) -> list[SimpleOfferDto]:
         raise NotImplementedError()
 
     @abstractmethod
-    def count_offers(options: SearchOptions) -> int:
+    def count_offers(self, options: SearchOptions) -> int:
         raise NotImplementedError()
+
+
+class IOfferRepository(ABC):
+    @abstractmethod
+    def upsert_offer(self, offer_id: UUID, **upsert_kwargs) -> None:
+        raise NotImplementedError

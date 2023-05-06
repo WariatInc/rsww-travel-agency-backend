@@ -1,11 +1,11 @@
+import re
 from dataclasses import fields
 from datetime import datetime
 
 from src.consts import Collections
 from src.infrastructure.storage import MongoReadOnlyClient
+from src.offer.domain.dtos import SearchOptions, SimpleOfferDto
 from src.offer.domain.ports import ISearchOfferQuery
-from src.offer.infrastructure.queries.search import SearchOptions
-from src.offer.infrastructure.storage.offer import SimpleOffer
 from src.offer.schema import SimpleOfferSchema
 
 
@@ -15,14 +15,19 @@ class SearchOfferQuery(ISearchOfferQuery):
         self.client = client
 
     @staticmethod
-    def _build_query(options: SearchOptions) -> dict:
-        query = {}
+    def _ilike_condition(search_term: str) -> dict[str, re.Pattern]:
+        regex = re.compile(search_term, re.IGNORECASE)
+        return {"$regex": regex}
+
+    def _build_query(self, options: SearchOptions) -> dict:
+        query = {"is_available": True}
+
         if options.city:
-            query["city"] = options.city
+            query["city"] = self._ilike_condition(options.city)
         if options.country:
-            query["country"] = options.country
+            query["country"] = self._ilike_condition(options.country)
         if options.operator:
-            query["operator"] = options.operator
+            query["operator"] = self._ilike_condition(options.operator)
         if options.date_start:
             query["departure_date"] = {
                 "$gt": datetime.combine(
@@ -41,13 +46,11 @@ class SearchOfferQuery(ISearchOfferQuery):
             query["number_of_kids"] = {"$gte": options.kids}
         if options.room:
             query["room_type"] = options.room
-        if options.available:
-            query["is_available"] = options.available
         return query
 
     @staticmethod
     def _build_projection() -> dict:
-        projection = {field.name: 1 for field in fields(SimpleOffer)}
+        projection = {field.name: 1 for field in fields(SimpleOfferDto)}
         projection["_id"] = 0
         return projection
 
@@ -57,14 +60,14 @@ class SearchOfferQuery(ISearchOfferQuery):
             query
         )
 
-    def search_offers(self, options: SearchOptions) -> list[SimpleOffer]:
+    def search_offers(self, options: SearchOptions) -> list[SimpleOfferDto]:
         query = self._build_query(options)
         projection = self._build_projection()
 
         results = (
             self.client.get_db()[self.collection_name]
             .find(query, projection)
-            .skip(options.page * options.page_size)
+            .skip((options.page - 1) * options.page_size)
             .limit(options.page_size)
         )
 
