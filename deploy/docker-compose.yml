@@ -15,7 +15,7 @@ services:
       - rsww_backend_network
 
   pg_db:
-    image: postgres:14.7-alpine
+    image: postgres:13
     container_name: pg_db
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
@@ -42,11 +42,7 @@ services:
     restart: always
     build:
       context: ../payment_service
-    command: flask run --host 0.0.0.0 --port 8030
-    volumes:
-      - ../payment_service/src:/opt/payment_service/src:z
-      - ../payment_service/migrations:/opt/payment_service/migrations:z
-      - ../payment_service/db:/opt/payment_service/db:z
+    command: flask run --host 0.0.0.0 --port 8031
     environment:
       FLASK_DEBUG: 'true'
       FLASK_APP: app_wsgi.py
@@ -61,20 +57,16 @@ services:
       RABBITMQ_USER: payment_user
       RABBITMQ_PASSWORD: password
     ports:
-      - "8030:8030"
+      - "8031:8031"
     networks:
       - rsww_backend_network
 
   reservation_api:
-    container_name: reservation_api
+    container_name: reservation_apiC
     restart: always
     build:
       context: ../reservation_service
-    command: flask run --host 0.0.0.0 --port 8000
-    volumes:
-      - ../reservation_service/src:/opt/reservation_service/src:z
-      - ../reservation_service/migrations:/opt/reservation_service/migrations:z
-      - ../reservation_service/db:/opt/reservation_service/db:z
+    command: flask run --host 0.0.0.0 --port 8001
     environment:
       FLASK_DEBUG: 'true'
       FLASK_APP: app_wsgi.py
@@ -89,7 +81,7 @@ services:
       RABBITMQ_USER: reservation_user
       RABBITMQ_PASSWORD: password
     ports:
-      - "8000:8000"
+      - "8001:8001"
     networks:
       - rsww_backend_network
 
@@ -98,10 +90,6 @@ services:
     build:
       context: ../tour_operator_service
     command: python3 main.py
-    volumes:
-      - ../tour_operator_service/src:/opt/tour_operator/src:z
-      - ../tour_operator_service/db:/opt/tour_operator/db:z
-      - ../tour_operator_service/migrations:/opt/tour_operator/migrations:z
     environment:
       FLASK_DEBUG: 'true'
       FLASK_APP: app_wsgi.py
@@ -116,7 +104,7 @@ services:
       RABBITMQ_USER: tour_operator_user
       RABBITMQ_PASSWORD: password
     ports:
-      - "8020:8020"
+      - "8021:8021"
     networks:
       - rsww_backend_network
 
@@ -125,10 +113,7 @@ services:
     restart: always
     build:
       context: ../trip_offer_service
-    command: flask run --host 0.0.0.0 --port 8010
-    volumes:
-      - ../trip_offer_service/src:/opt/trip_offer_service/src:z
-      - ../trip_offer_service/db:/opt/trip_offer_service/db:z
+    command: flask run --host 0.0.0.0 --port 8011
     environment:
       FLASK_DEBUG: 'true'
       FLASK_APP: app_wsgi.py
@@ -143,7 +128,7 @@ services:
       RABBITMQ_USER: rabbitmq_admin
       RABBITMQ_PASSWORD: rabbitmq
     ports:
-      - "8010:8010"
+      - "8011:8011"
     networks:
       - rsww_backend_network
 
