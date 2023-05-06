@@ -39,3 +39,8 @@ class ReservationReadStoreRepository(IReservationReadStoreRepository):
         )
 
         self._session.execute(stmt)
+
+    def delete_reservation_from_read_store(self, reservation_id: UUID) -> None:
+        self._session.query(ReservationReadStore).filter(
+            ReservationReadStore.reservation_id == reservation_id
+        ).delete()

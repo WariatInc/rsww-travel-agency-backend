@@ -10,6 +10,7 @@ from src.auth.login import auth_required
 from src.reservation.domain.exceptions import (
     ActorIsNotReservationOwner,
     ReservationAlreadyCancelled,
+    ReservationCannotBeDeleted,
     ReservationExistInPendingAcceptedOrPaidStateException,
     ReservationIsPaid,
     ReservationNotFound,
@@ -17,6 +18,7 @@ from src.reservation.domain.exceptions import (
 from src.reservation.domain.ports import (
     ICancelReservationCommand,
     ICreateReservationCommand,
+    IDeleteRejectedReservationCommand,
     IGetUserReservationsQuery,
 )
 from src.reservation.error import ERROR
@@ -74,17 +76,48 @@ class ReservationCancelResource(Resource):
             )
         except ReservationNotFound:
             return custom_error(
-                ERROR.reservation_not_found_error, HTTPStatus.BAD_REQUEST
+                ERROR.reservation_not_found_error, HTTPStatus.NOT_FOUND
             )
         except ActorIsNotReservationOwner:
             return custom_error(
                 ERROR.actor_is_not_reservation_owner_error,
-                HTTPStatus.BAD_REQUEST,
+                HTTPStatus.FORBIDDEN,
             )
         except ReservationIsPaid:
             return custom_error(
                 ERROR.reservation_is_paid_cannot_be_cancelled,
                 HTTPStatus.BAD_REQUEST,
+            )
+
+        return {}
+
+
+class ReservationResource(Resource):
+    def __init__(
+        self,
+        delete_rejected_reservation_command: IDeleteRejectedReservationCommand,
+    ) -> None:
+        self.delete_rejected_reservation_command = (
+            delete_rejected_reservation_command
+        )
+
+    @auth_required
+    @use_schema(EmptySchema, HTTPStatus.OK)
+    def delete(self, reservation_id: UUID):
+        try:
+            self.delete_rejected_reservation_command(reservation_id)
+        except ReservationNotFound:
+            return custom_error(
+                ERROR.reservation_not_found_error, HTTPStatus.NOT_FOUND
+            )
+        except ReservationCannotBeDeleted:
+            return custom_error(
+                ERROR.reservation_cannot_be_deleted, HTTPStatus.BAD_REQUEST
+            )
+        except ActorIsNotReservationOwner:
+            return custom_error(
+                ERROR.actor_is_not_reservation_owner_error,
+                HTTPStatus.FORBIDDEN,
             )
 
         return {}
@@ -96,5 +129,6 @@ class Api(Blueprint):
 
     resources = [
         (ReservationsResource, "/"),
+        (ReservationResource, "/<uuid:reservation_id>"),
         (ReservationCancelResource, "/cancel/<uuid:reservation_id>"),
     ]

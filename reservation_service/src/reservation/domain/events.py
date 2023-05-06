@@ -25,10 +25,15 @@ class ReservationCancelledEvent(DomainEvent):
 
 
 @dataclass
+class ReservationDeletedEvent(DomainEvent):
+    reservation_id: UUID
+
+
+@dataclass
 class ReservationCheckedEvent(Event):
     reservation_id: UUID
     reservation_state: ReservationState
-    reason: Optional[str]
+    rejection_reason: Optional[str]
 
     @classmethod
     def from_rabbitmq_message(
@@ -42,5 +47,5 @@ class ReservationCheckedEvent(Event):
             reservation_state=ReservationState(
                 message.get("reservation_state")
             ),
-            reason=message.get("reason"),
+            rejection_reason=message.get("reason"),
         )

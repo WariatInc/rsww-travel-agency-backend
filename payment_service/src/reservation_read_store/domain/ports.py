@@ -14,6 +14,10 @@ class IReservationReadStoreRepository(ABC):
     ) -> None:
         raise NotImplementedError
 
+    @abstractmethod
+    def delete_reservation_from_read_store(self, reservation_id: UUID) -> None:
+        raise NotImplementedError
+
 
 class IReservationReadStoreUnitOfWork(ABC):
     reservation_read_store_repository = IReservationReadStoreRepository
@@ -40,4 +44,10 @@ class IReservationReadStoreView(ABC):
     def get_reservation(
         self, reservation_id: UUID
     ) -> Optional["ReservationDto"]:
+        raise NotImplementedError
+
+
+class IDeleteReservationFromReadStoreCommand(ABC):
+    @abstractmethod
+    def __call__(self, reservation_id: UUID) -> None:
         raise NotImplementedError

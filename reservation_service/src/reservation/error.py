@@ -7,3 +7,4 @@ class ERROR(StrEnum):
     reservation_already_cancelled_error = auto()
     actor_is_not_reservation_owner_error = auto()
     reservation_is_paid_cannot_be_cancelled = auto()
+    reservation_cannot_be_deleted = auto()

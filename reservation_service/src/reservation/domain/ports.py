@@ -30,6 +30,10 @@ class IReservationRepository(ABC):
     ) -> bool:
         raise NotImplementedError
 
+    @abstractmethod
+    def delete_reservation(self, reservation_id: UUID) -> None:
+        raise NotImplementedError
+
 
 class IReservationUnitOfWork(ABC):
     reservation_repository: IReservationRepository
@@ -45,7 +49,7 @@ class IReservationUnitOfWork(ABC):
 
 class ICreateReservationCommand(ABC):
     @abstractmethod
-    def __call__(self, offer_id: UUID) -> None:
+    def __call__(self, offer_id: UUID) -> "ReservationDto":
         raise NotImplementedError
 
 
@@ -70,4 +74,10 @@ class IReservationListView(ABC):
 class IGetUserReservationsQuery(ABC):
     @abstractmethod
     def get(self) -> list[ReservationDto]:
+        raise NotImplementedError
+
+
+class IDeleteRejectedReservationCommand(ABC):
+    @abstractmethod
+    def __call__(self, reservation_id: UUID) -> None:
         raise NotImplementedError

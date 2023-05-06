@@ -4,6 +4,7 @@ from src.reservation.domain.dtos import ReservationDto
 from src.reservation.domain.exceptions import (
     ActorIsNotReservationOwner,
     ReservationAlreadyCancelled,
+    ReservationCannotBeDeleted,
     ReservationIsPaid,
 )
 
@@ -26,3 +27,10 @@ def validate_if_reservation_can_be_cancelled(
 
     if reservation.state == ReservationState.paid:
         raise ReservationIsPaid
+
+
+def validate_if_reservation_can_be_deleted(
+    reservation: ReservationDto,
+) -> None:
+    if reservation.state != ReservationState.rejected:
+        raise ReservationCannotBeDeleted

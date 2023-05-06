@@ -46,7 +46,9 @@ class ReservationConsumer(RabbitMQConsumer):
         event = ReservationCheckedEvent.from_rabbitmq_message(payload)
         logger.info(msg=f"Consuming event: {event.type} with id: {event.id}")
         self._update_reservation_command(
-            event.reservation_id, state=event.reservation_state
+            event.reservation_id,
+            state=event.reservation_state,
+            rejection_reason=event.rejection_reason,
         )
         logger.info(msg=f"Event with id: {event.id} successfully consumed")
 

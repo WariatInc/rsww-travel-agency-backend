@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 from uuid import UUID
 
 from src.consts import ReservationState
@@ -10,3 +11,4 @@ class ReservationDto:
     state: ReservationState
     offer_id: UUID
     user_id: UUID
+    rejection_reason: Optional[str]

@@ -25,3 +25,7 @@ class ReservationIsPaid(ReservationException):
 
 class ActorIsNotReservationOwner(ReservationException):
     pass
+
+
+class ReservationCannotBeDeleted(ReservationException):
+    pass
