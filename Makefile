@@ -18,9 +18,42 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-deploy: run_rabbitmq init_rabbitmq_exchange to_service res_service ## Deploy all services
+deploy: run_rabbitmq \
+        init_rabbitmq_exchange \
+		run_postgres \
+		run_mongo \
+		payment_service \
+		reservation_service \
+		tour_operator_service \
+		trip_offer_service ## Deploy all services
 
-deploy_full: run_rabbitmq init_rabbitmq_exchange to_db to_service res_db res_service ## Deploy all services with db initialization
+deploy_full: run_rabbitmq \
+			 init_rabbitmq_exchange \
+			 run_postgres \
+			 configure_payment_db \
+			 deploy_payment_service \
+			 configure_reservation_db \
+			 deploy_reservation_service \
+			 configure_tour_operator_db \
+			 deploy_tour_operator_service \
+			 run_mongo \
+			 configure_trip_offer_db \
+			 deploy_trip_offer_service \
+			 run_bootstrap_mongo \
+			 start_payment_service_reservation_consumer \
+			 start_reservation_service_reservation_consumer \
+			 start_reservation_service_payment_consumer \
+			 start_tour_operator_service_reservation_consumer \
+			 start_trip_offer_service_offer_consumer ## Deploy all services with db initialization
+
+run_postgres: 
+	docker-compose up -d --no-recreate pg_db
+
+run_mongo: 
+	docker-compose up -d --no-recreate mongo_db
+
+run_bootstrap_mongo:
+	$(MAKE) -C ./trip_offer_service -f ./Makefile bootstrap_db
 
 run_rabbitmq: 
 	docker-compose up -d --no-recreate rabbitmq
@@ -28,48 +61,75 @@ run_rabbitmq:
 init_rabbitmq_exchange:
 	sleep 10
 
-	docker exec -it rabbitmq rabbitmqctl add_user trip_offer_user password
-	docker exec -it rabbitmq rabbitmqctl add_user reservation_user password
-	docker exec -it rabbitmq rabbitmqctl add_user tour_operator_user password
-	docker exec -it rabbitmq rabbitmqctl add_user payment_user password
+	docker-compose exec rabbitmq rabbitmqctl add_user trip_offer_user password
+	docker-compose exec rabbitmq rabbitmqctl add_user reservation_user password
+	docker-compose exec rabbitmq rabbitmqctl add_user tour_operator_user password
+	docker-compose exec rabbitmq rabbitmqctl add_user payment_user password
 
-	docker exec -it rabbitmq rabbitmqctl set_permissions -p / trip_offer_user ".*" ".*" ".*"
-	docker exec -it rabbitmq rabbitmqctl set_permissions -p / reservation_user ".*" ".*" ".*"
-	docker exec -it rabbitmq rabbitmqctl set_permissions -p / tour_operator_user  ".*" ".*" ".*"
-	docker exec -it rabbitmq rabbitmqctl set_permissions -p / payment_user  ".*" ".*" ".*"
+	docker-compose exec rabbitmq rabbitmqctl set_permissions -p / trip_offer_user ".*" ".*" ".*"
+	docker-compose exec rabbitmq rabbitmqctl set_permissions -p / reservation_user ".*" ".*" ".*"
+	docker-compose exec rabbitmq rabbitmqctl set_permissions -p / tour_operator_user  ".*" ".*" ".*"
+	docker-compose exec rabbitmq rabbitmqctl set_permissions -p / payment_user  ".*" ".*" ".*"
 
-	docker exec -it rabbitmq rabbitmqctl set_user_tags trip_offer_user management
-	docker exec -it rabbitmq rabbitmqctl set_user_tags reservation_user management
-	docker exec -it rabbitmq rabbitmqctl set_user_tags tour_operator_user management
-	docker exec -it rabbitmq rabbitmqctl set_user_tags payment_user management
+	docker-compose exec rabbitmq rabbitmqctl set_user_tags trip_offer_user management
+	docker-compose exec rabbitmq rabbitmqctl set_user_tags reservation_user management
+	docker-compose exec rabbitmq rabbitmqctl set_user_tags tour_operator_user management
+	docker-compose exec rabbitmq rabbitmqctl set_user_tags payment_user management
 
-	docker exec -it rabbitmq rabbitmqadmin declare exchange name=offer type=fanout -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare exchange name=reservation type=fanout -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare exchange name=payment type=fanout -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare exchange name=offer type=fanout -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare exchange name=reservation type=fanout -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare exchange name=payment type=fanout -u rabbitmq_admin -p rabbitmq
 
-	docker exec -it rabbitmq rabbitmqadmin declare queue name=tour_operator_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare queue name=reservation_service_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare queue name=reservation_service_payment_queue durable=true -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare queue name=payment_service_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare queue name=trip_offer_service_offer_queue durable=true -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare queue name=tour_operator_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare queue name=reservation_service_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare queue name=reservation_service_payment_queue durable=true -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare queue name=payment_service_reservation_queue durable=true -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare queue name=trip_offer_service_offer_queue durable=true -u rabbitmq_admin -p rabbitmq
 
-	docker exec -it rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="tour_operator_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="reservation_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="payment_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare binding source="payment" destination_type="queue" destination="reservation_service_payment_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
-	docker exec -it rabbitmq rabbitmqadmin declare binding source="offer" destination_type="queue" destination="trip_offer_service_offer_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="tour_operator_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="reservation_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare binding source="reservation" destination_type="queue" destination="payment_service_reservation_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare binding source="payment" destination_type="queue" destination="reservation_service_payment_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
+	docker-compose exec rabbitmq rabbitmqadmin declare binding source="offer" destination_type="queue" destination="trip_offer_service_offer_queue" routing_key="" -u rabbitmq_admin -p rabbitmq
 
-to_db:
-	$(MAKE) -C ./trip_offer_service -f ./Makefile init_db
+configure_payment_db:
+	$(MAKE) -C ./payment_service -f ./Makefile init_db
 
-to_service:
-	$(MAKE) -C ./trip_offer_service -f ./Makefile run_api_daemon
+deploy_payment_service:
+	$(MAKE) -C ./payment_service -f ./Makefile run_api_daemon
 
-res_db:
+configure_reservation_db:
 	$(MAKE) -C ./reservation_service -f ./Makefile init_db
 
-res_service:
+deploy_reservation_service:
 	$(MAKE) -C ./reservation_service -f ./Makefile run_api_daemon
+
+configure_tour_operator_db:
+	$(MAKE) -C ./tour_operator_service -f ./Makefile init_db
+
+deploy_tour_operator_service:
+	$(MAKE) -C ./tour_operator_service -f ./Makefile run_app_daemon
+
+configure_trip_offer_db:
+	$(MAKE) -C ./trip_offer_service -f ./Makefile init_db
+
+deploy_trip_offer_service:
+	$(MAKE) -C ./trip_offer_service -f ./Makefile run_api_daemon
+
+start_payment_service_reservation_consumer:
+	$(MAKE) -C ./payment_service -f ./Makefile start_reservation_consumer_daemon
+
+start_reservation_service_reservation_consumer:
+	$(MAKE) -C ./reservation_service -f ./Makefile start_reservation_consumer_daemon
+
+start_reservation_service_payment_consumer:
+	$(MAKE) -C ./reservation_service -f ./Makefile start_payment_consumer_daemon
+
+start_tour_operator_service_reservation_consumer:
+	$(MAKE) -C ./tour_operator_service -f ./Makefile start_reservation_consumer_daemon
+
+start_trip_offer_service_offer_consumer:
+	$(MAKE) -C ./trip_offer_service -f ./Makefile start_offer_consumer_daemon
 
 ALL_CONTAINERS_IDS := $(shell docker ps -aq)
 
