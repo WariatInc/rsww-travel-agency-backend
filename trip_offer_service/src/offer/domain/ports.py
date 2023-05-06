@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Optional
+from typing import Optional, Any
 from uuid import UUID
 
 from src.offer.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
@@ -18,6 +18,10 @@ class ISearchOfferQuery(ABC):
 
     @abstractmethod
     def count_offers(self, options: SearchOptions) -> int:
+        raise NotImplementedError()
+    
+    @abstractmethod
+    def get_search_options(self) -> dict[str, Any]:
         raise NotImplementedError()
 
 

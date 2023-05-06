@@ -1,6 +1,7 @@
 import re
 from dataclasses import fields
 from datetime import datetime
+from typing import Any
 
 from src.consts import Collections
 from src.infrastructure.storage import MongoReadOnlyClient
@@ -30,9 +31,7 @@ class SearchOfferQuery(ISearchOfferQuery):
             query["operator"] = self._ilike_condition(options.operator)
         if options.date_start:
             query["departure_date"] = {
-                "$gt": datetime.combine(
-                    options.date_start, datetime.min.time()
-                )
+                "$gt": datetime.combine(options.date_start, datetime.min.time())
             }
         if options.date_end:
             query["arrival_date"] = {
@@ -56,9 +55,7 @@ class SearchOfferQuery(ISearchOfferQuery):
 
     def count_offers(self, options: SearchOptions) -> int:
         query = self._build_query(options)
-        return self.client.get_db()[self.collection_name].count_documents(
-            query
-        )
+        return self.client.get_db()[self.collection_name].count_documents(query)
 
     def search_offers(self, options: SearchOptions) -> list[SimpleOfferDto]:
         query = self._build_query(options)
@@ -72,3 +69,9 @@ class SearchOfferQuery(ISearchOfferQuery):
         )
 
         return SimpleOfferSchema().load(results, many=True)
+
+    def get_search_options(self) -> dict[str, Any]:
+        collection = self.client.get_db()[self.collection_name]
+        fields = ["city", "country", "operator", "transport", "room_type"]
+
+        return {field: collection.distinct(field) for field in fields}
