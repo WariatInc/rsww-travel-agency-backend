@@ -61,43 +61,43 @@ $(DEV_DEPS): %.txt: %.in $(PIP_COMPILE) $(BASE_DEPS)
 deps: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 
 upgrade $(STATE_DB_UPGRADED): $(STATE_DIR) $(STATE_DB_INIT) $(STATE_API_BUILD) $(CURRENT_MIGRATION)
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api wait-for-it pg_db:5432
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api flask db upgrade
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm payment_api wait-for-it pg_db:5432
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm payment_api flask db upgrade
 	touch $(STATE_DB_UPGRADED)
 
 migrate: $(STATE_DB_UPGRADED)
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api wait-for-it pg_db:5432
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api flask db migrate --message "$(MSG)"
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api bash -c "flask db history 2>/dev/null | head -1 | cut --delimiter=' ' --fields=3,5-" > $(CURRENT_MIGRATION)
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm payment_api wait-for-it pg_db:5432
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm payment_api flask db migrate --message "$(MSG)"
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm payment_api bash -c "flask db history 2>/dev/null | head -1 | cut --delimiter=' ' --fields=3,5-" > $(CURRENT_MIGRATION)
 
 init_db $(STATE_DB_INIT): $(STATE_DIR) $(DB_INIT_SQL) $(DB_DUMP)
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api wait-for-it pg_db:5432
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api psql --host=pg_db --dbname=postgres --username=postgres --file=$(DB_INIT_SQL)
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm payment_api wait-for-it pg_db:5432
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm payment_api psql --host=pg_db --dbname=postgres --username=postgres --file=$(DB_INIT_SQL)
 	touch $(STATE_DB_INIT)
 
 init_test_db $(STATE_DB_TEST_INIT): $(STATE_DIR) $(DB_TEST_INIT_SQL)
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api wait-for-it pg_db:5432
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api psql --host=pg_db --dbname=postgres --username=postgres --file=$(DB_TEST_INIT_SQL)
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm payment_api wait-for-it pg_db:5432
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm payment_api psql --host=pg_db --dbname=postgres --username=postgres --file=$(DB_TEST_INIT_SQL)
 	touch $(STATE_DB_TEST_INIT)
 
 build_api $(STATE_API_BUILD): $(STATE_DIR) $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
-	docker-compose --project-name $(PROJECT_NAME) build payment_api
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) build payment_api
 	touch $(STATE_API_BUILD)
 
 run_api: $(STATE_DB_UPGRADED)
-	docker-compose --project-name $(PROJECT_NAME) up payment_api
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) up payment_api
 
 start_reservation_consumer:
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api python3 src/reservation_read_store/infrastructure/message_broker/consumer.py
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm payment_api python3 src/reservation_read_store/infrastructure/message_broker/consumer.py
 
 start_reservation_consumer_daemon:
-	docker-compose --project-name $(PROJECT_NAME) run --name payment_service_reservation_consumer -d payment_api python3 src/reservation_read_store/infrastructure/message_broker/consumer.py
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --name payment_service_reservation_consumer -d payment_api python3 src/reservation_read_store/infrastructure/message_broker/consumer.py
 
 run_api_daemon: $(STATE_DB_UPGRADED)
-	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate payment_api
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) up -d --no-recreate payment_api
 
 psql: $(STATE_API_BUILD)
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api psql --host=pg_db --dbname=payment_pg --username=payment
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm payment_api psql --host=pg_db --dbname=payment_pg --username=payment
 
 install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(BASE_DEPS)
@@ -112,4 +112,4 @@ lint:
 	$(BLACK) .
 
 test: $(STATE_DB_TEST_INIT)
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api pytest .
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm payment_api pytest .

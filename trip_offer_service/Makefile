@@ -56,33 +56,33 @@ $(DEV_DEPS): %.txt: %.in $(PIP_COMPILE) $(BASE_DEPS)
 deps: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 
 build_api $(STATE_API_BUILD): $(STATE_DIR) $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
-	docker-compose --project-name $(PROJECT_NAME) build trip_offer_api
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) build trip_offer_api
 	touch $(STATE_API_BUILD)
 
 init_db $(STATE_DB_INIT): $(STATE_API_BUILD) $(DB_INIT_JS)
-	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api wait-for-it mongo_db:27017
-	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api mongosh --host=mongo_db --port=27017 --username=mongodb_admin --password=mongodb --authenticationDatabase="admin" --file=$(DB_INIT_JS)
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm trip_offer_api wait-for-it mongo_db:27017
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm trip_offer_api mongosh --host=mongo_db --port=27017 --username=mongodb_admin --password=mongodb --authenticationDatabase="admin" --file=$(DB_INIT_JS)
 	touch $(STATE_DB_INIT)
 
 init_test_db $(STATE_TEST_DB_INIT): $(STATE_API_BUILD)  $(DB_TEST_INIT_JS)
-	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api wait-for-it mongo_db:27017
-	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api mongosh --host=mongo_db --port=27017 --username=mongodb_admin --password=mongodb --authenticationDatabase="admin" --file=$(DB_TEST_INIT_JS)
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm trip_offer_api wait-for-it mongo_db:27017
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm trip_offer_api mongosh --host=mongo_db --port=27017 --username=mongodb_admin --password=mongodb --authenticationDatabase="admin" --file=$(DB_TEST_INIT_JS)
 	touch $(STATE_TEST_DB_INIT)
 
 bootstrap_db: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
-	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api mongorestore -d trip_offer_mongo --host=mongo_db --port=27017 --username=mongodb_admin --password=mongodb --authenticationDatabase="admin" $(DB_BOOTSTRAP)
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm trip_offer_api mongorestore -d trip_offer_mongo --host=mongo_db --port=27017 --username=mongodb_admin --password=mongodb --authenticationDatabase="admin" $(DB_BOOTSTRAP)
 
 run_api: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
-	docker-compose --project-name $(PROJECT_NAME) up trip_offer_api
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) up trip_offer_api
 
 start_offer_consumer:
-	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api python3 src/offer/infrastructure/message_broker/consumer.py
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm trip_offer_api python3 src/offer/infrastructure/message_broker/consumer.py
 
 start_offer_consumer_daemon:
-	docker-compose --project-name $(PROJECT_NAME) run --name trip_offer_service_offer_consumer -d trip_offer_api python3 src/offer/infrastructure/message_broker/consumer.py
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --name trip_offer_service_offer_consumer -d trip_offer_api python3 src/offer/infrastructure/message_broker/consumer.py
 
 run_api_daemon: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
-	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate trip_offer_api
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) up -d --no-recreate trip_offer_api
 
 install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(BASE_DEPS)
@@ -100,4 +100,4 @@ lint:
 	$(BLACK) .
 
 test: $(STATE_DB_TEST_INIT)
-	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api pytest .
+	docker-compose -f ../deploy/docker-compose.yml --project-name $(PROJECT_NAME) run --rm trip_offer_api pytest .
