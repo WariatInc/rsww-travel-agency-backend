@@ -27,9 +27,7 @@ deploy: run_rabbitmq \
 		tour_operator_service \
 		trip_offer_service ## Deploy all services
 
-deploy_full: run_rabbitmq \
-			 init_rabbitmq_exchange \
-			 run_postgres \
+deploy_full: run_postgres \
 			 configure_payment_db \
 			 deploy_payment_service \
 			 configure_reservation_db \
