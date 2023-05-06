@@ -71,7 +71,7 @@ migrate: $(STATE_DB_UPGRADED)
 init_db $(STATE_DB_INIT): $(STATE_DIR) $(DB_INIT_SQL)
 	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator wait-for-it pg_db:5432
 	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator psql --host=pg_db --dbname=postgres --username=postgres --file=$(DB_INIT_SQL)
-	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator pg_restore --host=pg_db --username=tour_operator --dbname=tour_operator_pg --format=custom $(DB_DUMP)
+	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator pg_restore --host=pg_db --username=tour_operator --dbname=tour_operator_pg --format=custom $(DB_DUMP) || echo
 	touch $(STATE_DB_INIT)
 
 init_test_db $(STATE_DB_TEST_INIT): $(STATE_DIR) $(DB_TEST_INIT_SQL)

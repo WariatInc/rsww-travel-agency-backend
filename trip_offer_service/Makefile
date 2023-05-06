@@ -70,6 +70,7 @@ init_test_db $(STATE_TEST_DB_INIT): $(STATE_API_BUILD)  $(DB_TEST_INIT_JS)
 	touch $(STATE_TEST_DB_INIT)
 
 bootstrap_db: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
+	unzip -o db/dump/mongodb_dump.zip -d db/dump/
 	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api mongorestore -d trip_offer_mongo --host=mongo_db --port=27017 --username=mongodb_admin --password=mongodb --authenticationDatabase="admin" $(DB_BOOTSTRAP)
 
 run_api: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
