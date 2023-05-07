@@ -11,7 +11,6 @@ from src.api.error import validation_error
 from src.config import Config, DefaultConfig
 from src.di_container.modules import all_modules
 from src.utils import import_from
-
 __all__ = ["create_app"]
 
 
