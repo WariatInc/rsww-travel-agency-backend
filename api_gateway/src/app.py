@@ -5,6 +5,7 @@ from flask import Flask, Response
 from flask_injector import FlaskInjector, FlaskModule
 from flask_migrate import Migrate
 from injector import Injector, inject
+from flask_cors import CORS
 
 import src.extensions as ext
 from src.api.error import validation_error
@@ -51,6 +52,8 @@ def configure_extensions(app: Flask) -> None:
     Migrate(app, ext.db)
 
     FlaskInjector(app, injector=app.injector)
+
+    CORS(app)
 
 
 def configure_injector(app: Flask) -> Injector:
