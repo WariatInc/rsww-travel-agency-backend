@@ -18,6 +18,7 @@ from src.reservation.domain.ports import (
     ICancelReservationCommand,
     ICreateReservationCommand,
     IDeleteRejectedReservationCommand,
+    IGetReservationQuery,
     IGetUserReservationsQuery,
 )
 from src.reservation.error import ERROR
@@ -25,8 +26,10 @@ from src.reservation.schema import (
     CreatedReservationSchema,
     ReservationCancelPostSchema,
     ReservationDeleteSchema,
+    ReservationGetSchema,
     ReservationListSchema,
     ReservationPostSchema,
+    ReservationSchema,
     ReservationsGetSchema,
 )
 from src.user.domain.exceptions import UserNotFoundException
@@ -106,10 +109,30 @@ class ReservationResource(Resource):
     def __init__(
         self,
         delete_rejected_reservation_command: IDeleteRejectedReservationCommand,
+        get_reservation_query: IGetReservationQuery,
     ) -> None:
         self.delete_rejected_reservation_command = (
             delete_rejected_reservation_command
         )
+        self.get_reservation_query = get_reservation_query
+
+    @use_kwargs(ReservationGetSchema, location="query")
+    @use_schema(ReservationSchema, HTTPStatus.OK)
+    def get(self, user_gid: UUID, reservation_id: UUID):
+        try:
+            reservation = self.get_reservation_query.get(
+                user_gid, reservation_id
+            )
+        except UserNotFoundException:
+            return custom_error(
+                ERROR.user_not_found_error, HTTPStatus.NOT_FOUND
+            )
+        except ReservationNotFound:
+            return custom_error(
+                ERROR.reservation_not_found_error, HTTPStatus.NOT_FOUND
+            )
+
+        return reservation
 
     @use_schema(EmptySchema, HTTPStatus.OK)
     @use_kwargs(ReservationDeleteSchema, location="query")

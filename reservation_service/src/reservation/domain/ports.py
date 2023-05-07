@@ -75,9 +75,23 @@ class IReservationListView(ABC):
         raise NotImplementedError
 
 
+class IReservationView(ABC):
+    @abstractmethod
+    def get(
+        self, user_id: UUID, reservation_id: UUID
+    ) -> Optional[ReservationDto]:
+        raise NotImplementedError
+
+
+class IGetReservationQuery(ABC):
+    @abstractmethod
+    def get(self, user_gid: UUID, reservation_id: UUID) -> ReservationDto:
+        raise NotImplementedError
+
+
 class IGetUserReservationsQuery(ABC):
     @abstractmethod
-    def get(self, user_id: UUID) -> list[ReservationDto]:
+    def get(self, user_gid: UUID) -> list[ReservationDto]:
         raise NotImplementedError
 
 

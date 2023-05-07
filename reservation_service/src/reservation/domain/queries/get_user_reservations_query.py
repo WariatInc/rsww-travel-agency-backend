@@ -9,7 +9,7 @@ from src.user.domain.exceptions import UserNotFoundException
 from src.user.domain.ports import IUserView
 
 
-class GetUserReservationQuery(IGetUserReservationsQuery):
+class GetUserReservationsQuery(IGetUserReservationsQuery):
     def __init__(
         self, reservation_list_view: IReservationListView, user_view: IUserView
     ) -> None:

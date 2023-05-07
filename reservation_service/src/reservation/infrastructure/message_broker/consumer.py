@@ -12,9 +12,7 @@ from src.infrastructure.message_broker import (
 )
 from src.infrastructure.storage import SessionFactory, SQLAlchemyEngine
 from src.reservation.domain.commands import UpdateReservationCommand
-from src.reservation.domain.events import (
-    ReservationCheckedEvent,
-)
+from src.reservation.domain.events import ReservationCheckedEvent
 from src.reservation.domain.ports import IUpdateReservationCommand
 from src.reservation.infrastructure.message_broker.producer import (
     ReservationPublisher,

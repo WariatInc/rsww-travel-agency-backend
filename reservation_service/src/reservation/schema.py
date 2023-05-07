@@ -17,6 +17,10 @@ class ReservationSchema(ma.Schema):
     rejection_reason = ma.fields.Str(**implicitly_nullable)
 
 
+class ReservationGetSchema(ma.Schema):
+    user_gid = ma.fields.UUID(**non_nullable)
+
+
 class ReservationListSchema(ma.Schema):
     reservations = ma.fields.Nested(
         ReservationSchema, many=True, **non_nullable

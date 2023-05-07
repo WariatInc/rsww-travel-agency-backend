@@ -1,3 +1,4 @@
-from .get_user_reservations_query import GetUserReservationQuery
+from .get_reservation_query import GetReservationQuery
+from .get_user_reservations_query import GetUserReservationsQuery
 
-__all__ = ["GetUserReservationQuery"]
+__all__ = ["GetUserReservationsQuery", "GetReservationQuery"]

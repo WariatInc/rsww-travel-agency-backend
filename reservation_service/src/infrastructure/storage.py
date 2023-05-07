@@ -1,5 +1,5 @@
 from flask import Config
-from sqlalchemy import Engine, create_engine
+from sqlalchemy import Engine, NullPool, create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
 
@@ -13,7 +13,9 @@ class SQLAlchemyEngine:
 
 class SQLAlchemyReadOnlyEngine:
     def __init__(self, config: Config) -> None:
-        self.engine = create_engine(config["SQLALCHEMY_BINDS"]["readonly"])
+        self.engine = create_engine(
+            config["SQLALCHEMY_BINDS"]["readonly"], poolclass=NullPool
+        )
 
     def __call__(self, *args, **kwargs) -> Engine:
         return self.engine
