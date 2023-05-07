@@ -2,8 +2,9 @@ import functools
 import inspect
 from typing import Any, Optional
 
-from injector import Binder, ConstructorOrClassT, Injector, Provider, inject
+from injector import Binder, ConstructorOrClassT, Injector
 from injector import Module as BaseModule
+from injector import Provider, inject
 
 __all__ = ["Module"]
 

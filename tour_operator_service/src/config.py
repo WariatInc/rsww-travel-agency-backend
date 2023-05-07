@@ -25,6 +25,8 @@ class DefaultConfig(Config):
     RABBITMQ_USER = os.environ.get("RABBITMQ_USER")
     RABBITMQ_PASSWORD = os.environ.get("RABBITMQ_PASSWORD")
 
+    CONSUMERS = ["src.offer.infrastructure.message_broker.consumer"]
+
 
 class TestConfig(DefaultConfig):
     ENVIRONMENT = "test"

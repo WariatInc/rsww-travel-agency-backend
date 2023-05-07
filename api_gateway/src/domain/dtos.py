@@ -4,5 +4,7 @@ from uuid import UUID
 
 @dataclass
 class ActorDto:
-    id: UUID
     gid: UUID
+    first_name: str
+    last_name: str
+    email: str

@@ -3,6 +3,7 @@ from typing import Optional
 from uuid import UUID
 
 from src.reservation.domain.dtos import ReservationDto
+from src.user.domain.ports import IUserRepository
 
 
 class IReservationRepository(ABC):
@@ -37,6 +38,7 @@ class IReservationRepository(ABC):
 
 class IReservationUnitOfWork(ABC):
     reservation_repository: IReservationRepository
+    user_repository: IUserRepository
 
     @abstractmethod
     def commit(self) -> None:
@@ -49,13 +51,15 @@ class IReservationUnitOfWork(ABC):
 
 class ICreateReservationCommand(ABC):
     @abstractmethod
-    def __call__(self, offer_id: UUID) -> "ReservationDto":
+    def __call__(self, user_gid: UUID, offer_id: UUID) -> "ReservationDto":
         raise NotImplementedError
 
 
 class ICancelReservationCommand(ABC):
     @abstractmethod
-    def __call__(self, reservation_id: UUID) -> "ReservationDto":
+    def __call__(
+        self, user_gid: UUID, reservation_id: UUID
+    ) -> "ReservationDto":
         raise NotImplementedError
 
 
@@ -67,17 +71,17 @@ class IUpdateReservationCommand(ABC):
 
 class IReservationListView(ABC):
     @abstractmethod
-    def get_list(self, user_id: UUID) -> list[ReservationDto]:
+    def get_list(self, user_gid: UUID) -> list[ReservationDto]:
         raise NotImplementedError
 
 
 class IGetUserReservationsQuery(ABC):
     @abstractmethod
-    def get(self) -> list[ReservationDto]:
+    def get(self, user_id: UUID) -> list[ReservationDto]:
         raise NotImplementedError
 
 
 class IDeleteRejectedReservationCommand(ABC):
     @abstractmethod
-    def __call__(self, reservation_id: UUID) -> None:
+    def __call__(self, user_gid: UUID, reservation_id: UUID) -> None:
         raise NotImplementedError

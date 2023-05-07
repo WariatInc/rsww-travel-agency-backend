@@ -26,3 +26,6 @@ class PaymentState(StrEnum):
     finalized = auto()
     rejected = auto()
     pending = auto()
+
+
+RESERVATION_READ_STORE_COLUMNS = ["reservation_id", "state"]

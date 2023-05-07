@@ -104,7 +104,7 @@ install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(DEV_DEPS)
 
 app_bash:
-	docker container exec --interactive --tty $(call get_container_id, $(PROJECT_NAME)_tour_operator) bash
+	docker container exec --interactive --tty $(call get_container_id, $(PROJECT_NAME)-tour_operator) bash
 
 lint:
 	$(ISORT) .

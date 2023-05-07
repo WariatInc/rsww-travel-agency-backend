@@ -40,6 +40,14 @@ class DefaultConfig(Config):
     RABBITMQ_PASSWORD = os.environ.get("RABBITMQ_PASSWORD")
 
 
+class ProductionConfig(DefaultConfig):
+    ENVIRONMENT = "prod"
+    CONSUMERS = [
+        "src.reservation.infrastructure.message_broker.consumer",
+        "src.payment.infrastructure.message_broker.consumer",
+    ]
+
+
 class TestConfig(DefaultConfig):
     ENVIRONMENT = "test"
     TESTING = True

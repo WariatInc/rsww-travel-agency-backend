@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 from flask import Config
 
@@ -12,7 +12,9 @@ from src.infrastructure.message_broker import (
 )
 from src.infrastructure.storage import SessionFactory, SQLAlchemyEngine
 from src.reservation.domain.commands import UpdateReservationCommand
-from src.reservation.domain.events import ReservationCheckedEvent
+from src.reservation.domain.events import (
+    ReservationCheckedEvent,
+)
 from src.reservation.domain.ports import IUpdateReservationCommand
 from src.reservation.infrastructure.message_broker.producer import (
     ReservationPublisher,
@@ -27,6 +29,13 @@ if TYPE_CHECKING:
         BlockingConnection,
     )
     from pika.spec import Basic, BasicProperties
+
+
+logging.basicConfig(
+    format="%(name)s - %(levelname)s - %(asctime)s - %(message)s",
+    level=logging.INFO,
+)
+logger = logging.getLogger("Reservation Consumer")
 
 
 class ReservationConsumer(RabbitMQConsumer):
@@ -66,9 +75,10 @@ class ReservationConsumer(RabbitMQConsumer):
         self.channel.basic_ack(delivery_tag=method.delivery_tag)
 
 
-def _consume() -> None:
-    config = Config("")
-    config.from_object(DefaultConfig)
+def consume(config: Optional[Config] = None) -> None:
+    if not config:
+        config = Config("")
+        config.from_object(DefaultConfig)
 
     connection_factory = RabbitMQConnectionFactory(config)
     session_factory = SessionFactory(SQLAlchemyEngine(config))
@@ -87,9 +97,4 @@ def _consume() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        format="Reservation service - reservation consumer | %(name)s - %(levelname)s - %(asctime)s - %(message)s",
-        level=logging.INFO,
-    )
-    logger = logging.getLogger(__name__)
-    _consume()
+    consume()

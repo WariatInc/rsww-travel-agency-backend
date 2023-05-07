@@ -1,19 +1,19 @@
 from src.consts import ReservationState
-from src.domain.dtos import ActorDto
 from src.reservation.domain.dtos import ReservationDto
 from src.reservation.domain.exceptions import (
-    ActorIsNotReservationOwner,
     ReservationAlreadyCancelled,
     ReservationCannotBeDeleted,
     ReservationIsPaid,
+    UserIsNotReservationOwner,
 )
+from src.user.domain.dtos import UserDto
 
 
 def validate_reservation_ownership(
-    actor: ActorDto, reservation: ReservationDto
+    user: UserDto, reservation: ReservationDto
 ) -> None:
-    if actor.id != reservation.user_id:
-        raise ActorIsNotReservationOwner
+    if user.id != reservation.user_id:
+        raise UserIsNotReservationOwner
 
 
 def validate_if_reservation_can_be_cancelled(

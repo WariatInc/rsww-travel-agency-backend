@@ -29,7 +29,7 @@ services:
     restart: always
     build:
       context: api_gateway
-    command: flask run --host 0.0.0.0 --port 8000
+    command: flask run --host 0.0.0.0 --port 8040
     volumes:
       - ./api_gateway/src:/opt/api_gateway/src:z
       - ./api_gateway/migrations:/opt/api_gateway/migrations:z

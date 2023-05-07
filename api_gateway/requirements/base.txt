@@ -1,5 +1,9 @@
 alembic==1.10.4
     # via flask-migrate
+certifi==2022.12.7
+    # via requests
+charset-normalizer==3.1.0
+    # via requests
 click==8.1.3
     # via flask
 flask==2.2.3
@@ -16,6 +20,8 @@ flask-sqlalchemy==3.0.3
     # via
     #   -r requirements/base.in
     #   flask-migrate
+idna==3.4
+    # via requests
 importlib-metadata==6.6.0
     # via flask
 injector==0.20.1
@@ -49,6 +55,8 @@ packaging==23.1
     #   webargs
 psycopg2==2.9.6
     # via -r requirements/base.in
+requests==2.30.0
+    # via -r requirements/base.in
 sqlalchemy==2.0.12
     # via
     #   -r requirements/base.in
@@ -58,6 +66,8 @@ typing-extensions==4.5.0
     # via
     #   alembic
     #   sqlalchemy
+urllib3==2.0.2
+    # via requests
 webargs==8.2.0
     # via -r requirements/base.in
 werkzeug==2.3.3

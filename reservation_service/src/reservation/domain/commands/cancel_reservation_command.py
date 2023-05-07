@@ -1,9 +1,7 @@
 from uuid import UUID
 
-from src.auth.login import current_user
 from src.consts import ReservationState
 from src.domain.events import event_factory
-from src.domain.factories import actor_dto_factory
 from src.reservation.domain.events import ReservationCancelledEvent
 from src.reservation.domain.exceptions import ReservationNotFound
 from src.reservation.domain.ports import (
@@ -18,6 +16,7 @@ from src.reservation.domain.validation import (
 from src.reservation.infrastructure.message_broker.producer import (
     ReservationPublisher,
 )
+from src.user.domain.exceptions import UserNotFoundException
 
 
 class CancelReservationCommand(ICancelReservationCommand):
@@ -31,18 +30,20 @@ class CancelReservationCommand(ICancelReservationCommand):
         self._update_reservation_command = update_reservation_command
         self._publisher = publisher
 
-    def __call__(self, reservation_id: UUID) -> None:
-        actor = actor_dto_factory(current_user)
-
+    def __call__(self, user_gid: UUID, reservation_id: UUID) -> None:
         with self._uow:
+            user = self._uow.user_repository.get_user_by_gid(user_gid=user_gid)
             reservation = self._uow.reservation_repository.get_reservation(
                 reservation_id
             )
 
+        if not user:
+            raise UserNotFoundException
+
         if not reservation:
             raise ReservationNotFound
 
-        validate_reservation_ownership(actor=actor, reservation=reservation)
+        validate_reservation_ownership(user=user, reservation=reservation)
         validate_if_reservation_can_be_cancelled(reservation)
 
         self._update_reservation_command(

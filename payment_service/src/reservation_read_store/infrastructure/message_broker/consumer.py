@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Optional
 
 from flask import Config
 
@@ -36,6 +36,13 @@ if TYPE_CHECKING:
     from pika.spec import Basic, BasicProperties
 
 
+logging.basicConfig(
+    format="%(name)s - %(levelname)s - %(asctime)s - %(message)s",
+    level=logging.INFO,
+)
+logger = logging.getLogger("Reservation Consumer")
+
+
 class ReservationConsumer(RabbitMQConsumer):
     queue = Queues.payment_service_reservation_queue
 
@@ -68,10 +75,9 @@ class ReservationConsumer(RabbitMQConsumer):
     ) -> None:
         event = ReservationUpdatedEvent.from_rabbitmq_message(payload)
         logger.info(msg=f"Consuming event: {event.type} with id: {event.id}")
-        if event.state:
-            self._reservation_read_store_synchronization_command(
-                reservation_id=event.reservation_id, state=event.state
-            )
+        self._reservation_read_store_synchronization_command(
+            reservation_id=event.reservation_id, **event.details
+        )
         logger.info(msg=f"Event with id: {event.id} successfully consumed")
 
     def _consume_reservation_deleted_event(
@@ -102,9 +108,10 @@ class ReservationConsumer(RabbitMQConsumer):
         self.channel.basic_ack(delivery_tag=method.delivery_tag)
 
 
-def _consume() -> None:
-    config = Config("")
-    config.from_object(DefaultConfig)
+def consume(config: Optional[type[Config]] = None) -> None:
+    if not config:
+        config = Config("")
+        config.from_object(DefaultConfig)
 
     connection_factory = RabbitMQConnectionFactory(config)
     session_factory = SessionFactory(SQLAlchemyEngine(config))
@@ -126,15 +133,9 @@ def _consume() -> None:
         reservation_read_store_synchronization_command,
         delete_reservation_from_read_store_command,
     )
-
     logger.info(msg="Start consuming")
     consumer.consume()
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        format="Payment service - reservation consumer | %(name)s - %(levelname)s - %(asctime)s - %(message)s",
-        level=logging.INFO,
-    )
-    logger = logging.getLogger(__name__)
-    _consume()
+    consume()

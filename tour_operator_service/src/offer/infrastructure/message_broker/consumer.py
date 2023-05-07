@@ -1,8 +1,8 @@
 import json
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Optional
 
-from src.config import DefaultConfig
+from src.config import Config, DefaultConfig
 from src.consts import Queues
 from src.infrastructure.message_broker import (
     RabbitMQConnectionFactory,
@@ -33,6 +33,13 @@ if TYPE_CHECKING:
         BlockingConnection,
     )
     from pika.spec import Basic, BasicProperties
+
+
+logging.basicConfig(
+    format="%(name)s - %(levelname)s - %(asctime)s - %(message)s",
+    level=logging.INFO,
+)
+logger = logging.getLogger("Reservation Consumer")
 
 
 class ReservationConsumer(RabbitMQConsumer):
@@ -81,9 +88,12 @@ class ReservationConsumer(RabbitMQConsumer):
         self.channel.basic_ack(delivery_tag=method.delivery_tag)
 
 
-def _consume() -> None:
-    connection_factory = RabbitMQConnectionFactory(DefaultConfig)
-    session_factory = SessionFactory(SQLAlchemyEngine(DefaultConfig))
+def consume(config: Optional[type[Config]] = None) -> None:
+    if not config:
+        config = DefaultConfig
+
+    connection_factory = RabbitMQConnectionFactory(config)
+    session_factory = SessionFactory(SQLAlchemyEngine(config))
 
     update_offer_command = UpdateOfferCommand(
         uow=OfferUnitOfWork(session_factory),
@@ -105,9 +115,4 @@ def _consume() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        format="Tour operator - reservation consumer | %(name)s - %(levelname)s - %(asctime)s - %(message)s",
-        level=logging.INFO,
-    )
-    logger = logging.getLogger(__name__)
-    _consume()
+    consume()

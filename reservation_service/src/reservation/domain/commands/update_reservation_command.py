@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from src.consts import ReservationState
 from src.domain.events import event_factory
 from src.reservation.domain.events import ReservationUpdatedEvent
 from src.reservation.domain.ports import (
@@ -20,6 +21,12 @@ class UpdateReservationCommand(IUpdateReservationCommand):
 
     def __call__(self, reservation_id: UUID, **update_kwargs) -> None:
         with self._uow:
+            reservation = self._uow.reservation_repository.get_reservation(
+                reservation_id
+            )
+            if reservation.state == ReservationState.cancelled:
+                update_kwargs.pop("state")
+
             self._uow.reservation_repository.update_reservation(
                 reservation_id, **update_kwargs
             )

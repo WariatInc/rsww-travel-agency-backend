@@ -32,7 +32,17 @@ class DefaultConfig(Config):
         )
     }
 
-    BLUEPRINTS = []
+    RESERVATION_SERVICE_ROOT_URL = os.environ.get(
+        "RESERVATION_SERVICE_ROOT_URL"
+    )
+    PAYMENT_SERVICE_ROOT_URL = os.environ.get("PAYMENT_SERVICE_ROOT_URL")
+    TRIP_OFFER_SERVICE_ROOT_URL = os.environ.get("TRIP_OFFER_SERVICE_ROOT_URL")
+
+    BLUEPRINTS = [
+        "src.reservation.api",
+        "src.payment.api",
+        "src.trip_offer.api",
+    ]
 
 
 class TestConfig(DefaultConfig):

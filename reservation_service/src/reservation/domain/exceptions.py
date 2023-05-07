@@ -23,7 +23,7 @@ class ReservationIsPaid(ReservationException):
     pass
 
 
-class ActorIsNotReservationOwner(ReservationException):
+class UserIsNotReservationOwner(ReservationException):
     pass
 
 

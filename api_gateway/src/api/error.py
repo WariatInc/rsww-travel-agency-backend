@@ -12,7 +12,7 @@ def custom_error(
     headers: Optional[Headers] = None,
     **kwargs,
 ) -> Response:
-    data = dict(mesasge=msg)
+    data = dict(message=msg)
     data.update(kwargs)
     response = make_response(
         json.dumps(data), code, {"Content-Type": "application/json"}

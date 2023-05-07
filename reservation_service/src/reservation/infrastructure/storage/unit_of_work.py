@@ -3,6 +3,7 @@ from src.reservation.domain.ports import IReservationUnitOfWork
 from src.reservation.infrastructure.storage.repository import (
     ReservationRepository,
 )
+from src.user.infrastructure.storage.repository import UserRepository
 
 
 class ReservationUnitOfWork(IReservationUnitOfWork):
@@ -12,6 +13,7 @@ class ReservationUnitOfWork(IReservationUnitOfWork):
     def __enter__(self) -> None:
         self._session = self._session_factory.create_session()
         self.reservation_repository = ReservationRepository(self._session)
+        self.user_repository = UserRepository(self._session)
 
     def __exit__(self, *args) -> None:
         self._session.close()
