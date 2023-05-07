@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from threading import Thread
 from typing import Optional
 
 from flask import Flask, Response
@@ -35,6 +36,10 @@ def create_app(
     configure_blueprints(app)
     configure_extensions(app)
     configure_handlers(app)
+
+    if app.config.get("ENVIRONMENT") == "prod":
+        configure_consumers(app)
+
     return app
 
 
@@ -73,3 +78,10 @@ def configure_handlers(app: Flask) -> None:
         exc = getattr(err, "exc")
         messages = getattr(exc, "messages", None)
         return validation_error(messages)
+
+
+def configure_consumers(app: Flask) -> None:
+    for module in app.config.get("CONSUMERS"):
+        consume_func = import_from(module, "consume")
+        consumer = Thread(target=consume_func, args=(app.config,))
+        consumer.start()

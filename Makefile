@@ -40,6 +40,8 @@ deploy_full: run_rabbitmq \
 			 configure_trip_offer_db \
 			 deploy_trip_offer_service \
 			 run_bootstrap_mongo \
+			 configure_api_gateway_db \
+			 deploy_api_gateway \
 			 start_payment_service_reservation_consumer \
 			 start_reservation_service_reservation_consumer \
 			 start_reservation_service_payment_consumer \
@@ -115,6 +117,12 @@ configure_trip_offer_db:
 
 deploy_trip_offer_service:
 	$(MAKE) -C ./trip_offer_service -f ./Makefile run_api_daemon
+
+configure_api_gateway_db:
+	$(MAKE) -C ./api_gateway -f ./Makefile init_db
+
+deploy_api_gateway:
+	$(MAKE) -C ./api_gateway -f ./Makefile run_api_daemon
 
 start_payment_service_reservation_consumer:
 	$(MAKE) -C ./payment_service -f ./Makefile start_reservation_consumer_daemon

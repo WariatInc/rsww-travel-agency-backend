@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Any, Optional
+from typing import Any
 from uuid import UUID
 
 from src.consts import ReservationState
@@ -28,7 +28,7 @@ class ReservationCreatedEvent(Event):
 @dataclass
 class ReservationUpdatedEvent(Event):
     reservation_id: UUID
-    state: Optional[ReservationState] = None
+    details: dict[str, Any]
 
     @classmethod
     def from_rabbitmq_message(
@@ -39,7 +39,7 @@ class ReservationUpdatedEvent(Event):
             time=datetime.fromisoformat(message.get("time")),
             type=message.get("type"),
             reservation_id=UUID(message.get("reservation_id")),
-            state=ReservationState(message.get("details").get("state")),
+            details=message.get("details"),
         )
 
 

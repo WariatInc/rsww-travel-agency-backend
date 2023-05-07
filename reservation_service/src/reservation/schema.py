@@ -6,6 +6,7 @@ from src.consts import ReservationState
 
 class ReservationPostSchema(ma.Schema):
     offer_id = ma.fields.UUID(**non_nullable)
+    user_gid = ma.fields.UUID(**non_nullable)
 
 
 class ReservationSchema(ma.Schema):
@@ -24,3 +25,15 @@ class ReservationListSchema(ma.Schema):
 
 class CreatedReservationSchema(ma.Schema):
     reservation_id = ma.fields.UUID()
+
+
+class ReservationsGetSchema(ma.Schema):
+    user_gid = ma.fields.UUID(**non_nullable)
+
+
+class ReservationCancelPostSchema(ma.Schema):
+    user_gid = ma.fields.UUID(**non_nullable)
+
+
+class ReservationDeleteSchema(ma.Schema):
+    user_gid = ma.fields.UUID(**non_nullable)

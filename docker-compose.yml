@@ -15,7 +15,7 @@ services:
       - rsww_backend_network
 
   pg_db:
-    image: postgres:14.7-alpine
+    image: postgres:13
     container_name: pg_db
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
@@ -24,8 +24,25 @@ services:
     networks:
       - rsww_backend_network
 
+  api_gateway:
+    container_name: api_gateway
+    restart: always
+    build:
+      context: api_gateway
+    command: flask run --host 0.0.0.0 --port 8040
+    volumes:
+      - ./api_gateway/src:/opt/api_gateway/src:z
+      - ./api_gateway/migrations:/opt/api_gateway/migrations:z
+      - ./api_gateway/db:/opt/api_gateway/db:z
+    env_file:
+      - api_gateway/.env.dev
+    ports:
+      - "8040:8040"
+    networks:
+      - rsww_backend_network
+
   mongo_db:
-    image: mongo:6.0.5
+    image: mongo:4.4.9
     container_name: mongo_db
     restart: unless-stopped
     command: mongod --auth

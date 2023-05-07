@@ -7,4 +7,9 @@ if TYPE_CHECKING:
 
 
 def actor_dto_factory(user: "User") -> ActorDto:
-    return ActorDto(id=user.id, gid=user.gid)
+    return ActorDto(
+        gid=user.gid,
+        first_name=user.first_name,
+        last_name=user.last_name,
+        email=user.last_name,
+    )

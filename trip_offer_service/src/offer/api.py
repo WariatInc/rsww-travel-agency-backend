@@ -22,11 +22,11 @@ class OfferResource(Resource):
     def __init__(self, get_offer_query: IGetOfferQuery) -> None:
         self.get_offer_query = get_offer_query
 
-    def get(self, uuid: UUID):
-        offer: Optional[OfferDto] = self.get_offer_query.get_offer(uuid)
+    def get(self, offer_id: UUID):
+        offer: Optional[OfferDto] = self.get_offer_query.get_offer(offer_id)
         if not offer:
             return custom_error(
-                f"Provided UUID={uuid} could not be found.",
+                f"Provided UUID={offer_id} could not be found.",
                 HTTPStatus.NOT_FOUND,
             )
 
@@ -63,11 +63,11 @@ class SearchOfferOptionsResource(Resource):
 
 
 class Api(Blueprint):
-    name = "offer"
+    name = "offers"
     import_name = __name__
 
     resources = [
-        (OfferResource, "/get/<uuid:uuid>"),
-        (SearchOfferResource, "/search/"),
+        (OfferResource, "/<uuid:offer_id>"),
+        (SearchOfferResource, "/search"),
         (SearchOfferOptionsResource, "/search/options"),
     ]

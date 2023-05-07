@@ -3,14 +3,13 @@ from typing import TYPE_CHECKING, Optional
 from uuid import UUID
 
 if TYPE_CHECKING:
-    from src.consts import ReservationState
     from src.reservation_read_store.domain.dtos import ReservationDto
 
 
 class IReservationReadStoreRepository(ABC):
     @abstractmethod
     def upsert_reservation_read_store(
-        self, reservation_id: UUID, state: "ReservationState"
+        self, reservation_id: UUID, **upsert_kwargs
     ) -> None:
         raise NotImplementedError
 
@@ -33,9 +32,7 @@ class IReservationReadStoreUnitOfWork(ABC):
 
 class IReservationReadStoreSynchronizationCommand(ABC):
     @abstractmethod
-    def __call__(
-        self, reservation_id: UUID, state: "ReservationState"
-    ) -> None:
+    def __call__(self, reservation_id: UUID, **upsert_kwargs) -> None:
         raise NotImplementedError
 
 

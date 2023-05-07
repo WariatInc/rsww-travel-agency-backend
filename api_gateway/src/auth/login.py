@@ -8,7 +8,7 @@ from werkzeug.local import LocalProxy
 from src.api.error import custom_error
 from src.auth.error import ERROR
 from src.extensions import db
-from src.user.infrastructure.storage.models import User, UserIdentity
+from src.user.infrastructure.storage.models import User
 
 current_user = LocalProxy(lambda: _get_current_user())
 
@@ -28,24 +28,18 @@ def auth_required(func: Callable) -> Callable:
     @wraps(func)
     def wrapper(*args, **kwargs):
         if not _get_auth_info():
-            return custom_error(
-                ERROR.unauthorized.value, HTTPStatus.UNAUTHORIZED
-            )
+            return custom_error(ERROR.unauthorized, HTTPStatus.UNAUTHORIZED)
 
         if not (
-            user_identity := db.session.query(UserIdentity)
-            .filter(UserIdentity.email == g.auth_email)
+            user := db.session.query(User)
+            .filter(User.email == g.auth_email)
             .one_or_none()
         ):
             return custom_error(
-                ERROR.user_wrong_credentials.value, HTTPStatus.UNAUTHORIZED
+                ERROR.user_wrong_credentials, HTTPStatus.UNAUTHORIZED
             )
 
-        g.current_user = (
-            db.session.query(User)
-            .filter(User.gid == user_identity.gid)
-            .first()
-        )
+        g.current_user = user
         return func(*args, **kwargs)
 
     return wrapper
