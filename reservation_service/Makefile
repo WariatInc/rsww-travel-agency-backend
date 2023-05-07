@@ -74,7 +74,7 @@ migrate: $(STATE_DB_UPGRADED)
 init_db $(STATE_DB_INIT): $(STATE_DIR) $(DB_INIT_SQL) $(DB_DUMP)
 	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api wait-for-it pg_db:5432
 	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api psql --host=pg_db --dbname=postgres --username=postgres --file=$(DB_INIT_SQL)
-	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api pg_restore --host=pg_db --username=postgres --dbname=postgres --format=custom $(DB_DUMP)
+	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api pg_restore --host=pg_db --username=postgres --dbname=rsww_179919_reservation --format=custom $(DB_DUMP)
 	touch $(STATE_DB_INIT)
 
 init_test_db $(STATE_DB_TEST_INIT): $(STATE_DIR) $(DB_TEST_INIT_SQL)
