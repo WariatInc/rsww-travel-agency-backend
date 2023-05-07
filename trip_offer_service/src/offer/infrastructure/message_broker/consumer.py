@@ -1,6 +1,6 @@
 import json
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Optional
 
 from flask import Config
 
@@ -22,6 +22,13 @@ if TYPE_CHECKING:
     from pika.spec import Basic, BasicProperties
 
     from src.offer.domain.ports import IOfferRepository
+
+
+logging.basicConfig(
+    format="%(name)s - %(levelname)s - %(asctime)s - %(message)s",
+    level=logging.INFO,
+)
+logger = logging.getLogger("Reservation Consumer")
 
 
 class ReservationConsumer(RabbitMQConsumer):
@@ -59,9 +66,10 @@ class ReservationConsumer(RabbitMQConsumer):
         self.channel.basic_ack(delivery_tag=method.delivery_tag)
 
 
-def _consume() -> None:
-    config = Config("")
-    config.from_object(DefaultConfig)
+def consume(config: Optional[type[Config]] = None) -> None:
+    if not config:
+        config = Config("")
+        config.from_object(DefaultConfig)
 
     connection_factory = RabbitMQConnectionFactory(config)
     client = MongoClient(config)
@@ -76,9 +84,4 @@ def _consume() -> None:
 
 
 if __name__ == "__main__":
-    logging.basicConfig(
-        format="Trip offer service - offer consumer | %(name)s - %(levelname)s - %(asctime)s - %(message)s",
-        level=logging.INFO,
-    )
-    logger = logging.getLogger(__name__)
-    _consume()
+    consume()
