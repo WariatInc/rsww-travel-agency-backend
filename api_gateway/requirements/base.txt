@@ -20,10 +20,16 @@ flask-sqlalchemy==3.0.3
     # via
     #   -r requirements/base.in
     #   flask-migrate
+greenlet==2.0.2
+    # via sqlalchemy
 idna==3.4
     # via requests
 importlib-metadata==6.6.0
-    # via flask
+    # via
+    #   alembic
+    #   flask
+importlib-resources==5.12.0
+    # via alembic
 injector==0.20.1
     # via
     #   -r requirements/base.in
@@ -65,6 +71,7 @@ sqlalchemy==2.0.12
 typing-extensions==4.5.0
     # via
     #   alembic
+    #   injector
     #   sqlalchemy
 urllib3==2.0.2
     # via requests
@@ -75,4 +82,6 @@ werkzeug==2.3.3
     #   -r requirements/base.in
     #   flask
 zipp==3.15.0
-    # via importlib-metadata
+    # via
+    #   importlib-metadata
+    #   importlib-resources

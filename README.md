@@ -66,6 +66,22 @@ RABBITMQ_PORT=5672
 RABBITMQ_USER=trip_offer_user
 RABBITMQ_PASSWORD=password
 ```
+
+Sample ```api_gateway/.env.dev``` file: 
+```
+FLASK_DEBUG=true
+FLASK_ENV=development
+FLASK_APP=app_wsgi.py
+NO_WSGI=true
+PG_USER=api_gateway
+PG_PASSWORD=api_gateway
+PG_DB=api_gateway_pg
+PG_HOST=pg_db
+PG_PORT=5432
+RESERVATION_SERVICE_ROOT_URL=http://reservation_api:8000/api
+PAYMENT_SERVICE_ROOT_URL=http://payment_api:8030/api
+TRIP_OFFER_SERVICE_ROOT_URL=http://trip_offer_api:8010/api
+```
 #
 In order to enusre proper DB bootstraping, please do the following steps:
 
