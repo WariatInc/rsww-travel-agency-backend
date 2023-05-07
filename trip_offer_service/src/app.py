@@ -1,3 +1,4 @@
+from threading import Thread
 from typing import Optional
 
 from flask import Flask
@@ -31,6 +32,9 @@ def create_app(
     configure_blueprints(app)
     configure_extensions(app)
 
+    if app.config.get("ENVIRONMENT") == "prod":
+        configure_consumers(app)
+
     return app
 
 
@@ -57,3 +61,10 @@ def configure_blueprints(app: Flask) -> None:
         inject(blueprint.__init__)
         instance = app.injector.create_object(blueprint)
         instance.register()
+
+
+def configure_consumers(app: Flask) -> None:
+    for module in app.config.get("CONSUMERS"):
+        consume_func = import_from(module, "consume")
+        consumer = Thread(target=consume_func, args=(app.config,))
+        consumer.start()
