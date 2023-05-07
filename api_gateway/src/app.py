@@ -2,10 +2,10 @@ from http import HTTPStatus
 from typing import Optional
 
 from flask import Flask, Response
+from flask_cors import CORS
 from flask_injector import FlaskInjector, FlaskModule
 from flask_migrate import Migrate
 from injector import Injector, inject
-from flask_cors import CORS
 
 import src.extensions as ext
 from src.api.error import validation_error
@@ -17,7 +17,7 @@ __all__ = ["create_app"]
 
 
 def create_app(
-    app_name: Optional[str] = None, config: Optional[Config] = None
+    app_name: Optional[str] = None, config: Optional[type[Config]] = None
 ) -> Flask:
     """Create Flask app"""
 
