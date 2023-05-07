@@ -17,19 +17,27 @@ from src.reservation.domain.ports import (
     ICancelReservationCommand,
     ICreateReservationCommand,
     IDeleteRejectedReservationCommand,
+    IGetReservationQuery,
     IGetUserReservationsQuery,
     IReservationListView,
     IReservationUnitOfWork,
+    IReservationView,
     IUpdateReservationCommand,
 )
-from src.reservation.domain.queries import GetUserReservationQuery
+from src.reservation.domain.queries import (
+    GetReservationQuery,
+    GetUserReservationsQuery,
+)
 from src.reservation.infrastructure.message_broker.producer import (
     ReservationPublisher,
 )
 from src.reservation.infrastructure.storage.unit_of_work import (
     ReservationUnitOfWork,
 )
-from src.reservation.infrastructure.storage.views import ReservationListView
+from src.reservation.infrastructure.storage.views import (
+    ReservationListView,
+    ReservationView,
+)
 
 
 class ReservationModule(Module):
@@ -48,13 +56,15 @@ class ReservationModule(Module):
         )
 
         # Queries
-        self.bind(IGetUserReservationsQuery, GetUserReservationQuery)
+        self.bind(IGetUserReservationsQuery, GetUserReservationsQuery)
+        self.bind(IGetReservationQuery, GetReservationQuery)
 
         # Unit of works
         self.bind(IReservationUnitOfWork, ReservationUnitOfWork)
 
         # Views
         self.bind(IReservationListView, ReservationListView)
+        self.bind(IReservationView, ReservationView)
 
     @provider
     @singleton

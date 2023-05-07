@@ -88,6 +88,22 @@ class ReservationResource(Resource):
         )
 
     @auth_required
+    def get(self, reservation_id: UUID):
+        actor = actor_dto_factory(current_user)
+        try:
+            response = requests.get(
+                url=f"{self.reservation_service_root_url}"
+                f"{ReservationApiEndpoints.get_reservation.format(reservation_id=reservation_id, user_gid=actor.gid)}",
+            )
+        except ConnectionError:
+            return custom_error(
+                ERROR.reservation_service_unavailable,
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+
+        return make_response(response.json(), response.status_code)
+
+    @auth_required
     def delete(self, reservation_id: UUID):
         actor = actor_dto_factory(current_user)
         try:
