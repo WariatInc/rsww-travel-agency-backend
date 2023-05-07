@@ -66,5 +66,5 @@ def configure_blueprints(app: Flask) -> None:
 def configure_consumers(app: Flask) -> None:
     for module in app.config.get("CONSUMERS"):
         consume_func = import_from(module, "consume")
-        consumer = Thread(target=consume_func, args=(app.config,))
+        consumer = Thread(target=consume_func, args=(app.config,), daemon=True)
         consumer.start()

@@ -27,3 +27,4 @@ reservation_service/db/reservation_db.gz
 tour_operator_service/db/to_db.gz
 trip_offer_service/db/dump
 api_gateway/db/api_gateway_db.gz
+payment_service/db/payment_db.gz

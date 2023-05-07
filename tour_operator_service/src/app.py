@@ -8,7 +8,7 @@ from src.tour_operator import TourOperatorService
 from src.utils import import_from
 
 
-def create_app(config: Config = DefaultConfig) -> TourOperatorService:
+def create_app(config: type[Config] = DefaultConfig) -> TourOperatorService:
     app = TourOperatorService()
 
     configure_app(app, config)
@@ -24,12 +24,12 @@ def configure_injector(app: TourOperatorService) -> None:
     app.set_injector(injector)
 
 
-def configure_app(app: TourOperatorService, config: Config) -> None:
+def configure_app(app: TourOperatorService, config: type[Config]) -> None:
     app.apply_config(config=config)
 
 
 def configure_consumers(app: TourOperatorService) -> None:
     for module in app.config.CONSUMERS:
         consume_func = import_from(module, "consume")
-        consumer = Thread(target=consume_func, args=(app.config,))
+        consumer = Thread(target=consume_func, args=(app.config,), daemon=True)
         consumer.start()

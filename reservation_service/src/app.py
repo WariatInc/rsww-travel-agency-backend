@@ -43,7 +43,7 @@ def create_app(
     return app
 
 
-def configure_app(app: Flask, config: Optional[Config]) -> None:
+def configure_app(app: Flask, config: Optional[type[Config]]) -> None:
     app.config.from_object(DefaultConfig)
 
     if config:
@@ -83,5 +83,5 @@ def configure_handlers(app: Flask) -> None:
 def configure_consumers(app: Flask) -> None:
     for module in app.config.get("CONSUMERS"):
         consume_func = import_from(module, "consume")
-        consumer = Thread(target=consume_func, args=(app.config,))
+        consumer = Thread(target=consume_func, args=(app.config,), daemon=True)
         consumer.start()

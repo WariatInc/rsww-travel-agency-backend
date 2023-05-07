@@ -17,7 +17,7 @@ __all__ = ["create_app"]
 
 
 def create_app(
-    app_name: Optional[str] = None, config: Optional[Config] = None
+    app_name: Optional[str] = None, config: Optional[type[Config]] = None
 ) -> Flask:
     """Create Flask app"""
 
@@ -83,5 +83,5 @@ def configure_handlers(app: Flask) -> None:
 def configure_consumers(app: Flask) -> None:
     for module in app.config.get("CONSUMERS"):
         consume_func = import_from(module, "consume")
-        consumer = Thread(target=consume_func, args=(app.config,))
+        consumer = Thread(target=consume_func, args=(app.config,), daemon=True)
         consumer.start()

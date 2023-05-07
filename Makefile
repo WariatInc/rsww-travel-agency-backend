@@ -18,14 +18,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-deploy: run_rabbitmq \
-        init_rabbitmq_exchange \
-		run_postgres \
-		run_mongo \
-		payment_service \
-		reservation_service \
-		tour_operator_service \
-		trip_offer_service ## Deploy all services
 
 deploy_full: run_rabbitmq \
 			 init_rabbitmq_exchange \
@@ -39,7 +31,6 @@ deploy_full: run_rabbitmq \
 			 run_mongo \
 			 configure_trip_offer_db \
 			 deploy_trip_offer_service \
-			 run_bootstrap_mongo \
 			 configure_api_gateway_db \
 			 deploy_api_gateway  ## Deploy all services with db initialization
 

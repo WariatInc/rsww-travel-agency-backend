@@ -24,7 +24,6 @@ class MongoReadOnlyClient:
     def __init__(self, config: Config) -> None:
         db_name = config["MONGO_DB_NAME"]
 
-        print(config["MONGO_READONLY_URI"])
         self.client = _MongoClient(
             config["MONGO_READONLY_URI"], uuidRepresentation="standard"
         )
