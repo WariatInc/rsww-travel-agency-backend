@@ -97,7 +97,7 @@ run_api_daemon: $(STATE_DB_UPGRADED)
 	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate payment_api
 
 psql: $(STATE_API_BUILD)
-	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api psql --host=pg_db --dbname=payment_pg --username=payment
+	docker-compose --project-name $(PROJECT_NAME) run --rm payment_api psql --host=pg_db --dbname=payment_pg --username=179919_payment
 
 install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(BASE_DEPS)
