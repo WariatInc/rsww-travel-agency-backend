@@ -41,12 +41,13 @@ deploy_full: run_rabbitmq \
 			 deploy_trip_offer_service \
 			 run_bootstrap_mongo \
 			 configure_api_gateway_db \
-			 deploy_api_gateway \
-			 start_payment_service_reservation_consumer \
+			 deploy_api_gateway  ## Deploy all services with db initialization
+
+deploy_consumers: start_payment_service_reservation_consumer \
 			 start_reservation_service_reservation_consumer \
 			 start_reservation_service_payment_consumer \
 			 start_tour_operator_service_reservation_consumer \
-			 start_trip_offer_service_offer_consumer ## Deploy all services with db initialization
+			 start_trip_offer_service_offer_consumer
 
 run_postgres: 
 	docker-compose up -d --no-recreate pg_db
