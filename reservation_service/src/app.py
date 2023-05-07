@@ -1,7 +1,6 @@
 from http import HTTPStatus
 from threading import Thread
 from typing import Optional
-import atexit
 
 from flask import Flask, Response
 from flask_injector import FlaskInjector, FlaskModule
@@ -13,10 +12,8 @@ from src.api.error import validation_error
 from src.config import Config, DefaultConfig
 from src.di_container.modules import all_modules
 from src.utils import import_from
-import logging
-__all__ = ["create_app"]
 
-logger = logging.getLogger("app")
+__all__ = ["create_app"]
 
 
 def create_app(

@@ -1,5 +1,3 @@
-from src.app import create_app, configure_consumers
-from src.config import ProductionConfig
+from src.app import create_app
 
-
-app = create_app(config=ProductionConfig)
+app = create_app()
