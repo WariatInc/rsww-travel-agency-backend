@@ -1,6 +1,7 @@
 from http import HTTPStatus
 from threading import Thread
 from typing import Optional
+import atexit
 
 from flask import Flask, Response
 from flask_injector import FlaskInjector, FlaskModule
@@ -12,8 +13,10 @@ from src.api.error import validation_error
 from src.config import Config, DefaultConfig
 from src.di_container.modules import all_modules
 from src.utils import import_from
-
+import logging
 __all__ = ["create_app"]
+
+logger = logging.getLogger("app")
 
 
 def create_app(
@@ -43,7 +46,7 @@ def create_app(
     return app
 
 
-def configure_app(app: Flask, config: Optional[Config]) -> None:
+def configure_app(app: Flask, config: Optional[type[Config]]) -> None:
     app.config.from_object(DefaultConfig)
 
     if config:
@@ -83,5 +86,5 @@ def configure_handlers(app: Flask) -> None:
 def configure_consumers(app: Flask) -> None:
     for module in app.config.get("CONSUMERS"):
         consume_func = import_from(module, "consume")
-        consumer = Thread(target=consume_func, args=(app.config,))
+        consumer = Thread(target=consume_func, args=(app.config,), daemon=True)
         consumer.start()

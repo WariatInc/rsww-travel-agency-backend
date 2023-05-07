@@ -45,6 +45,10 @@ class DefaultConfig(Config):
     ]
 
 
+class ProductionConfig(DefaultConfig):
+    ENVIRONMENT = "prod"
+
+
 class TestConfig(DefaultConfig):
     ENVIRONMENT = "test"
     TESTING = True
