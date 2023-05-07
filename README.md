@@ -53,12 +53,13 @@ RABBITMQ_PASSWORD=password
 Sample ```trip_offer_service/.env.dev``` file: 
 
 ```
-FLASK_DEBUG=true
+FLASK_DEBUG=false
+FLASK_ENV=production
 FLASK_APP=app_wsgi.py
 NO_WSGI=true
 MONGO_USER=179919_trip_offer
 MONGO_PASSWORD=trip_offer
-MONGO_DB=rsww_179919_trip_offer
+MONGO_DB=trip_offer_mongo
 MONGO_HOST=mongo_db
 MONGO_PORT=27017
 RABBITMQ_HOST=rabbitmq
