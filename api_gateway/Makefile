@@ -74,7 +74,7 @@ migrate: $(STATE_DB_UPGRADED)
 init_db $(STATE_DB_INIT): $(STATE_DIR) $(DB_INIT_SQL) $(DB_DUMP)
 	docker-compose --project-name $(PROJECT_NAME) run --rm api_gateway wait-for-it pg_db:5432
 	docker-compose --project-name $(PROJECT_NAME) run --rm api_gateway psql --host=pg_db --dbname=postgres --username=postgres --file=$(DB_INIT_SQL)
-	docker-compose --project-name $(PROJECT_NAME) run --rm api_gateway pg_restore --host=pg_db --username=api_gateway --dbname=api_gateway_pg --format=custom $(DB_DUMP)
+	docker-compose --project-name $(PROJECT_NAME) run --rm api_gateway pg_restore --host=pg_db --username=179919_api_gateway --dbname=api_gateway_pg --format=custom $(DB_DUMP)
 	touch $(STATE_DB_INIT)
 
 init_test_db $(STATE_DB_TEST_INIT): $(STATE_DIR) $(DB_TEST_INIT_SQL)
@@ -93,7 +93,7 @@ run_api_daemon: $(STATE_DB_UPGRADED)
 	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate api_gateway
 
 psql: $(STATE_API_BUILD)
-	docker-compose --project-name $(PROJECT_NAME) run --rm api_gateway psql --host=pg_db --dbname=api_gateway_pg --username=api_gateway
+	docker-compose --project-name $(PROJECT_NAME) run --rm api_gateway psql --host=pg_db --dbname=api_gateway_pg --username=postgres
 
 install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(BASE_DEPS)

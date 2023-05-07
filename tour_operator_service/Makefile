@@ -71,7 +71,7 @@ migrate: $(STATE_DB_UPGRADED)
 init_db $(STATE_DB_INIT): $(STATE_DIR) $(DB_INIT_SQL)
 	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator wait-for-it pg_db:5432
 	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator psql --host=pg_db --dbname=postgres --username=postgres --file=$(DB_INIT_SQL)
-	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator pg_restore --host=pg_db --username=tour_operator --dbname=tour_operator_pg --format=custom $(DB_DUMP)
+	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator pg_restore --host=pg_db --username=179919_tour_operator --dbname=tour_operator_pg --format=custom $(DB_DUMP)
 	touch $(STATE_DB_INIT)
 
 init_test_db $(STATE_DB_TEST_INIT): $(STATE_DIR) $(DB_TEST_INIT_SQL)
@@ -96,7 +96,7 @@ run_app_daemon: $(STATE_APP_BUILD) $(STATE_DB_INIT)
 	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate tour_operator
 
 psql: $(STATE_APP_BUILD)
-	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator psql --host=pg_db --dbname=tour_operator_pg --username=postgres
+	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator psql --host=pg_db --dbname=tour_operator_pg --username=179919_tour_operator
 
 install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(BASE_DEPS)

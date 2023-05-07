@@ -74,7 +74,7 @@ migrate: $(STATE_DB_UPGRADED)
 init_db $(STATE_DB_INIT): $(STATE_DIR) $(DB_INIT_SQL) $(DB_DUMP)
 	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api wait-for-it pg_db:5432
 	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api psql --host=pg_db --dbname=postgres --username=postgres --file=$(DB_INIT_SQL)
-	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api pg_restore --host=pg_db --username=reservation --dbname=reservation_pg --format=custom $(DB_DUMP)
+	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api pg_restore --host=pg_db --username=postgres --dbname=reservation_pg --format=custom $(DB_DUMP)
 	touch $(STATE_DB_INIT)
 
 init_test_db $(STATE_DB_TEST_INIT): $(STATE_DIR) $(DB_TEST_INIT_SQL)
@@ -105,7 +105,7 @@ run_api_daemon: $(STATE_DB_UPGRADED)
 	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate reservation_api
 
 psql: $(STATE_API_BUILD)
-	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api psql --host=pg_db --dbname=reservation_pg --username=reservation
+	docker-compose --project-name $(PROJECT_NAME) run --rm reservation_api psql --host=pg_db --dbname=reservation_pg --username=postgres
 
 install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(BASE_DEPS)
@@ -113,7 +113,7 @@ install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(DEV_DEPS)
 
 api_bash:
-	docker container exec --interactive --tty $(call get_container_id, $(PROJECT_NAME)_reservation_api) bash
+	docker container exec --interactive --tty $(call get_container_id, $(PROJECT_NAME)-reservation_api) bash
 
 lint:
 	$(ISORT) .
