@@ -23,3 +23,12 @@ class SearchOfferSchema(ma.Schema):
         validate=lambda x: x >= 0, **possibly_undefined_non_nullable
     )
     room = ma.fields.Enum(RoomType, **possibly_undefined_non_nullable)
+
+
+class OfferPriceGetSchema(ma.Schema):
+    kids_up_to_3 = ma.fields.Integer(
+        **possibly_undefined_non_nullable, validate=lambda x: x >= 0
+    )
+    kids_up_to_10 = ma.fields.Integer(
+        **possibly_undefined_non_nullable, validate=lambda x: x >= 0
+    )

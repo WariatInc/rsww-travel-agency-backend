@@ -11,10 +11,11 @@ from src.domain.events import Event
 class ReservationCreatedEvent(Event):
     reservation_id: UUID
     state: ReservationState
+    price: float
 
     @classmethod
     def from_rabbitmq_message(
-        cls, message: dict[str, str]
+        cls, message: dict[str, Any]
     ) -> "ReservationCreatedEvent":
         return cls(
             id=UUID(message.get("id")),
@@ -22,6 +23,7 @@ class ReservationCreatedEvent(Event):
             type=message.get("type"),
             reservation_id=UUID(message.get("reservation_id")),
             state=ReservationState.pending,
+            price=message.get("price"),
         )
 
 

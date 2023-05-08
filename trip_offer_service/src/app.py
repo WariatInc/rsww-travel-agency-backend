@@ -1,10 +1,12 @@
+from http import HTTPStatus
 from threading import Thread
 from typing import Optional
 
-from flask import Flask
+from flask import Flask, Response
 from flask_injector import FlaskInjector, FlaskModule
 from injector import Injector, inject
 
+from src.api.error import validation_error
 from src.config import Config, DefaultConfig
 from src.di_container.modules import all_modules
 from src.utils import import_from
@@ -31,6 +33,7 @@ def create_app(
     configure_injector(app)
     configure_blueprints(app)
     configure_extensions(app)
+    configure_handlers(app)
 
     if app.config.get("ENVIRONMENT") == "prod":
         configure_consumers(app)
@@ -68,3 +71,11 @@ def configure_consumers(app: Flask) -> None:
         consume_func = import_from(module, "consume")
         consumer = Thread(target=consume_func, args=(app.config,), daemon=True)
         consumer.start()
+
+
+def configure_handlers(app: Flask) -> None:
+    @app.errorhandler(HTTPStatus.UNPROCESSABLE_ENTITY)
+    def handle_unprocessable_entity(err: Exception) -> Response:
+        exc = getattr(err, "exc")
+        messages = getattr(exc, "messages", None)
+        return validation_error(messages)

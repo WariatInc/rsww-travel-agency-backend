@@ -11,7 +11,7 @@ from src.api.blueprint import Blueprint
 from src.api.error import custom_error
 from src.consts import TripOfferApiEndpoints
 from src.trip_offer.error import ERROR
-from src.trip_offer.schema import SearchOfferSchema
+from src.trip_offer.schema import OfferPriceGetSchema, SearchOfferSchema
 
 
 class OfferResource(Resource):
@@ -79,6 +79,28 @@ class SearchOfferOptionsResource(Resource):
         return make_response(response.json(), response.status_code)
 
 
+class OfferPriceResource(Resource):
+    def __init__(self, config: Config) -> None:
+        self.trip_offer_service_root_url = config.get(
+            "TRIP_OFFER_SERVICE_ROOT_URL"
+        )
+
+    @use_kwargs(OfferPriceGetSchema, location="query")
+    def get(self, offer_id: UUID, **kwargs):
+        try:
+            response = requests.get(
+                url=f"{self.trip_offer_service_root_url}{TripOfferApiEndpoints.get_offer_price.format(offer_id=str(offer_id))}",
+                params=kwargs,
+            )
+        except ConnectionError:
+            return custom_error(
+                ERROR.trip_offer_service_unavailable,
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+
+        return make_response(response.json(), response.status_code)
+
+
 class Api(Blueprint):
     name = "offers"
     import_name = __name__
@@ -87,4 +109,5 @@ class Api(Blueprint):
         (OfferResource, "/<uuid:offer_id>"),
         (SearchOfferResource, "/search"),
         (SearchOfferOptionsResource, "/search/options"),
+        (OfferPriceResource, "/price/<uuid:offer_id>"),
     ]

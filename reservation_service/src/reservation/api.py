@@ -26,10 +26,10 @@ from src.reservation.schema import (
     CreatedReservationSchema,
     ReservationCancelPostSchema,
     ReservationDeleteSchema,
+    ReservationDetailsSchema,
     ReservationGetSchema,
     ReservationListSchema,
     ReservationPostSchema,
-    ReservationSchema,
     ReservationsGetSchema,
 )
 from src.user.domain.exceptions import UserNotFoundException
@@ -46,9 +46,18 @@ class ReservationsResource(Resource):
 
     @use_schema(CreatedReservationSchema, HTTPStatus.OK)
     @use_kwargs(ReservationPostSchema, location="json")
-    def post(self, user_gid: UUID, offer_id: UUID):
+    def post(
+        self,
+        user_gid: UUID,
+        offer_id: UUID,
+        price: float,
+        kids_up_to_3: int = 0,
+        kids_up_to_10: int = 0,
+    ):
         try:
-            reservation = self.create_reservation_command(user_gid, offer_id)
+            reservation = self.create_reservation_command(
+                user_gid, offer_id, kids_up_to_3, kids_up_to_10, price
+            )
         except ReservationExistInPendingAcceptedOrPaidStateException:
             return custom_error(
                 ERROR.reservation_exist_in_pending_accepted_or_paid_state_error,
@@ -117,7 +126,7 @@ class ReservationResource(Resource):
         self.get_reservation_query = get_reservation_query
 
     @use_kwargs(ReservationGetSchema, location="query")
-    @use_schema(ReservationSchema, HTTPStatus.OK)
+    @use_schema(ReservationDetailsSchema, HTTPStatus.OK)
     def get(self, user_gid: UUID, reservation_id: UUID):
         try:
             reservation = self.get_reservation_query.get(

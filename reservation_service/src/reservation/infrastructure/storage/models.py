@@ -26,6 +26,9 @@ class Reservation(db.BaseModel):
         nullable=False,
         default=ReservationState.pending,
     )
+    kids_up_to_3 = db.Column(db.Integer(), nullable=False)
+    kids_up_to_10 = db.Column(db.Integer(), nullable=False)
+    price = db.Column(db.Float(), nullable=False)
 
     user_id = db.Column(db.UUID(), nullable=False)
     user = db.relationship("User", back_populates="reservations")
