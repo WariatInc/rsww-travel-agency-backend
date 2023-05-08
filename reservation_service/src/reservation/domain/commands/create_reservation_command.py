@@ -16,7 +16,7 @@ from src.reservation.infrastructure.message_broker.producer import (
 from src.user.domain.exceptions import UserNotFoundException
 
 if TYPE_CHECKING:
-    from src.reservation.domain.dtos import ReservationDto
+    from src.reservation.domain.dtos import ReservationDetailsDto
 
 
 class CreateReservationCommand(ICreateReservationCommand):
@@ -26,7 +26,14 @@ class CreateReservationCommand(ICreateReservationCommand):
         self._uow = uow
         self._publisher = publisher
 
-    def __call__(self, user_gid: UUID, offer_id: UUID) -> "ReservationDto":
+    def __call__(
+        self,
+        user_gid: UUID,
+        offer_id: UUID,
+        kids_up_to_3: int,
+        kids_up_to_10: int,
+        price: float,
+    ) -> "ReservationDetailsDto":
         with self._uow:
             if not (
                 user := self._uow.user_repository.get_user_by_gid(user_gid)
@@ -39,7 +46,11 @@ class CreateReservationCommand(ICreateReservationCommand):
                 raise ReservationExistInPendingAcceptedOrPaidStateException
 
             reservation = self._uow.reservation_repository.create_reservation(
-                user_id=user.id, offer_id=offer_id
+                user_id=user.id,
+                offer_id=offer_id,
+                kids_up_to_3=kids_up_to_3,
+                kids_up_to_10=kids_up_to_10,
+                price=price,
             )
             self._uow.commit()
 
@@ -47,6 +58,9 @@ class CreateReservationCommand(ICreateReservationCommand):
             ReservationCreatedEvent,
             offer_id=reservation.offer_id,
             reservation_id=reservation.id,
+            kids_up_to_3=reservation.kids_up_to_3,
+            kids_up_to_10=reservation.kids_up_to_10,
+            price=reservation.price,
         )
         self._publisher.publish(event)
 

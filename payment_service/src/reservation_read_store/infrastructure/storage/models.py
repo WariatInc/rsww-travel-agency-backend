@@ -14,3 +14,4 @@ class ReservationReadStore(db.BaseModel):
 
     reservation_id = db.Column(db.UUID())
     state = db.Column(db.Enum(ReservationState), nullable=False)
+    price = db.Column(db.Float(), nullable=True)

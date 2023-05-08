@@ -11,6 +11,9 @@ from src.domain.events import DomainEvent, Event
 class ReservationCreatedEvent(DomainEvent):
     offer_id: UUID
     reservation_id: UUID
+    kids_up_to_3: int
+    kids_up_to_10: int
+    price: float
 
 
 @dataclass

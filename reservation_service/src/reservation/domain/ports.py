@@ -2,15 +2,20 @@ from abc import ABC, abstractmethod
 from typing import Optional
 from uuid import UUID
 
-from src.reservation.domain.dtos import ReservationDto
+from src.reservation.domain.dtos import ReservationDetailsDto, ReservationDto
 from src.user.domain.ports import IUserRepository
 
 
 class IReservationRepository(ABC):
     @abstractmethod
     def create_reservation(
-        self, user_id: UUID, offer_id: UUID
-    ) -> ReservationDto:
+        self,
+        user_id: UUID,
+        offer_id: UUID,
+        kids_up_to_3: int,
+        kids_up_to_10: int,
+        price: float,
+    ) -> ReservationDetailsDto:
         raise NotImplementedError
 
     @abstractmethod
@@ -22,7 +27,7 @@ class IReservationRepository(ABC):
     @abstractmethod
     def get_reservation(
         self, reservation_id: UUID
-    ) -> Optional[ReservationDto]:
+    ) -> Optional[ReservationDetailsDto]:
         raise NotImplementedError
 
     @abstractmethod
@@ -51,15 +56,20 @@ class IReservationUnitOfWork(ABC):
 
 class ICreateReservationCommand(ABC):
     @abstractmethod
-    def __call__(self, user_gid: UUID, offer_id: UUID) -> "ReservationDto":
+    def __call__(
+        self,
+        user_gid: UUID,
+        offer_id: UUID,
+        kids_up_to_3: int,
+        kids_up_to_10: int,
+        price: float,
+    ) -> "ReservationDetailsDto":
         raise NotImplementedError
 
 
 class ICancelReservationCommand(ABC):
     @abstractmethod
-    def __call__(
-        self, user_gid: UUID, reservation_id: UUID
-    ) -> "ReservationDto":
+    def __call__(self, user_gid: UUID, reservation_id: UUID) -> None:
         raise NotImplementedError
 
 
@@ -79,13 +89,15 @@ class IReservationView(ABC):
     @abstractmethod
     def get(
         self, user_id: UUID, reservation_id: UUID
-    ) -> Optional[ReservationDto]:
+    ) -> Optional[ReservationDetailsDto]:
         raise NotImplementedError
 
 
 class IGetReservationQuery(ABC):
     @abstractmethod
-    def get(self, user_gid: UUID, reservation_id: UUID) -> ReservationDto:
+    def get(
+        self, user_gid: UUID, reservation_id: UUID
+    ) -> ReservationDetailsDto:
         raise NotImplementedError
 
 

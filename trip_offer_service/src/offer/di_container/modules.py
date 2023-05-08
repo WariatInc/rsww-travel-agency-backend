@@ -1,8 +1,16 @@
 from injector import Binder
 
 from src.di_container.injector import Module
-from src.offer.domain.ports import IGetOfferQuery, ISearchOfferQuery
-from src.offer.domain.queries import GetOfferQuery, SearchOfferQuery
+from src.offer.domain.ports import (
+    IGetOfferPriceQuery,
+    IGetOfferQuery,
+    ISearchOfferQuery,
+)
+from src.offer.domain.queries import (
+    GetOfferPriceQuery,
+    GetOfferQuery,
+    SearchOfferQuery,
+)
 
 
 class OfferModule(Module):
@@ -10,3 +18,4 @@ class OfferModule(Module):
         # queries
         self.bind(IGetOfferQuery, GetOfferQuery)
         self.bind(ISearchOfferQuery, SearchOfferQuery)
+        self.bind(IGetOfferPriceQuery, GetOfferPriceQuery)
