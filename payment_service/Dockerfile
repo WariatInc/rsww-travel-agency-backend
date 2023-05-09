@@ -1,4 +1,4 @@
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 
 ENV PYTHON_VERSION="3.9.13"
 ENV PYENV_ROOT="/pyenv"
