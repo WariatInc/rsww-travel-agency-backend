@@ -103,7 +103,7 @@ services:
       FLASK_APP: app_wsgi.py
       NO_WSGI: 'true'
       MONGO_USER: 179919_trip_offer
-      MONGO_PASSWORD: 179919_trip_offer
+      MONGO_PASSWORD: trip_offer
       MONGO_DB: rsww_179919_trip_offer
       MONGO_HOST: 'actina15.maas'
       MONGO_PORT: 27017
