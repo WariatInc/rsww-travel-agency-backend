@@ -3,7 +3,7 @@ version: '3.8'
 services:
   rabbitmq:
     restart: always
-    image: jkoniusz/rsww-179919-rabbitmq:v1 # obraz NIEWYSTAWIONY
+    image: jkoniusz/rsww-179919-rabbitmq:v1
     ports:
       - 17995:5672 # broker rabbit
       - 17996:15672 # adminer rabbit
@@ -21,7 +21,7 @@ services:
 #
   api_gateway:
     restart: always
-    image: jkoniusz/rsww-179919-api-gateway:v1 # obraz wystawiony
+    image: jkoniusz/rsww-179919-api-gateway:v1
     ports:
       - 17991:8040
     command: flask run --host 0.0.0.0 --port 8040    
@@ -45,7 +45,7 @@ services:
 #
   reservation_api:
     restart: always
-    image: jkoniusz/rsww-179919-reservation-service:v1 # obraz NIEWYSTAWIONY
+    image: jkoniusz/rsww-179919-reservation-service:v1
     command: flask run --host 0.0.0.0 --port 8000
     environment:
       FLASK_DEBUG: 'true'
@@ -70,7 +70,7 @@ services:
 # 
   payment_api:
     restart: always
-    image: jkoniusz/rsww-179919-payment-service:v1 # obraz NIEWYSTAWIONY
+    image: jkoniusz/rsww-179919-payment-service:v1
     command: flask run --host 0.0.0.0 --port 8030
     environment:
       FLASK_DEBUG: 'true'
@@ -95,7 +95,7 @@ services:
 # 
   trip_offer_api:
     restart: always
-    image: jkoniusz/rsww-179919-trip-offer-service:v1 # obraz WYSTAWIONY ???
+    image: jkoniusz/rsww-179919-trip-offer-service:v1
     command: flask run --host 0.0.0.0 --port 8010
     environment:
       FLASK_DEBUG: 'true'
@@ -118,7 +118,7 @@ services:
 #
   tour_operator:
     restart: always
-    image: jkoniusz/rsww-179919-tour-operator-service:v1 # obraz NIEWYSTAWIONY
+    image: jkoniusz/rsww-179919-tour-operator-service:v1
     command: python3 main.py
     environment:
       FLASK_DEBUG: 'true'
@@ -133,8 +133,6 @@ services:
       RABBITMQ_PORT: 17995
       RABBITMQ_USER: tour_operator_user
       RABBITMQ_PASSWORD: password
-    ports: # czy to jest potrzebne????
-      - "8020:8020"
     depends_on:
       rabbitmq:
         condition: service_healthy
