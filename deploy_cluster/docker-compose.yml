@@ -117,7 +117,7 @@ services:
 # # 
 # # -------------------------------TOUR_OPERATOR APP-------------------------------
 # #
-#   tour_operator:
+#   tour_operator_app:
 #     restart: always
 #     image: jkoniusz/rsww-179919-tour-operator-service:v1 # obraz NIEWYSTAWIONY
 #     command: python3 main.py
