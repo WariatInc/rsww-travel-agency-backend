@@ -146,6 +146,5 @@ services:
 #   frontend:
 #     restart: always
 #     image: jkoniusz/rsww-179919-frontend:v1 # obraz NIEWYSTAWIONY
-#     build: .
 #     ports:
 #       - "17999:4200"
