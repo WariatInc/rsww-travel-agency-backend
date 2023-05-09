@@ -113,9 +113,7 @@ services:
       RABBITMQ_PASSWORD: rabbitmq
     ports:
       - "17994:8010"
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+
 # # 
 # # -------------------------------TOUR_OPERATOR APP-------------------------------
 # #
