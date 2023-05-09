@@ -1,6 +1,5 @@
 from injector import Binder, provider, singleton
 from pika import BlockingConnection
-
 from src.di_container.modules import Module
 from src.offer.domain.commands import (
     OfferReservationCommand,

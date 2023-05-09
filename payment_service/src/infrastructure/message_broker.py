@@ -17,7 +17,6 @@ from pika.spec import PERSISTENT_DELIVERY_MODE, Basic
 
 if TYPE_CHECKING:
     from pika.adapters.blocking_connection import BlockingChannel
-
     from src.consts import Exchanges, Queues
 
 

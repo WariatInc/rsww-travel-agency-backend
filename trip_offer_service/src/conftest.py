@@ -1,6 +1,5 @@
 import pytest
 from pytest_factoryboy import register
-
 from src.app import create_app
 from src.config import TestConfig
 from src.infrastructure.storage import MongoClient

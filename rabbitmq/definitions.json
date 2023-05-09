@@ -1,0 +1,171 @@
+{
+    "rabbit_version":"latest",
+    "users":[
+        {
+            "name":"rabbitmq_admin",
+            "password":"rabbitmq",
+            "tags":"administrator"
+        },
+        {
+            "name":"trip_offer_user",
+            "password":"password",
+            "tags":"management"
+        },
+        {
+            "name":"reservation_user",
+            "password":"password",
+            "tags":"management"
+        },
+        {
+            "name":"tour_operator_user",
+            "password":"password",
+            "tags":"management"
+        },
+        {
+            "name":"payment_user",
+            "password":"password",
+            "tags":"management"
+        }
+    ],
+    "vhosts":[
+        {
+            "name":"/"
+        }
+    ],
+    "permissions":[
+        {
+            "user":"rabbitmq_admin",
+            "vhost":"/",
+            "configure":".*",
+            "write":".*",
+            "read":".*"
+        },
+        {
+            "user":"trip_offer_user",
+            "vhost":"/",
+            "configure":".*",
+            "write":".*",
+            "read":".*"
+        },
+        {
+            "user":"reservation_user",
+            "vhost":"/",
+            "configure":".*",
+            "write":".*",
+            "read":".*"
+        },
+        {
+            "user":"tour_operator_user",
+            "vhost":"/",
+            "configure":".*",
+            "write":".*",
+            "read":".*"
+        },
+        {
+            "user":"payment_user",
+            "vhost":"/",
+            "configure":".*",
+            "write":".*",
+            "read":".*"
+        }
+    ],
+    "parameters": [],
+    "policies": [],
+    "exchanges": [
+        {
+            "name": "offer",
+            "vhost": "/",
+            "type": "fanout",
+            "durable": true,
+            "auto_delete": false
+        },
+        {
+            "name": "reservation",
+            "vhost": "/",
+            "type": "fanout",
+            "durable": true,
+            "auto_delete": false
+        },
+        {
+            "name": "payment",
+            "vhost": "/",
+            "type": "fanout",
+            "durable": true,
+            "auto_delete": false
+        }
+    ],
+    "queues": [
+        {
+            "name": "tour_operator_reservation_queue",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {}
+        },
+        {
+            "name": "reservation_service_reservation_queue",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {}
+        },
+        {
+            "name": "reservation_service_payment_queue",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {}
+        },
+        {
+            "name": "payment_service_reservation_queue",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {}
+        },
+        {
+            "name": "trip_offer_service_offer_queue",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {}
+        }
+    ],
+    "bindings": [
+        {
+            "source": "reservation",
+            "vhost": "/",
+            "destination": "tour_operator_reservation_queue",
+            "destination_type": "queue",
+            "routing_key": ""
+        },
+        {
+            "source": "reservation",
+            "vhost": "/",
+            "destination": "reservation_service_reservation_queue",
+            "destination_type": "queue",
+            "routing_key": ""
+        },
+        {
+            "source": "reservation",
+            "vhost": "/",
+            "destination": "payment_service_reservation_queue",
+            "destination_type": "queue",
+            "routing_key": ""
+        },
+        {
+            "source": "payment",
+            "vhost": "/",
+            "destination": "reservation_service_payment_queue",
+            "destination_type": "queue",
+            "routing_key": ""
+        },
+        {
+            "source": "offer",
+            "vhost": "/",
+            "destination": "trip_offer_service_offer_queue",
+            "destination_type": "queue",
+            "routing_key": ""
+        }
+    ]
+}

@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.reservation.domain.dtos import ReservationDto
+from src.reservation.domain.dtos import ReservationDetailsDto
 from src.reservation.domain.exceptions import ReservationNotFound
 from src.reservation.domain.ports import IGetReservationQuery, IReservationView
 from src.user.domain.exceptions import UserNotFoundException
@@ -14,7 +14,9 @@ class GetReservationQuery(IGetReservationQuery):
         self.reservation_view = reservation_view
         self.user_view = user_view
 
-    def get(self, user_gid: UUID, reservation_id: UUID) -> ReservationDto:
+    def get(
+        self, user_gid: UUID, reservation_id: UUID
+    ) -> ReservationDetailsDto:
         if not (user := self.user_view.get_user_by_gid(user_gid)):
             raise UserNotFoundException
 

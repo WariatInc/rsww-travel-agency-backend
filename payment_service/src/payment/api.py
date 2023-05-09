@@ -1,8 +1,6 @@
 from http import HTTPStatus
 from uuid import UUID
 
-from webargs.flaskparser import use_kwargs
-
 from src.api import Resource
 from src.api.blueprint import Blueprint
 from src.api.error import custom_error
@@ -19,6 +17,7 @@ from src.payment.schema import (
     ProcessReservationPaymentPostSchema,
     ProcessReservationPaymentSchema,
 )
+from webargs.flaskparser import use_kwargs
 
 
 class ProcessReservationPaymentResource(Resource):

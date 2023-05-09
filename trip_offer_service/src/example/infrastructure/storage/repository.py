@@ -3,7 +3,6 @@ from typing import Any
 
 from pymongo.collection import Collection
 from pymongo.database import Database
-
 from src.example.domain.ports import IExampleRepository
 from src.example.infrastructure.storage.documents import Example
 from src.infrastructure.storage import MongoClient

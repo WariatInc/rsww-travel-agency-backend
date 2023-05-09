@@ -1,7 +1,6 @@
 from threading import Thread
 
 from injector import Injector
-
 from src.config import Config, DefaultConfig
 from src.di_container.modules import AppModule, all_modules
 from src.tour_operator import TourOperatorService

@@ -12,3 +12,10 @@ class ReservationDto:
     offer_id: UUID
     user_id: UUID
     rejection_reason: Optional[str]
+
+
+@dataclass
+class ReservationDetailsDto(ReservationDto):
+    kids_up_to_3: int
+    kids_up_to_10: int
+    price: float

@@ -17,6 +17,7 @@ class TripOfferApiEndpoints(StrEnum):
     get_offer = "/offers/{offer_id}"
     offer_search = "/offers/search"
     offer_search_options = "/offers/search/options"
+    get_offer_price = "/offers/price/{offer_id}"
 
 
 class TransportType(StrEnum):

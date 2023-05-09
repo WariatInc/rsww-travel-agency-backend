@@ -1,7 +1,6 @@
 import pytest
 from pytest_factoryboy import register
 from sqlalchemy.orm import Session
-
 from src.app import create_app
 from src.config import TestConfig
 from src.extensions import db as _db

@@ -5,17 +5,29 @@ from uuid import UUID
 
 import marshmallow as ma
 from flask import jsonify, request
-
 from src.api import Resource
 from src.api.blueprint import Blueprint
 from src.api.error import custom_error, validation_error
+from src.api.schema import use_schema
 from src.offer.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
-from src.offer.domain.ports import IGetOfferQuery, ISearchOfferQuery
+from src.offer.domain.exceptions import (
+    InvalidOfferConfiguration,
+    OfferNotFoundException,
+)
+from src.offer.domain.ports import (
+    IGetOfferPriceQuery,
+    IGetOfferQuery,
+    ISearchOfferQuery,
+)
+from src.offer.error import ERROR
 from src.offer.schema import (
+    OfferPriceGetSchema,
+    OfferPriceSchema,
     OfferSchema,
     SearchOptionsSchema,
     SimpleOfferSchema,
 )
+from webargs.flaskparser import use_kwargs
 
 
 class OfferResource(Resource):
@@ -62,6 +74,31 @@ class SearchOfferOptionsResource(Resource):
         return jsonify(self.query.get_search_options())
 
 
+class OfferPriceResource(Resource):
+    def __init__(self, get_offer_price: IGetOfferPriceQuery) -> None:
+        self._get_offer_price = get_offer_price
+
+    @use_kwargs(OfferPriceGetSchema, location="query")
+    @use_schema(OfferPriceSchema, HTTPStatus.OK)
+    def get(
+        self, offer_id: UUID, kids_up_to_3: int = 0, kids_up_to_10: int = 0
+    ):
+        try:
+            price = self._get_offer_price.get_price(
+                offer_id, kids_up_to_3, kids_up_to_10
+            )
+        except OfferNotFoundException:
+            return custom_error(
+                ERROR.offer_not_found_error, HTTPStatus.NOT_FOUND
+            )
+        except InvalidOfferConfiguration:
+            return custom_error(
+                ERROR.invalid_offer_configuration_error, HTTPStatus.BAD_REQUEST
+            )
+
+        return {"price": price}
+
+
 class Api(Blueprint):
     name = "offers"
     import_name = __name__
@@ -70,4 +107,5 @@ class Api(Blueprint):
         (OfferResource, "/<uuid:offer_id>"),
         (SearchOfferResource, "/search"),
         (SearchOfferOptionsResource, "/search/options"),
+        (OfferPriceResource, "/price/<uuid:offer_id>"),
     ]

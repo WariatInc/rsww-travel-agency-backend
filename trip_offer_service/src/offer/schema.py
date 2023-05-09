@@ -1,5 +1,4 @@
 import marshmallow as ma
-
 from src.api.schema import possibly_undefined_non_nullable
 from src.consts import RoomType, TransportType
 from src.offer.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
@@ -40,6 +39,7 @@ class OfferSchema(ma.Schema):
     thumbnail_url = ma.fields.Str()
     arrival_date = ma.fields.Raw()
     departure_date = ma.fields.Raw()
+    departure_city = ma.fields.String(allow_none=True)
     transport = ma.fields.Enum(TransportType)
     number_of_adults = ma.fields.Integer()
     number_of_kids = ma.fields.Integer()
@@ -54,12 +54,13 @@ class OfferSchema(ma.Schema):
 class SimpleOfferSchema(ma.Schema):
     offer_id = ma.fields.UUID()
     tour_id = ma.fields.UUID()
-    operator = ma.fields.Str()
-    country = ma.fields.Str()
-    city = ma.fields.Str()
+    operator = ma.fields.String()
+    country = ma.fields.String()
+    city = ma.fields.String()
     thumbnail_url = ma.fields.Str()
     arrival_date = ma.fields.Raw()
     departure_date = ma.fields.Raw()
+    departure_city = ma.fields.String(allow_none=True)
     transport = ma.fields.Enum(TransportType)
     number_of_adults = ma.fields.Integer()
     number_of_kids = ma.fields.Integer()
@@ -69,3 +70,16 @@ class SimpleOfferSchema(ma.Schema):
     @ma.post_load
     def create_offer(self, data, **_):
         return SimpleOfferDto(**data)
+
+
+class OfferPriceSchema(ma.Schema):
+    price = ma.fields.Float()
+
+
+class OfferPriceGetSchema(ma.Schema):
+    kids_up_to_3 = ma.fields.Integer(
+        **possibly_undefined_non_nullable, validate=lambda x: x >= 0
+    )
+    kids_up_to_10 = ma.fields.Integer(
+        **possibly_undefined_non_nullable, validate=lambda x: x >= 0
+    )

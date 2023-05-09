@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
@@ -14,8 +15,9 @@ class OfferDto:
     city: str
     description: str
     thumbnail_url: str
-    arrival_date: str
-    departure_date: str
+    arrival_date: datetime
+    departure_date: datetime
+    departure_city: Optional[str]
     city: str
     transport: TransportType
     number_of_adults: int
@@ -32,8 +34,9 @@ class SimpleOfferDto:
     country: str
     city: str
     thumbnail_url: str
-    arrival_date: str
-    departure_date: str
+    arrival_date: datetime
+    departure_date: datetime
+    departure_city: Optional[str]
     transport: TransportType
     number_of_adults: int
     number_of_kids: int
