@@ -5,6 +5,8 @@ from uuid import UUID
 
 import marshmallow as ma
 from flask import jsonify, request
+from webargs.flaskparser import use_kwargs
+
 from src.api import Resource
 from src.api.blueprint import Blueprint
 from src.api.error import custom_error, validation_error
@@ -27,7 +29,6 @@ from src.offer.schema import (
     SearchOptionsSchema,
     SimpleOfferSchema,
 )
-from webargs.flaskparser import use_kwargs
 
 
 class OfferResource(Resource):

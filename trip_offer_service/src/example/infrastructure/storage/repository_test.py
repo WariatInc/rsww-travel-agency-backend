@@ -1,6 +1,7 @@
 from uuid import uuid4
 
 import pytest
+
 from src.example.infrastructure.storage.repository import ExampleRepository
 
 

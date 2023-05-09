@@ -2,6 +2,7 @@ from typing import Optional
 from uuid import UUID
 
 import sqlalchemy as sqla
+
 from src.consts import ReservationState
 from src.infrastructure.storage import ReadOnlySessionFactory
 from src.reservation.domain.dtos import ReservationDetailsDto, ReservationDto

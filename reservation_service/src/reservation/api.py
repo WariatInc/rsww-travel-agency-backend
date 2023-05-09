@@ -1,6 +1,8 @@
 from http import HTTPStatus
 from uuid import UUID
 
+from webargs.flaskparser import use_kwargs
+
 from src.api.blueprint import Blueprint, Resource
 from src.api.error import custom_error
 from src.api.schema import EmptySchema, use_schema
@@ -31,7 +33,6 @@ from src.reservation.schema import (
     ReservationsGetSchema,
 )
 from src.user.domain.exceptions import UserNotFoundException
-from webargs.flaskparser import use_kwargs
 
 
 class ReservationsResource(Resource):
