@@ -5,12 +5,18 @@ from src.api import Resource
 from src.api.blueprint import Blueprint
 from src.api.error import custom_error
 from src.api.schema import use_schema
-from src.payment.domain.exceptions import (ItemAlreadyPaid, ItemCannotBePaid,
-                                           ItemNotFound, ItemPaymentInProgress)
+from src.payment.domain.exceptions import (
+    ItemAlreadyPaid,
+    ItemCannotBePaid,
+    ItemNotFound,
+    ItemPaymentInProgress,
+)
 from src.payment.domain.ports import IProcessReservationPaymentCommand
 from src.payment.error import ERROR
-from src.payment.schema import (ProcessReservationPaymentPostSchema,
-                                ProcessReservationPaymentSchema)
+from src.payment.schema import (
+    ProcessReservationPaymentPostSchema,
+    ProcessReservationPaymentSchema,
+)
 from webargs.flaskparser import use_kwargs
 
 

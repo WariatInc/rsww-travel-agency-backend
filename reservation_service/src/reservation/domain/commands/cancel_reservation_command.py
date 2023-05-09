@@ -4,13 +4,18 @@ from src.consts import ReservationState
 from src.domain.events import event_factory
 from src.reservation.domain.events import ReservationCancelledEvent
 from src.reservation.domain.exceptions import ReservationNotFound
-from src.reservation.domain.ports import (ICancelReservationCommand,
-                                          IReservationUnitOfWork,
-                                          IUpdateReservationCommand)
+from src.reservation.domain.ports import (
+    ICancelReservationCommand,
+    IReservationUnitOfWork,
+    IUpdateReservationCommand,
+)
 from src.reservation.domain.validation import (
-    validate_if_reservation_can_be_cancelled, validate_reservation_ownership)
-from src.reservation.infrastructure.message_broker.producer import \
-    ReservationPublisher
+    validate_if_reservation_can_be_cancelled,
+    validate_reservation_ownership,
+)
+from src.reservation.infrastructure.message_broker.producer import (
+    ReservationPublisher,
+)
 from src.user.domain.exceptions import UserNotFoundException
 
 

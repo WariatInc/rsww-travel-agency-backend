@@ -5,8 +5,10 @@ import sqlalchemy as sqla
 from src.consts import ReservationState
 from src.infrastructure.storage import ReadOnlySessionFactory
 from src.reservation.domain.dtos import ReservationDetailsDto, ReservationDto
-from src.reservation.domain.factories import (reservation_details_dto_factory,
-                                              reservation_dto_factory)
+from src.reservation.domain.factories import (
+    reservation_details_dto_factory,
+    reservation_dto_factory,
+)
 from src.reservation.domain.ports import IReservationListView, IReservationView
 from src.reservation.infrastructure.storage.models import Reservation
 

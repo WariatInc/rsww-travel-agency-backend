@@ -5,24 +5,33 @@ from typing import TYPE_CHECKING, Any, Optional
 from flask import Config
 from src.config import DefaultConfig
 from src.consts import Queues
-from src.infrastructure.message_broker import (RabbitMQConnectionFactory,
-                                               RabbitMQConsumer)
+from src.infrastructure.message_broker import (
+    RabbitMQConnectionFactory,
+    RabbitMQConsumer,
+)
 from src.infrastructure.storage import SessionFactory, SQLAlchemyEngine
 from src.reservation_read_store.domain.commands import (
     DeleteReservationFromReadStoreCommand,
-    ReservationReadStoreSynchronizationCommand)
-from src.reservation_read_store.domain.events import (ReservationCreatedEvent,
-                                                      ReservationDeletedEvent,
-                                                      ReservationUpdatedEvent)
+    ReservationReadStoreSynchronizationCommand,
+)
+from src.reservation_read_store.domain.events import (
+    ReservationCreatedEvent,
+    ReservationDeletedEvent,
+    ReservationUpdatedEvent,
+)
 from src.reservation_read_store.domain.ports import (
     IDeleteReservationFromReadStoreCommand,
-    IReservationReadStoreSynchronizationCommand)
-from src.reservation_read_store.infrastructure.storage.unit_of_work import \
-    ReservationReadStoreUnitOfWork
+    IReservationReadStoreSynchronizationCommand,
+)
+from src.reservation_read_store.infrastructure.storage.unit_of_work import (
+    ReservationReadStoreUnitOfWork,
+)
 
 if TYPE_CHECKING:
-    from pika.adapters.blocking_connection import (BlockingChannel,
-                                                   BlockingConnection)
+    from pika.adapters.blocking_connection import (
+        BlockingChannel,
+        BlockingConnection,
+    )
     from pika.spec import Basic, BasicProperties
 
 
