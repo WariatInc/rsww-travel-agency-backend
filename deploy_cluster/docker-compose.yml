@@ -57,7 +57,7 @@ services:
       PG_DB: rsww_179919_reservation
       PG_HOST: 'actina20.maas'
       PG_PORT: 5432
-      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_HOST: 'actina20.maas'
       RABBITMQ_PORT: 17995
       RABBITMQ_USER: reservation_user
       RABBITMQ_PASSWORD: password
@@ -81,7 +81,7 @@ services:
       PG_DB: rsww_179919_payment
       PG_HOST: 'actina20.maas'
       PG_PORT: 5432
-      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_HOST: actina20
       RABBITMQ_PORT: 17995
       RABBITMQ_USER: payment_user
       RABBITMQ_PASSWORD: password
