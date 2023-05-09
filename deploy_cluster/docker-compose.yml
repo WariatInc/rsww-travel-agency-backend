@@ -6,8 +6,8 @@ services:
     # image: jkoniusz/rsww-179919-rabbitmq-custom-image:v1 # obraz NIEWYSTAWIONY
     image: lukaszszarecki/rsww-179919-rabbitmq-custom-image
     ports:
-      - 17995:5672 # porty puste na klastrze
-      - 17996:15672 # porty puste na klastze
+      - 17995:5672 # broker rabbit
+      - 17996:15672 # adminer rabbit
     environment:
       RABBITMQ_DEFAULT_USER: rabbitmq_admin
       RABBITMQ_DEFAULT_PASS: rabbitmq
@@ -94,28 +94,28 @@ services:
 # # 
 # # -------------------------------TRIP OFFER API-------------------------------
 # # 
-#   trip_offer_api:
-#     restart: always
-#     image: jkoniusz/rsww-179919-trip-offer-service:v1 # obraz WYSTAWIONY ???
-#     command: flask run --host 0.0.0.0 --port 8010
-#     environment:
-#       FLASK_DEBUG: 'true'
-#       FLASK_APP: app_wsgi.py
-#       NO_WSGI: 'true'
-#       MONGO_USER: 179919_trip_offer
-#       MONGO_PASSWORD: 179919_trip_offer
-#       MONGO_DB: rsww_179919_trip_offer
-#       MONGO_HOST: 'actina15.maas'
-#       MONGO_PORT: 27017
-#       RABBITMQ_HOST: 179919_rabbitmq
-#       RABBITMQ_PORT: 17995
-#       RABBITMQ_USER: rabbitmq_admin
-#       RABBITMQ_PASSWORD: rabbitmq
-#     ports:
-#       - "17994:8010"
-#     depends_on:
-#       rabbitmq:
-#         condition: service_healthy
+  trip_offer_api:
+    restart: always
+    image: jkoniusz/rsww-179919-trip-offer-service:v1 # obraz WYSTAWIONY ???
+    command: flask run --host 0.0.0.0 --port 8010
+    environment:
+      FLASK_DEBUG: 'true'
+      FLASK_APP: app_wsgi.py
+      NO_WSGI: 'true'
+      MONGO_USER: 179919_trip_offer
+      MONGO_PASSWORD: 179919_trip_offer
+      MONGO_DB: rsww_179919_trip_offer
+      MONGO_HOST: 'actina15.maas'
+      MONGO_PORT: 27017
+      RABBITMQ_HOST: 179919_rabbitmq
+      RABBITMQ_PORT: 17995
+      RABBITMQ_USER: rabbitmq_admin
+      RABBITMQ_PASSWORD: rabbitmq
+    ports:
+      - "17994:8010"
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
 # # 
 # # -------------------------------TOUR_OPERATOR APP-------------------------------
 # #
