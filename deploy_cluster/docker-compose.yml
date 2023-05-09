@@ -62,9 +62,7 @@ services:
       RABBITMQ_PASSWORD: password
     ports:
       - "17992:8000"
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+
 # 
 # -------------------------------PAYMENT API-------------------------------
 # 
@@ -87,9 +85,7 @@ services:
       RABBITMQ_PASSWORD: password
     ports:
       - "17993:8030"
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+
 # 
 # -------------------------------TRIP OFFER API-------------------------------
 # 
@@ -133,9 +129,7 @@ services:
       RABBITMQ_PORT: 17995
       RABBITMQ_USER: tour_operator_user
       RABBITMQ_PASSWORD: password
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+
 
 # # 
 # # -------------------------------FRONTEND-------------------------------
