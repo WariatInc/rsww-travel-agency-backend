@@ -3,8 +3,9 @@ from typing import TYPE_CHECKING
 from src.reservation_read_store.domain.dtos import ReservationDto
 
 if TYPE_CHECKING:
-    from src.reservation_read_store.infrastructure.storage.models import \
-        ReservationReadStore
+    from src.reservation_read_store.infrastructure.storage.models import (
+        ReservationReadStore,
+    )
 
 
 def reservation_dto_factory(

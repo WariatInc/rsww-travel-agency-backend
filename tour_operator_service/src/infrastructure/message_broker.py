@@ -5,8 +5,12 @@ from json import JSONEncoder
 from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
-from pika import (BasicProperties, BlockingConnection, ConnectionParameters,
-                  PlainCredentials)
+from pika import (
+    BasicProperties,
+    BlockingConnection,
+    ConnectionParameters,
+    PlainCredentials,
+)
 from pika.exceptions import StreamLostError
 from pika.spec import PERSISTENT_DELIVERY_MODE
 from src.config import Config

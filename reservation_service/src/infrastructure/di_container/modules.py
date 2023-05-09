@@ -2,9 +2,12 @@ from flask import Config
 from injector import Binder, provider, singleton
 from src.di_container.injector import Module
 from src.infrastructure.message_broker import RabbitMQConnectionFactory
-from src.infrastructure.storage import (ReadOnlySessionFactory, SessionFactory,
-                                        SQLAlchemyEngine,
-                                        SQLAlchemyReadOnlyEngine)
+from src.infrastructure.storage import (
+    ReadOnlySessionFactory,
+    SessionFactory,
+    SQLAlchemyEngine,
+    SQLAlchemyReadOnlyEngine,
+)
 
 __all__ = ["InfrastructureModule"]
 

@@ -1,8 +1,9 @@
 from src.domain.events import event_factory
 from src.example.domain.events import ExampleUpdatedEvent
 from src.example.domain.ports import IExampleRepository, IUpsertExampleCommand
-from src.example.infrastructure.message_broker.publisher import \
-    ExamplePublisher
+from src.example.infrastructure.message_broker.publisher import (
+    ExamplePublisher,
+)
 from src.example.infrastructure.storage.documents import Example
 
 

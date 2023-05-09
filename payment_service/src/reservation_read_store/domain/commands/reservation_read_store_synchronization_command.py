@@ -2,7 +2,8 @@ from uuid import UUID
 
 from src.reservation_read_store.domain.ports import (
     IReservationReadStoreSynchronizationCommand,
-    IReservationReadStoreUnitOfWork)
+    IReservationReadStoreUnitOfWork,
+)
 
 
 class ReservationReadStoreSynchronizationCommand(

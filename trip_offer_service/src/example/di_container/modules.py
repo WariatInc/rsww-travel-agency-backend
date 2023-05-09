@@ -3,12 +3,16 @@ from pika import BlockingConnection
 from src.di_container.injector import Module
 from src.example.api import ExampleResource, ExamplesResource
 from src.example.domain.commands import UpsertExampleCommand
-from src.example.domain.ports import (IExampleRepository, IExamplesView,
-                                      IGetExamplesListQuery,
-                                      IUpsertExampleCommand)
+from src.example.domain.ports import (
+    IExampleRepository,
+    IExamplesView,
+    IGetExamplesListQuery,
+    IUpsertExampleCommand,
+)
 from src.example.domain.queries import GetExamplesListQuery
-from src.example.infrastructure.message_broker.publisher import \
-    ExamplePublisher
+from src.example.infrastructure.message_broker.publisher import (
+    ExamplePublisher,
+)
 from src.example.infrastructure.storage.repository import ExampleRepository
 from src.example.infrastructure.storage.views import ExamplesView
 

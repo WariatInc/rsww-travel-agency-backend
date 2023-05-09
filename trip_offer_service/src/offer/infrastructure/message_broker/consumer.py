@@ -5,15 +5,19 @@ from typing import TYPE_CHECKING, Any, Optional
 from flask import Config
 from src.config import DefaultConfig
 from src.consts import Queues
-from src.infrastructure.message_broker import (RabbitMQConnectionFactory,
-                                               RabbitMQConsumer)
+from src.infrastructure.message_broker import (
+    RabbitMQConnectionFactory,
+    RabbitMQConsumer,
+)
 from src.infrastructure.storage import MongoClient
 from src.offer.domain.events import OfferChangedEvent
 from src.offer.infrastructure.storage.repository import OfferRepository
 
 if TYPE_CHECKING:
-    from pika.adapters.blocking_connection import (BlockingChannel,
-                                                   BlockingConnection)
+    from pika.adapters.blocking_connection import (
+        BlockingChannel,
+        BlockingConnection,
+    )
     from pika.spec import Basic, BasicProperties
     from src.offer.domain.ports import IOfferRepository
 

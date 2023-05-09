@@ -5,20 +5,26 @@ from typing import TYPE_CHECKING, Optional
 from flask import Config
 from src.config import DefaultConfig
 from src.consts import Queues, ReservationState
-from src.infrastructure.message_broker import (RabbitMQConnectionFactory,
-                                               RabbitMQConsumer)
+from src.infrastructure.message_broker import (
+    RabbitMQConnectionFactory,
+    RabbitMQConsumer,
+)
 from src.infrastructure.storage import SessionFactory, SQLAlchemyEngine
 from src.payment.domain.events import ItemPaidEvent
 from src.reservation.domain.commands import UpdateReservationCommand
 from src.reservation.domain.ports import IUpdateReservationCommand
-from src.reservation.infrastructure.message_broker.producer import \
-    ReservationPublisher
-from src.reservation.infrastructure.storage.unit_of_work import \
-    ReservationUnitOfWork
+from src.reservation.infrastructure.message_broker.producer import (
+    ReservationPublisher,
+)
+from src.reservation.infrastructure.storage.unit_of_work import (
+    ReservationUnitOfWork,
+)
 
 if TYPE_CHECKING:
-    from pika.adapters.blocking_connection import (BlockingChannel,
-                                                   BlockingConnection)
+    from pika.adapters.blocking_connection import (
+        BlockingChannel,
+        BlockingConnection,
+    )
     from pika.spec import Basic, BasicProperties
 
 
