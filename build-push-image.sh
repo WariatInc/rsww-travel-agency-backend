@@ -11,5 +11,6 @@ if [ $# -eq 0 ]; then
   exit 1
 fi
 
+docker login
 docker build -t $1 $2
 docker push $1
