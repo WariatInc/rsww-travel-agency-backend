@@ -39,113 +39,113 @@ services:
       RESERVATION_SERVICE_ROOT_URL: http://reservation_api:17992/api
       PAYMENT_SERVICE_ROOT_URL: http://payment_api:17993/api
       TRIP_OFFER_SERVICE_ROOT_URL: http://trip_offer_api:17994/api
-# 
-# -------------------------------RESERVATION API-------------------------------
-#
-  reservation_api:
-    restart: always
-    image: jkoniusz/rsww-179919-reservation-service:v1 # obraz NIEWYSTAWIONY
-    command: flask run --host 0.0.0.0 --port 8000
-    environment:
-      FLASK_DEBUG: 'true'
-      FLASK_APP: app_wsgi.py
-      NO_WSGI: 'true'
-      PG_USER: 179919_reservation
-      PG_PASSWORD: reservation
-      PG_DB: rsww_179919_reservation
-      PG_HOST: 'actina20.maas'
-      PG_PORT: 5432
-      RABBITMQ_HOST: 179919_rabbitmq
-      RABBITMQ_PORT: 5672
-      RABBITMQ_USER: reservation_user
-      RABBITMQ_PASSWORD: password
-    ports:
-      - "17992:8000"
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-# 
-# -------------------------------PAYMENT API-------------------------------
-# 
-  payment_api:
-    restart: always
-    image: jkoniusz/rsww-179919-payment-service:v1 # obraz NIEWYSTAWIONY
-    command: flask run --host 0.0.0.0 --port 8030
-    environment:
-      FLASK_DEBUG: 'true'
-      FLASK_APP: app_wsgi.py
-      NO_WSGI: 'true'
-      PG_USER: 179919_payment
-      PG_PASSWORD: payment
-      PG_DB: rsww_179919_payment
-      PG_HOST: 'actina20.maas'
-      PG_PORT: 5432
-      RABBITMQ_HOST: 179919_rabbitmq
-      RABBITMQ_PORT: 5672
-      RABBITMQ_USER: payment_user
-      RABBITMQ_PASSWORD: password
-    ports:
-      - "17993:8030"
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-# 
-# -------------------------------TRIP OFFER API-------------------------------
-# 
-  trip_offer_api:
-    restart: always
-    image: jkoniusz/rsww-179919-trip-offer-service:v1 # obraz WYSTAWIONY ???
-    command: flask run --host 0.0.0.0 --port 8010
-    environment:
-      FLASK_DEBUG: 'true'
-      FLASK_APP: app_wsgi.py
-      NO_WSGI: 'true'
-      MONGO_USER: 179919_trip_offer
-      MONGO_PASSWORD: 179919_trip_offer
-      MONGO_DB: rsww_179919_trip_offer
-      MONGO_HOST: 'actina15.maas'
-      MONGO_PORT: 27017
-      RABBITMQ_HOST: 179919_rabbitmq
-      RABBITMQ_PORT: 5672
-      RABBITMQ_USER: rabbitmq_admin
-      RABBITMQ_PASSWORD: rabbitmq
-    ports:
-      - "17994:8010"
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
-# 
-# -------------------------------TOUR_OPERATOR APP-------------------------------
-#
-  tour_operator:
-    restart: always
-    image: jkoniusz/rsww-179919-tour-operator-service:v1 # obraz NIEWYSTAWIONY
-    command: python3 main.py
-    environment:
-      FLASK_DEBUG: 'true'
-      FLASK_APP: app_wsgi.py
-      NO_WSGI: 'true'
-      PG_USER: 179919_tour_operator
-      PG_PASSWORD: tour_operator
-      PG_DB: rsww_179919_tour_operator
-      PG_HOST: 'actina20.maas'
-      PG_PORT: 5432
-      RABBITMQ_HOST: 179919_rabbitmq
-      RABBITMQ_PORT: 5672
-      RABBITMQ_USER: tour_operator_user
-      RABBITMQ_PASSWORD: password
-    ports: # czy to jest potrzebne????
-      - "8020:8020"
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+# # 
+# # -------------------------------RESERVATION API-------------------------------
+# #
+#   reservation_api:
+#     restart: always
+#     image: jkoniusz/rsww-179919-reservation-service:v1 # obraz NIEWYSTAWIONY
+#     command: flask run --host 0.0.0.0 --port 8000
+#     environment:
+#       FLASK_DEBUG: 'true'
+#       FLASK_APP: app_wsgi.py
+#       NO_WSGI: 'true'
+#       PG_USER: 179919_reservation
+#       PG_PASSWORD: reservation
+#       PG_DB: rsww_179919_reservation
+#       PG_HOST: 'actina20.maas'
+#       PG_PORT: 5432
+#       RABBITMQ_HOST: 179919_rabbitmq
+#       RABBITMQ_PORT: 5672
+#       RABBITMQ_USER: reservation_user
+#       RABBITMQ_PASSWORD: password
+#     ports:
+#       - "17992:8000"
+#     depends_on:
+#       rabbitmq:
+#         condition: service_healthy
+# # 
+# # -------------------------------PAYMENT API-------------------------------
+# # 
+#   payment_api:
+#     restart: always
+#     image: jkoniusz/rsww-179919-payment-service:v1 # obraz NIEWYSTAWIONY
+#     command: flask run --host 0.0.0.0 --port 8030
+#     environment:
+#       FLASK_DEBUG: 'true'
+#       FLASK_APP: app_wsgi.py
+#       NO_WSGI: 'true'
+#       PG_USER: 179919_payment
+#       PG_PASSWORD: payment
+#       PG_DB: rsww_179919_payment
+#       PG_HOST: 'actina20.maas'
+#       PG_PORT: 5432
+#       RABBITMQ_HOST: 179919_rabbitmq
+#       RABBITMQ_PORT: 5672
+#       RABBITMQ_USER: payment_user
+#       RABBITMQ_PASSWORD: password
+#     ports:
+#       - "17993:8030"
+#     depends_on:
+#       rabbitmq:
+#         condition: service_healthy
+# # 
+# # -------------------------------TRIP OFFER API-------------------------------
+# # 
+#   trip_offer_api:
+#     restart: always
+#     image: jkoniusz/rsww-179919-trip-offer-service:v1 # obraz WYSTAWIONY ???
+#     command: flask run --host 0.0.0.0 --port 8010
+#     environment:
+#       FLASK_DEBUG: 'true'
+#       FLASK_APP: app_wsgi.py
+#       NO_WSGI: 'true'
+#       MONGO_USER: 179919_trip_offer
+#       MONGO_PASSWORD: 179919_trip_offer
+#       MONGO_DB: rsww_179919_trip_offer
+#       MONGO_HOST: 'actina15.maas'
+#       MONGO_PORT: 27017
+#       RABBITMQ_HOST: 179919_rabbitmq
+#       RABBITMQ_PORT: 5672
+#       RABBITMQ_USER: rabbitmq_admin
+#       RABBITMQ_PASSWORD: rabbitmq
+#     ports:
+#       - "17994:8010"
+#     depends_on:
+#       rabbitmq:
+#         condition: service_healthy
+# # 
+# # -------------------------------TOUR_OPERATOR APP-------------------------------
+# #
+#   tour_operator:
+#     restart: always
+#     image: jkoniusz/rsww-179919-tour-operator-service:v1 # obraz NIEWYSTAWIONY
+#     command: python3 main.py
+#     environment:
+#       FLASK_DEBUG: 'true'
+#       FLASK_APP: app_wsgi.py
+#       NO_WSGI: 'true'
+#       PG_USER: 179919_tour_operator
+#       PG_PASSWORD: tour_operator
+#       PG_DB: rsww_179919_tour_operator
+#       PG_HOST: 'actina20.maas'
+#       PG_PORT: 5432
+#       RABBITMQ_HOST: 179919_rabbitmq
+#       RABBITMQ_PORT: 5672
+#       RABBITMQ_USER: tour_operator_user
+#       RABBITMQ_PASSWORD: password
+#     ports: # czy to jest potrzebne????
+#       - "8020:8020"
+#     depends_on:
+#       rabbitmq:
+#         condition: service_healthy
 
-# 
-# -------------------------------FRONTEND-------------------------------
-#
-  frontend:
-    restart: always
-    image: jkoniusz/rsww-179919-frontend:v1 # obraz NIEWYSTAWIONY
-    build: .
-    ports:
-      - "17999:4200"
+# # 
+# # -------------------------------FRONTEND-------------------------------
+# #
+#   frontend:
+#     restart: always
+#     image: jkoniusz/rsww-179919-frontend:v1 # obraz NIEWYSTAWIONY
+#     build: .
+#     ports:
+#       - "17999:4200"
