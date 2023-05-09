@@ -39,6 +39,8 @@ services:
       RESERVATION_SERVICE_ROOT_URL: http://reservation_api:17992/api
       PAYMENT_SERVICE_ROOT_URL: http://payment_api:17993/api
       TRIP_OFFER_SERVICE_ROOT_URL: http://trip_offer_api:17994/api
+
+#
 # # 
 # # -------------------------------RESERVATION API-------------------------------
 # #
