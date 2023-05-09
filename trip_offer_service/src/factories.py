@@ -2,6 +2,7 @@ from inspect import isclass
 from typing import Any
 
 from factory import Factory, faker
+
 from src.example.infrastructure.storage.documents import Example
 
 

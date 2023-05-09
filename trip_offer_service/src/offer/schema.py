@@ -1,4 +1,5 @@
 import marshmallow as ma
+
 from src.api.schema import possibly_undefined_non_nullable
 from src.consts import RoomType, TransportType
 from src.offer.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
@@ -66,6 +67,7 @@ class SimpleOfferSchema(ma.Schema):
     number_of_kids = ma.fields.Integer()
     room_type = ma.fields.Enum(RoomType)
     is_available = ma.fields.Bool()
+    price = ma.fields.Float(allow_none=True, default=None)
 
     @ma.post_load
     def create_offer(self, data, **_):

@@ -1,5 +1,6 @@
 from flask import Config
 from injector import provider, singleton
+
 from src.di_container.injector import Module
 from src.infrastructure.message_broker import RabbitMQConnectionFactory
 from src.infrastructure.storage import MongoClient, MongoReadOnlyClient

@@ -3,6 +3,7 @@ import logging
 from typing import TYPE_CHECKING, Any, Optional
 
 from flask import Config
+
 from src.config import DefaultConfig
 from src.consts import Queues
 from src.infrastructure.message_broker import (
@@ -19,6 +20,7 @@ if TYPE_CHECKING:
         BlockingConnection,
     )
     from pika.spec import Basic, BasicProperties
+
     from src.offer.domain.ports import IOfferRepository
 
 
