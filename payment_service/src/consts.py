@@ -28,4 +28,4 @@ class PaymentState(StrEnum):
     pending = auto()
 
 
-RESERVATION_READ_STORE_COLUMNS = ["reservation_id", "state"]
+RESERVATION_READ_STORE_COLUMNS = ["reservation_id", "state", "price"]

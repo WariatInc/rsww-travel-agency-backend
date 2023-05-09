@@ -3,7 +3,6 @@ import logging
 from typing import TYPE_CHECKING, Any, Optional
 
 from flask import Config
-
 from src.config import DefaultConfig
 from src.consts import Queues
 from src.infrastructure.message_broker import (
@@ -66,7 +65,9 @@ class ReservationConsumer(RabbitMQConsumer):
         event = ReservationCreatedEvent.from_rabbitmq_message(payload)
         logger.info(msg=f"Consuming event: {event.type} with id: {event.id}")
         self._reservation_read_store_synchronization_command(
-            reservation_id=event.reservation_id, state=event.state
+            reservation_id=event.reservation_id,
+            state=event.state,
+            price=event.price,
         )
         logger.info(msg=f"Event with id: {event.id} successfully consumed")
 

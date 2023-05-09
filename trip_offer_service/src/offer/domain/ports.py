@@ -29,3 +29,11 @@ class IOfferRepository(ABC):
     @abstractmethod
     def upsert_offer(self, offer_id: UUID, **upsert_kwargs) -> None:
         raise NotImplementedError
+
+
+class IGetOfferPriceQuery(ABC):
+    @abstractmethod
+    def get_price(
+        self, offer_id: UUID, kids_up_to_3: int, kids_up_to_10: int
+    ) -> float:
+        raise NotImplementedError

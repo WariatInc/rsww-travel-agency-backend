@@ -1,5 +1,4 @@
 from injector import Binder, singleton
-
 from src.config import Config
 from src.di_container.injector import Module
 from src.infrastructure.di_container.modules import InfrastructureModule

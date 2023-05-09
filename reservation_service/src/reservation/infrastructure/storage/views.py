@@ -2,11 +2,13 @@ from typing import Optional
 from uuid import UUID
 
 import sqlalchemy as sqla
-
 from src.consts import ReservationState
 from src.infrastructure.storage import ReadOnlySessionFactory
-from src.reservation.domain.dtos import ReservationDto
-from src.reservation.domain.factories import reservation_dto_factory
+from src.reservation.domain.dtos import ReservationDetailsDto, ReservationDto
+from src.reservation.domain.factories import (
+    reservation_details_dto_factory,
+    reservation_dto_factory,
+)
 from src.reservation.domain.ports import IReservationListView, IReservationView
 from src.reservation.infrastructure.storage.models import Reservation
 
@@ -34,7 +36,7 @@ class ReservationView(IReservationView):
 
     def get(
         self, user_id: UUID, reservation_id: UUID
-    ) -> Optional[ReservationDto]:
+    ) -> Optional[ReservationDetailsDto]:
         if (
             reservation := self._session.query(Reservation)
             .filter(
@@ -43,4 +45,4 @@ class ReservationView(IReservationView):
             )
             .one_or_none()
         ):
-            return reservation_dto_factory(reservation)
+            return reservation_details_dto_factory(reservation)

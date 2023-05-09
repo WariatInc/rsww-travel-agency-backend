@@ -2,12 +2,11 @@ from http import HTTPStatus
 from threading import Thread
 from typing import Optional
 
+import src.extensions as ext
 from flask import Flask, Response
 from flask_injector import FlaskInjector, FlaskModule
 from flask_migrate import Migrate
 from injector import Injector, inject
-
-import src.extensions as ext
 from src.api.error import validation_error
 from src.config import Config, DefaultConfig
 from src.di_container.modules import all_modules

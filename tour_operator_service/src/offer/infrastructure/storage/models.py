@@ -2,7 +2,6 @@ from uuid import uuid4
 
 import sqlalchemy as sqla
 import sqlalchemy.orm as orm
-
 from src.consts import RoomType, Transport
 from src.extensions import Base
 

@@ -1,5 +1,4 @@
 from injector import Binder
-
 from src.di_container.injector import Module
 from src.user.domain.ports import IUserView
 from src.user.infrastructure.storage.views import UserView
