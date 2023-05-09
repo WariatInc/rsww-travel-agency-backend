@@ -1,21 +1,21 @@
 version: '3.8'
 
 services:
-  rabbitmq:
-    restart: always
-    image: jkoniusz/rsww-179919-rabbitmq:v1
-    ports:
-      - 17995:5672 # broker rabbit
-      - 17996:15672 # adminer rabbit
-    environment:
-      RABBITMQ_DEFAULT_USER: rabbitmq_admin
-      RABBITMQ_DEFAULT_PASS: rabbitmq
-    hostname: rabbitmq
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
-      interval: 5s
-      retries: 5
-      timeout: 10s
+  # rabbitmq:
+  #   restart: always
+  #   image: jkoniusz/rsww-179919-rabbitmq:v1
+  #   ports:
+  #     - 17995:5672 # broker rabbit
+  #     - 17996:15672 # adminer rabbit
+  #   environment:
+  #     RABBITMQ_DEFAULT_USER: rabbitmq_admin
+  #     RABBITMQ_DEFAULT_PASS: rabbitmq
+  #   hostname: rabbitmq
+  #   healthcheck:
+  #     test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+  #     interval: 5s
+  #     retries: 5
+  #     timeout: 10s
 # 
 # -------------------------------API GATEWAY-------------------------------
 #
