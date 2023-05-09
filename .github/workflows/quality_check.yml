@@ -24,7 +24,7 @@ jobs:
         pip install black==23.1.0 flake8
 
     - name: Check code quality with flake8
-      run: flake8 --ignore=E501 .
+      run: flake8 --ignore=E501 --ignore=W503 .
 
     - name: Check code formatting with black
       run: black --check --line-length 79 --target-version py39 . 
