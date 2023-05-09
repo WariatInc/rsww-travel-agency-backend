@@ -6,8 +6,8 @@ services:
     # image: jkoniusz/rsww-179919-rabbitmq-custom-image:v1 # obraz NIEWYSTAWIONY
     image: lukaszszarecki/rsww-179919-rabbitmq-custom-image
     ports:
-      - 179915:5672 # porty puste na klastrze
-      - 179916:15672 # porty puste na klastze
+      - 17995:5672 # porty puste na klastrze
+      - 17996:15672 # porty puste na klastze
     environment:
       RABBITMQ_DEFAULT_USER: rabbitmq_admin
       RABBITMQ_DEFAULT_PASS: rabbitmq
@@ -58,7 +58,7 @@ services:
 #       PG_HOST: 'actina20.maas'
 #       PG_PORT: 5432
 #       RABBITMQ_HOST: 179919_rabbitmq
-#       RABBITMQ_PORT: 179915
+#       RABBITMQ_PORT: 17995
 #       RABBITMQ_USER: reservation_user
 #       RABBITMQ_PASSWORD: password
 #     ports:
@@ -83,7 +83,7 @@ services:
 #       PG_HOST: 'actina20.maas'
 #       PG_PORT: 5432
 #       RABBITMQ_HOST: 179919_rabbitmq
-#       RABBITMQ_PORT: 179915
+#       RABBITMQ_PORT: 17995
 #       RABBITMQ_USER: payment_user
 #       RABBITMQ_PASSWORD: password
 #     ports:
@@ -108,7 +108,7 @@ services:
 #       MONGO_HOST: 'actina15.maas'
 #       MONGO_PORT: 27017
 #       RABBITMQ_HOST: 179919_rabbitmq
-#       RABBITMQ_PORT: 179915
+#       RABBITMQ_PORT: 17995
 #       RABBITMQ_USER: rabbitmq_admin
 #       RABBITMQ_PASSWORD: rabbitmq
 #     ports:
@@ -133,7 +133,7 @@ services:
 #       PG_HOST: 'actina20.maas'
 #       PG_PORT: 5432
 #       RABBITMQ_HOST: 179919_rabbitmq
-#       RABBITMQ_PORT: 179915
+#       RABBITMQ_PORT: 17995
 #       RABBITMQ_USER: tour_operator_user
 #       RABBITMQ_PASSWORD: password
 #     ports: # czy to jest potrzebne????
