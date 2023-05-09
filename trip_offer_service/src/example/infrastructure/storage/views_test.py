@@ -1,4 +1,5 @@
 import pytest
+
 from src.example.domain.factories import example_dto_factory
 from src.example.infrastructure.storage.views import ExamplesView
 

@@ -2,6 +2,8 @@ from http import HTTPStatus
 from uuid import UUID
 
 from flask import jsonify
+from webargs.flaskparser import use_kwargs
+
 from src.api import Resource
 from src.api.blueprint import Blueprint
 from src.example.domain.ports import (
@@ -9,7 +11,6 @@ from src.example.domain.ports import (
     IUpsertExampleCommand,
 )
 from src.example.schema import ExampleUpsertSchema
-from webargs.flaskparser import use_kwargs
 
 
 class ExampleResource(Resource):

@@ -6,14 +6,17 @@ from typing import Any
 from src.consts import Collections
 from src.infrastructure.storage import MongoReadOnlyClient
 from src.offer.domain.dtos import SearchOptions, SimpleOfferDto
-from src.offer.domain.ports import ISearchOfferQuery
+from src.offer.domain.ports import IGetOfferPriceQuery, ISearchOfferQuery
 from src.offer.schema import SimpleOfferSchema
 
 
 class SearchOfferQuery(ISearchOfferQuery):
-    def __init__(self, client: MongoReadOnlyClient) -> None:
+    def __init__(
+        self, client: MongoReadOnlyClient, get_offer_price: IGetOfferPriceQuery
+    ) -> None:
         self.collection_name = Collections.offer_view
         self.client = client
+        self.get_offer_price = get_offer_price
 
     @staticmethod
     def _ilike_condition(search_term: str) -> dict[str, re.Pattern]:
@@ -72,7 +75,11 @@ class SearchOfferQuery(ISearchOfferQuery):
             .limit(options.page_size)
         )
 
-        return SimpleOfferSchema().load(results, many=True)
+        offers = SimpleOfferSchema().load(results, many=True)
+        for offer in offers:
+            offer.price = self.get_offer_price.get_price(offer.offer_id, 0, 0)
+
+        return offers
 
     def get_search_options(self) -> dict[str, Any]:
         collection = self.client.get_db()[self.collection_name]

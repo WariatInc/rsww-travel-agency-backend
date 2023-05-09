@@ -1,3 +1,4 @@
+from math import ceil
 from uuid import UUID
 
 from src.consts import (
@@ -84,4 +85,4 @@ class GetOfferPriceQuery(IGetOfferPriceQuery):
             else 0
         )
 
-        return round((hotel_price + flight_price) * (1 + PROVISION), 2)
+        return ceil((hotel_price + flight_price) * (1 + PROVISION)) - 0.01

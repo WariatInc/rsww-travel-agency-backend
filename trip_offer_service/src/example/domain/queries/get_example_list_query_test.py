@@ -2,6 +2,7 @@ from unittest import mock
 from uuid import uuid4
 
 import pytest
+
 from src.example.domain.dtos import ExampleDto
 from src.example.domain.queries import GetExamplesListQuery
 

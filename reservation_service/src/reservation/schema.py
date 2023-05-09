@@ -1,4 +1,5 @@
 import marshmallow as ma
+
 from src.api.schema import (
     implicitly_nullable,
     non_nullable,
@@ -25,6 +26,7 @@ class ReservationSchema(ma.Schema):
     user_id = ma.fields.UUID(**non_nullable)
     state = ma.fields.Enum(ReservationState, **non_nullable)
     rejection_reason = ma.fields.Str(**implicitly_nullable)
+    price = ma.fields.Float(**non_nullable)
 
 
 class ReservationDetailsSchema(ma.Schema):

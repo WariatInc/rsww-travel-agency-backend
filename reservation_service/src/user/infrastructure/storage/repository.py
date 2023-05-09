@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Optional
 from uuid import UUID
 
 from sqlalchemy.orm import Session
+
 from src.user.domain.factories import user_dto_factory
 from src.user.domain.ports import IUserRepository
 from src.user.infrastructure.storage.models import User

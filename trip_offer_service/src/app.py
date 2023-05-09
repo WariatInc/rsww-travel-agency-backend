@@ -5,6 +5,7 @@ from typing import Optional
 from flask import Flask, Response
 from flask_injector import FlaskInjector, FlaskModule
 from injector import Injector, inject
+
 from src.api.error import validation_error
 from src.config import Config, DefaultConfig
 from src.di_container.modules import all_modules

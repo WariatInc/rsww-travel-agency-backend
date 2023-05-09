@@ -15,6 +15,7 @@ class Offer(TypedDict):
     thumbnail_url: str
     arrival_date: str
     departure_date: str
+    departure_city: str
     city: str
     transport: TransportType
     number_of_adults: int

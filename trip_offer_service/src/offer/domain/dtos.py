@@ -42,6 +42,7 @@ class SimpleOfferDto:
     number_of_kids: int
     room_type: RoomType
     is_available: bool
+    price: Optional[float] = None
 
 
 @dataclass
