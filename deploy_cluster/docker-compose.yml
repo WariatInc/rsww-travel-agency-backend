@@ -10,7 +10,7 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: rabbitmq_admin
       RABBITMQ_DEFAULT_PASS: rabbitmq
-    hostname: 179919_rabbitmq
+    hostname: rabbitmq
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
       interval: 5s
@@ -27,7 +27,7 @@ services:
     command: flask run --host 0.0.0.0 --port 8040    
     environment:
       FLASK_DEBUG: 'true'
-      FLASK_ENV: development
+      FLASK_ENV: production
       FLASK_APP: app_wsgi.py
       NO_WSGI: 'true'
       PG_USER: 179919_api_gateway
@@ -49,6 +49,7 @@ services:
     command: flask run --host 0.0.0.0 --port 8000
     environment:
       FLASK_DEBUG: 'true'
+      FLASK_ENV: production
       FLASK_APP: app_wsgi.py
       NO_WSGI: 'true'
       PG_USER: 179919_reservation
@@ -56,7 +57,7 @@ services:
       PG_DB: rsww_179919_reservation
       PG_HOST: 'actina20.maas'
       PG_PORT: 5432
-      RABBITMQ_HOST: 179919_rabbitmq
+      RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 17995
       RABBITMQ_USER: reservation_user
       RABBITMQ_PASSWORD: password
@@ -72,6 +73,7 @@ services:
     command: flask run --host 0.0.0.0 --port 8030
     environment:
       FLASK_DEBUG: 'true'
+      FLASK_ENV: production
       FLASK_APP: app_wsgi.py
       NO_WSGI: 'true'
       PG_USER: 179919_payment
@@ -79,7 +81,7 @@ services:
       PG_DB: rsww_179919_payment
       PG_HOST: 'actina20.maas'
       PG_PORT: 5432
-      RABBITMQ_HOST: 179919_rabbitmq
+      RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 17995
       RABBITMQ_USER: payment_user
       RABBITMQ_PASSWORD: password
@@ -95,6 +97,7 @@ services:
     command: flask run --host 0.0.0.0 --port 8010
     environment:
       FLASK_DEBUG: 'true'
+      FLASK_ENV: production
       FLASK_APP: app_wsgi.py
       NO_WSGI: 'true'
       MONGO_USER: 179919_trip_offer
@@ -102,7 +105,7 @@ services:
       MONGO_DB: rsww_179919_trip_offer
       MONGO_HOST: 'actina15.maas'
       MONGO_PORT: 27017
-      RABBITMQ_HOST: 179919_rabbitmq
+      RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 17995
       RABBITMQ_USER: rabbitmq_admin
       RABBITMQ_PASSWORD: rabbitmq
@@ -118,6 +121,7 @@ services:
     command: python3 main.py
     environment:
       FLASK_DEBUG: 'true'
+      FLASK_ENV: production
       FLASK_APP: app_wsgi.py
       NO_WSGI: 'true'
       PG_USER: 179919_tour_operator
@@ -125,7 +129,7 @@ services:
       PG_DB: rsww_179919_tour_operator
       PG_HOST: 'actina20.maas'
       PG_PORT: 5432
-      RABBITMQ_HOST: 179919_rabbitmq
+      RABBITMQ_HOST: rabbitmq
       RABBITMQ_PORT: 17995
       RABBITMQ_USER: tour_operator_user
       RABBITMQ_PASSWORD: password
