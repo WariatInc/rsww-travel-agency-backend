@@ -1,5 +1,4 @@
 import marshmallow as ma
-
 from src.api.schema import possibly_undefined_non_nullable
 from src.consts import RoomType, TransportType
 

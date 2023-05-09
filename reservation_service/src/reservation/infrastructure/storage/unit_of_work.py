@@ -1,8 +1,7 @@
 from src.infrastructure.storage import SessionFactory
 from src.reservation.domain.ports import IReservationUnitOfWork
-from src.reservation.infrastructure.storage.repository import (
-    ReservationRepository,
-)
+from src.reservation.infrastructure.storage.repository import \
+    ReservationRepository
 from src.user.infrastructure.storage.repository import UserRepository
 
 

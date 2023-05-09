@@ -3,14 +3,10 @@ from uuid import UUID
 from src.consts import RejectionReason, ReservationState
 from src.domain.events import event_factory
 from src.offer.domain.events import ReservationCheckedEvent
-from src.offer.domain.ports import (
-    IOfferReservationCommand,
-    IOfferUnitOfWork,
-    IUpdateOfferCommand,
-)
-from src.offer.infrastructure.message_broker.producer import (
-    ReservationPublisher,
-)
+from src.offer.domain.ports import (IOfferReservationCommand, IOfferUnitOfWork,
+                                    IUpdateOfferCommand)
+from src.offer.infrastructure.message_broker.producer import \
+    ReservationPublisher
 
 
 class OfferReservationCommand(IOfferReservationCommand):

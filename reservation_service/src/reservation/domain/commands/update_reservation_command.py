@@ -3,13 +3,10 @@ from uuid import UUID
 from src.consts import ReservationState
 from src.domain.events import event_factory
 from src.reservation.domain.events import ReservationUpdatedEvent
-from src.reservation.domain.ports import (
-    IReservationUnitOfWork,
-    IUpdateReservationCommand,
-)
-from src.reservation.infrastructure.message_broker.producer import (
-    ReservationPublisher,
-)
+from src.reservation.domain.ports import (IReservationUnitOfWork,
+                                          IUpdateReservationCommand)
+from src.reservation.infrastructure.message_broker.producer import \
+    ReservationPublisher
 
 
 class UpdateReservationCommand(IUpdateReservationCommand):

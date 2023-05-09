@@ -4,8 +4,6 @@ from uuid import UUID
 import requests
 from flask import Config, make_response
 from requests.exceptions import ConnectionError
-from webargs.flaskparser import use_kwargs
-
 from src.api import Resource
 from src.api.blueprint import Blueprint
 from src.api.error import custom_error
@@ -13,6 +11,7 @@ from src.auth.login import auth_required
 from src.consts import PaymentApiEndpoints
 from src.payment.error import ERROR
 from src.payment.schema import ProcessPaymentSchema
+from webargs.flaskparser import use_kwargs
 
 
 class PaymentReservationResource(Resource):

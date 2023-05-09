@@ -5,30 +5,20 @@ from uuid import UUID
 
 import marshmallow as ma
 from flask import jsonify, request
-from webargs.flaskparser import use_kwargs
-
 from src.api import Resource
 from src.api.blueprint import Blueprint
 from src.api.error import custom_error, validation_error
 from src.api.schema import use_schema
 from src.offer.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
-from src.offer.domain.exceptions import (
-    InvalidOfferConfiguration,
-    OfferNotFoundException,
-)
-from src.offer.domain.ports import (
-    IGetOfferPriceQuery,
-    IGetOfferQuery,
-    ISearchOfferQuery,
-)
+from src.offer.domain.exceptions import (InvalidOfferConfiguration,
+                                         OfferNotFoundException)
+from src.offer.domain.ports import (IGetOfferPriceQuery, IGetOfferQuery,
+                                    ISearchOfferQuery)
 from src.offer.error import ERROR
-from src.offer.schema import (
-    OfferPriceGetSchema,
-    OfferPriceSchema,
-    OfferSchema,
-    SearchOptionsSchema,
-    SimpleOfferSchema,
-)
+from src.offer.schema import (OfferPriceGetSchema, OfferPriceSchema,
+                              OfferSchema, SearchOptionsSchema,
+                              SimpleOfferSchema)
+from webargs.flaskparser import use_kwargs
 
 
 class OfferResource(Resource):

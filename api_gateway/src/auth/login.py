@@ -3,12 +3,11 @@ from http import HTTPStatus
 from typing import Callable
 
 from flask import g, request
-from werkzeug.local import LocalProxy
-
 from src.api.error import custom_error
 from src.auth.error import ERROR
 from src.extensions import db
 from src.user.infrastructure.storage.models import User
+from werkzeug.local import LocalProxy
 
 current_user = LocalProxy(lambda: _get_current_user())
 

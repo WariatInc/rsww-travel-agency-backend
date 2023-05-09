@@ -1,10 +1,6 @@
 import marshmallow as ma
-
-from src.api.schema import (
-    implicitly_nullable,
-    non_nullable,
-    possibly_undefined_non_nullable,
-)
+from src.api.schema import (implicitly_nullable, non_nullable,
+                            possibly_undefined_non_nullable)
 from src.consts import ReservationState
 
 

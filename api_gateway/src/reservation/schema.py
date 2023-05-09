@@ -1,5 +1,4 @@
 import marshmallow as ma
-
 from src.api.schema import non_nullable, possibly_undefined_non_nullable
 
 

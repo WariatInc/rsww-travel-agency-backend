@@ -1,10 +1,8 @@
 from uuid import UUID
 
 from src.reservation.domain.dtos import ReservationDto
-from src.reservation.domain.ports import (
-    IGetUserReservationsQuery,
-    IReservationListView,
-)
+from src.reservation.domain.ports import (IGetUserReservationsQuery,
+                                          IReservationListView)
 from src.user.domain.exceptions import UserNotFoundException
 from src.user.domain.ports import IUserView
 

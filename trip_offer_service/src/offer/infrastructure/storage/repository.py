@@ -1,7 +1,6 @@
 from uuid import UUID
 
 from pymongo.collection import Collection
-
 from src.consts import Collections
 from src.infrastructure.storage import MongoClient
 from src.offer.domain.ports import IOfferRepository

@@ -1,20 +1,12 @@
 from injector import Binder, provider, singleton
 from pika import BlockingConnection
-
 from src.di_container.modules import Module
-from src.offer.domain.commands import (
-    OfferReservationCommand,
-    UpdateOfferCommand,
-)
-from src.offer.domain.ports import (
-    IOfferReservationCommand,
-    IOfferUnitOfWork,
-    IUpdateOfferCommand,
-)
+from src.offer.domain.commands import (OfferReservationCommand,
+                                       UpdateOfferCommand)
+from src.offer.domain.ports import (IOfferReservationCommand, IOfferUnitOfWork,
+                                    IUpdateOfferCommand)
 from src.offer.infrastructure.message_broker.producer import (
-    OfferPublisher,
-    ReservationPublisher,
-)
+    OfferPublisher, ReservationPublisher)
 from src.offer.infrastructure.storage.unit_of_work import OfferUnitOfWork
 
 

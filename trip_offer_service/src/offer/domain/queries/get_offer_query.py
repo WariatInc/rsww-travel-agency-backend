@@ -2,7 +2,6 @@ from typing import Optional
 from uuid import UUID
 
 import marshmallow as ma
-
 from src.consts import Collections
 from src.infrastructure.storage import MongoReadOnlyClient
 from src.offer.domain.dtos import OfferDto
