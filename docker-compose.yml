@@ -15,8 +15,8 @@ services:
       - rsww_backend_network
 
   pg_db:
-    image: postgres:13
     container_name: pg_db
+    image: postgres:13
     environment:
       - POSTGRES_HOST_AUTH_METHOD=trust
     ports:
@@ -42,8 +42,8 @@ services:
       - rsww_backend_network
 
   mongo_db:
-    image: mongo:4.4.9
     container_name: mongo_db
+    image: mongo:4.4.9
     restart: unless-stopped
     command: mongod --auth
     environment:
