@@ -26,3 +26,5 @@ htmlcov/
 reservation_service/db/reservation_db.gz
 tour_operator_service/db/to_db.gz
 trip_offer_service/db/dump
+payment_service/db/payment_db.gz
+api_gateway/db/api_gateway_db.gz
