@@ -1,10 +1,8 @@
 from src.infrastructure.storage import SessionFactory
-from src.reservation_read_store.domain.ports import (
-    IReservationReadStoreUnitOfWork,
-)
-from src.reservation_read_store.infrastructure.storage.repository import (
-    ReservationReadStoreRepository,
-)
+from src.reservation_read_store.domain.ports import \
+    IReservationReadStoreUnitOfWork
+from src.reservation_read_store.infrastructure.storage.repository import \
+    ReservationReadStoreRepository
 
 
 class ReservationReadStoreUnitOfWork(IReservationReadStoreUnitOfWork):

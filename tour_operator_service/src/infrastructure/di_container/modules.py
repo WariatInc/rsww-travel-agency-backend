@@ -1,5 +1,4 @@
 from injector import Binder, provider, singleton
-
 from src.config import Config
 from src.di_container.injector import Module
 from src.infrastructure.message_broker import RabbitMQConnectionFactory

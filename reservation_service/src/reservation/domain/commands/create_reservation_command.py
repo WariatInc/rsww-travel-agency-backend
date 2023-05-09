@@ -3,16 +3,12 @@ from uuid import UUID
 
 from src.domain.events import event_factory
 from src.reservation.domain.events import ReservationCreatedEvent
-from src.reservation.domain.exceptions import (
-    ReservationExistInPendingAcceptedOrPaidStateException,
-)
-from src.reservation.domain.ports import (
-    ICreateReservationCommand,
-    IReservationUnitOfWork,
-)
-from src.reservation.infrastructure.message_broker.producer import (
-    ReservationPublisher,
-)
+from src.reservation.domain.exceptions import \
+    ReservationExistInPendingAcceptedOrPaidStateException
+from src.reservation.domain.ports import (ICreateReservationCommand,
+                                          IReservationUnitOfWork)
+from src.reservation.infrastructure.message_broker.producer import \
+    ReservationPublisher
 from src.user.domain.exceptions import UserNotFoundException
 
 if TYPE_CHECKING:

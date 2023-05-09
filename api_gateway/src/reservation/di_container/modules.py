@@ -1,5 +1,4 @@
 from injector import Binder
-
 from src.di_container.injector import Module
 from src.reservation.api import ReservationsResource
 

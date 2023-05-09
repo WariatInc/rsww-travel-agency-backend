@@ -4,34 +4,22 @@ from typing import TYPE_CHECKING, Any, Optional
 
 from src.config import Config, DefaultConfig
 from src.consts import Queues
-from src.infrastructure.message_broker import (
-    RabbitMQConnectionFactory,
-    RabbitMQConsumer,
-)
+from src.infrastructure.message_broker import (RabbitMQConnectionFactory,
+                                               RabbitMQConsumer)
 from src.infrastructure.storage import SessionFactory, SQLAlchemyEngine
-from src.offer.domain.commands import (
-    OfferReservationCommand,
-    UpdateOfferCommand,
-)
-from src.offer.domain.events import (
-    ReservationCancelledEvent,
-    ReservationCreatedEvent,
-)
-from src.offer.domain.ports import (
-    IOfferReservationCommand,
-    IUpdateOfferCommand,
-)
+from src.offer.domain.commands import (OfferReservationCommand,
+                                       UpdateOfferCommand)
+from src.offer.domain.events import (ReservationCancelledEvent,
+                                     ReservationCreatedEvent)
+from src.offer.domain.ports import (IOfferReservationCommand,
+                                    IUpdateOfferCommand)
 from src.offer.infrastructure.message_broker.producer import (
-    OfferPublisher,
-    ReservationPublisher,
-)
+    OfferPublisher, ReservationPublisher)
 from src.offer.infrastructure.storage.unit_of_work import OfferUnitOfWork
 
 if TYPE_CHECKING:
-    from pika.adapters.blocking_connection import (
-        BlockingChannel,
-        BlockingConnection,
-    )
+    from pika.adapters.blocking_connection import (BlockingChannel,
+                                                   BlockingConnection)
     from pika.spec import Basic, BasicProperties
 
 

@@ -48,9 +48,7 @@ class GetOfferPriceQuery(IGetOfferPriceQuery):
         kids_up_to_10: int,
         kids_up_to_3: int,
     ):
-        flight_cost = (
-            AVERAGE_FLIGHT_COST_PER_COUNTRY[offer.country]
-        )
+        flight_cost = AVERAGE_FLIGHT_COST_PER_COUNTRY[offer.country]
         return (
             2
             * flight_cost

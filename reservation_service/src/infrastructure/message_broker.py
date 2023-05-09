@@ -6,18 +6,13 @@ from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 from flask import Config
-from pika import (
-    BasicProperties,
-    BlockingConnection,
-    ConnectionParameters,
-    PlainCredentials,
-)
+from pika import (BasicProperties, BlockingConnection, ConnectionParameters,
+                  PlainCredentials)
 from pika.exceptions import StreamLostError
 from pika.spec import PERSISTENT_DELIVERY_MODE, Basic
 
 if TYPE_CHECKING:
     from pika.adapters.blocking_connection import BlockingChannel
-
     from src.consts import Exchanges, Queues
 
 

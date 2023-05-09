@@ -2,7 +2,6 @@ from typing import Optional
 from uuid import UUID, uuid4
 
 from sqlalchemy.orm import Session
-
 from src.consts import ReservationState
 from src.reservation.domain.dtos import ReservationDetailsDto
 from src.reservation.domain.factories import reservation_details_dto_factory

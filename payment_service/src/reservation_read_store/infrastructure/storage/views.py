@@ -4,9 +4,8 @@ from uuid import UUID
 from src.infrastructure.storage import ReadOnlySessionFactory
 from src.reservation_read_store.domain.factories import reservation_dto_factory
 from src.reservation_read_store.domain.ports import IReservationReadStoreView
-from src.reservation_read_store.infrastructure.storage.models import (
-    ReservationReadStore,
-)
+from src.reservation_read_store.infrastructure.storage.models import \
+    ReservationReadStore
 
 if TYPE_CHECKING:
     from src.reservation_read_store.domain.dtos import ReservationDto

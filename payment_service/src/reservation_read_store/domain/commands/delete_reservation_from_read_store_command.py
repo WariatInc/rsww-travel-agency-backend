@@ -1,9 +1,7 @@
 from uuid import UUID
 
 from src.reservation_read_store.domain.ports import (
-    IDeleteReservationFromReadStoreCommand,
-    IReservationReadStoreUnitOfWork,
-)
+    IDeleteReservationFromReadStoreCommand, IReservationReadStoreUnitOfWork)
 
 
 class DeleteReservationFromReadStoreCommand(

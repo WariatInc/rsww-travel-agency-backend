@@ -2,14 +2,11 @@ from uuid import UUID
 
 import sqlalchemy.dialects.postgresql as psql
 from sqlalchemy.orm import Session
-
 from src.consts import RESERVATION_READ_STORE_COLUMNS
-from src.reservation_read_store.domain.ports import (
-    IReservationReadStoreRepository,
-)
-from src.reservation_read_store.infrastructure.storage.models import (
-    ReservationReadStore,
-)
+from src.reservation_read_store.domain.ports import \
+    IReservationReadStoreRepository
+from src.reservation_read_store.infrastructure.storage.models import \
+    ReservationReadStore
 from src.utils import get_current_time
 
 
