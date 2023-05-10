@@ -1,4 +1,5 @@
 import marshmallow as ma
+
 from src.api.schema import non_nullable
 from src.consts import PaymentState
 
