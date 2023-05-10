@@ -1,14 +1,31 @@
 version: '3.8'
 
 services:
+  rabbitmq:
+    restart: always
+    image: jkoniusz/rsww-179919-rabbitmq:v1
+    ports:
+      - 17996:15672 # adminer rabbit
+    environment:
+      RABBITMQ_DEFAULT_USER: rabbitmq_admin
+      RABBITMQ_DEFAULT_PASS: rabbitmq
+    hostname: rabbitmq
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+      interval: 5s
+      retries: 5
+      timeout: 10s
+
+#
 # -------------------------------API GATEWAY-------------------------------
 #
+
   api_gateway:
     restart: always
     image: jkoniusz/rsww-179919-api-gateway:v1
     ports:
       - 17991:8040
-    command: bash -c "flask db upgrade && flask run --host 0.0.0.0 --port 8000"
+    command: bash -c "flask db upgrade && flask run --host 0.0.0.0 --port 8040"
     environment:
       FLASK_DEBUG: 'true'
       FLASK_ENV: production
@@ -19,12 +36,9 @@ services:
       PG_DB: rsww_179919_api_gateway
       PG_HOST: 'actina20.maas'
       PG_PORT: 5432
-      # RESERVATION_SERVICE_ROOT_URL: http://actina20:17992/api
-      # PAYMENT_SERVICE_ROOT_URL: http://actina17:17993/api
-      # TRIP_OFFER_SERVICE_ROOT_URL: http://actina18:17994/api
-      RESERVATION_SERVICE_ROOT_URL: reservation_api:8000/api
-      PAYMENT_SERVICE_ROOT_URL: payment_api:8030/api
-      TRIP_OFFER_SERVICE_ROOT_URL: trip_offer_api:8010/api
+      RESERVATION_SERVICE_ROOT_URL: http://reservation_api:8000/api
+      PAYMENT_SERVICE_ROOT_URL: http://payment_api:8030/api
+      TRIP_OFFER_SERVICE_ROOT_URL: http://trip_offer_api:8010/api
 
 # 
 # -------------------------------RESERVATION API-------------------------------
@@ -43,12 +57,10 @@ services:
       PG_DB: rsww_179919_reservation
       PG_HOST: 'actina20.maas'
       PG_PORT: 5432
-      RABBITMQ_HOST: actina20
-      RABBITMQ_PORT: 17995
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
       RABBITMQ_USER: reservation_user
       RABBITMQ_PASSWORD: password
-    ports:
-      - "17992:8000"
 
 # 
 # -------------------------------PAYMENT API-------------------------------
@@ -67,12 +79,10 @@ services:
       PG_DB: rsww_179919_payment
       PG_HOST: 'actina20.maas'
       PG_PORT: 5432
-      RABBITMQ_HOST: actina20
-      RABBITMQ_PORT: 17995
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
       RABBITMQ_USER: payment_user
       RABBITMQ_PASSWORD: password
-    ports:
-      - "17993:8030"
 
 # 
 # -------------------------------TRIP OFFER API-------------------------------
@@ -91,12 +101,10 @@ services:
       MONGO_DB: rsww_179919_trip_offer
       MONGO_HOST: 'actina15.maas'
       MONGO_PORT: 27017
-      RABBITMQ_HOST: actina20
-      RABBITMQ_PORT: 17995
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
       RABBITMQ_USER: rabbitmq_admin
       RABBITMQ_PASSWORD: rabbitmq
-    ports:
-      - "17994:8010"
 
 # 
 # -------------------------------TOUR_OPERATOR APP-------------------------------
@@ -115,8 +123,8 @@ services:
       PG_DB: rsww_179919_tour_operator
       PG_HOST: 'actina20.maas'
       PG_PORT: 5432
-      RABBITMQ_HOST: actina20
-      RABBITMQ_PORT: 17995
+      RABBITMQ_HOST: rabbitmq
+      RABBITMQ_PORT: 5672
       RABBITMQ_USER: tour_operator_user
       RABBITMQ_PASSWORD: password
 
