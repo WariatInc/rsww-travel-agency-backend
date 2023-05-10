@@ -1,21 +1,6 @@
 version: '3.8'
 
 services:
-  rabbitmq:
-    restart: always
-    image: jkoniusz/rsww-179919-rabbitmq:v1
-    ports:
-      - 17996:15672 # adminer rabbit
-    environment:
-      RABBITMQ_DEFAULT_USER: rabbitmq_admin
-      RABBITMQ_DEFAULT_PASS: rabbitmq
-    hostname: rabbitmq
-    healthcheck:
-      test: [ "CMD", "curl", "-f", "http://rabbitmq:15672" ]
-      interval: 5s
-      retries: 5
-      timeout: 10s
-
 #
 # -------------------------------API GATEWAY-------------------------------
 #
@@ -61,8 +46,6 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: reservation_user
       RABBITMQ_PASSWORD: password
-    depends_on:
-      - rabbitmq
 
 # 
 # -------------------------------PAYMENT API-------------------------------
@@ -85,8 +68,6 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: payment_user
       RABBITMQ_PASSWORD: password
-    depends_on:
-      - rabbitmq
 # 
 # -------------------------------TRIP OFFER API-------------------------------
 # 
@@ -108,10 +89,7 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: rabbitmq_admin
       RABBITMQ_PASSWORD: rabbitmq
-    depends_on:
-      - rabbitmq
-
-# 
+#
 # -------------------------------TOUR_OPERATOR APP-------------------------------
 #
   tour_operator:
@@ -132,5 +110,3 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: tour_operator_user
       RABBITMQ_PASSWORD: password
-    depends_on:
-      - rabbitmq
