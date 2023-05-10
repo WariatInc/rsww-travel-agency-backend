@@ -11,7 +11,7 @@ services:
       RABBITMQ_DEFAULT_PASS: rabbitmq
     hostname: rabbitmq
     healthcheck:
-      test: [ "CMD", "curl", "-f", "http://localhost:15672" ]
+      test: [ "CMD", "curl", "-f", "http://rabbitmq:15672" ]
       interval: 5s
       retries: 5
       timeout: 10s
@@ -61,6 +61,11 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: reservation_user
       RABBITMQ_PASSWORD: password
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://rabbitmq:15672" ]
+      interval: 5s
+      retries: 5
+      timeout: 10s
 
 # 
 # -------------------------------PAYMENT API-------------------------------
@@ -83,6 +88,11 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: payment_user
       RABBITMQ_PASSWORD: password
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://rabbitmq:15672" ]
+      interval: 5s
+      retries: 5
+      timeout: 10s
 
 # 
 # -------------------------------TRIP OFFER API-------------------------------
@@ -105,6 +115,11 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: rabbitmq_admin
       RABBITMQ_PASSWORD: rabbitmq
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://rabbitmq:15672" ]
+      interval: 5s
+      retries: 5
+      timeout: 10s
 
 # 
 # -------------------------------TOUR_OPERATOR APP-------------------------------
@@ -127,4 +142,8 @@ services:
       RABBITMQ_PORT: 5672
       RABBITMQ_USER: tour_operator_user
       RABBITMQ_PASSWORD: password
-
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://rabbitmq:15672" ]
+      interval: 5s
+      retries: 5
+      timeout: 10s
