@@ -2,6 +2,7 @@ from typing import Iterable
 
 from flask import Flask
 from injector import inject
+
 from src.api import Resource
 from src.utils import has_constructor_defined
 

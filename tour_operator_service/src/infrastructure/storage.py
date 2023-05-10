@@ -1,11 +1,14 @@
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.orm import Session, sessionmaker
+
 from src.config import Config
 
 
 class SQLAlchemyEngine:
     def __init__(self, config: Config) -> None:
-        self.engine = create_engine(config.SQLALCHEMY_DATABASE_URI)
+        self.engine = create_engine(
+            config.SQLALCHEMY_DATABASE_URI, pool_pre_ping=True
+        )
 
     def __call__(self, *args, **kwargs) -> Engine:
         return self.engine

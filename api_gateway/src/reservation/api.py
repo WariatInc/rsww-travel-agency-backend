@@ -4,6 +4,8 @@ from uuid import UUID
 import requests
 from flask import Config, make_response
 from requests.exceptions import ConnectionError
+from webargs.flaskparser import use_kwargs
+
 from src.api import Resource
 from src.api.blueprint import Blueprint
 from src.api.error import custom_error
@@ -13,7 +15,6 @@ from src.domain.factories import actor_dto_factory
 from src.reservation.error import ERROR
 from src.reservation.schema import ReservationPostSchema
 from src.trip_offer.error import ERROR as TRIP_OFFER_SERVICE_ERROR
-from webargs.flaskparser import use_kwargs
 
 
 class ReservationsResource(Resource):

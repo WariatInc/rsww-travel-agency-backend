@@ -3,6 +3,7 @@ from typing import Any
 
 from factory import Factory
 from factory.alchemy import SQLAlchemyModelFactory
+
 from src.extensions import db
 
 
