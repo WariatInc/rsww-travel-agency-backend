@@ -1,5 +1,6 @@
 from flask import Config
 from injector import Binder, provider, singleton
+
 from src.di_container.injector import Module
 from src.infrastructure.storage import (
     ReadOnlySessionFactory,

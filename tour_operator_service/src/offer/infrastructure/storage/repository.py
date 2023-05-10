@@ -2,6 +2,7 @@ from typing import TYPE_CHECKING, Any, Optional
 from uuid import UUID
 
 from sqlalchemy.orm import Session
+
 from src.offer.domain.factories import offer_dto_factory
 from src.offer.domain.ports import IOfferRepository
 from src.offer.infrastructure.storage.models import Offer
