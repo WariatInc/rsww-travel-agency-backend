@@ -16,9 +16,17 @@ class Tour(Base):
     hotel = orm.mapped_column(sqla.String(), nullable=False)
     country = orm.mapped_column(sqla.String(), nullable=False)
     city = orm.mapped_column(sqla.String(), nullable=False)
+    departure = orm.mapped_column(sqla.String(), nullable=False)
     description = orm.mapped_column(sqla.Text())
     thumbnail_url = orm.mapped_column(sqla.String(), nullable=False)
-    score = orm.mapped_column(sqla.SmallInteger, nullable=False)
+    score = orm.mapped_column(sqla.SmallInteger(), nullable=False)
+    arrival_date = orm.mapped_column(sqla.DateTime(), nullable=False)
+    departure_date = orm.mapped_column(sqla.DateTime(), nullable=False)
+    transport = orm.mapped_column(
+        sqla.Enum(Transport, name="transport_type_enum"), nullable=False
+    )
+    average_night_cost = orm.mapped_column(sqla.Float(), nullable=False)
+    average_flight_cost = orm.mapped_column(sqla.Float(), nullable=False)
     offers = orm.relationship("Offer", back_populates="tour")
 
 
@@ -39,16 +47,16 @@ class Offer(Base):
     )
 
     id = orm.mapped_column(sqla.UUID(), default=uuid4)
-    arrival_date = orm.mapped_column(sqla.Date(), nullable=False)
-    departure_date = orm.mapped_column(sqla.Date(), nullable=False)
-    departure_city = orm.mapped_column(sqla.String(), nullable=True)
-    transport = orm.mapped_column(
-        sqla.Enum(Transport, name="transport_enum"), nullable=False
-    )
     number_of_adults = orm.mapped_column(sqla.SmallInteger(), nullable=False)
     number_of_kids = orm.mapped_column(sqla.SmallInteger(), nullable=False)
     room_type = orm.mapped_column(
         sqla.Enum(RoomType, name="room_type_enum"), nullable=False
+    )
+    all_inclusive = orm.mapped_column(
+        sqla.Boolean(), nullable=False, default=False
+    )
+    breakfast = orm.mapped_column(
+        sqla.Boolean(), nullable=False, default=False
     )
     available = orm.mapped_column(sqla.Boolean(), nullable=False)
 
