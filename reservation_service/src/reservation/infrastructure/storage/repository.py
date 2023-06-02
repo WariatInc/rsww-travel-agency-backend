@@ -1,13 +1,13 @@
 from typing import Optional
 from uuid import UUID, uuid4
-
+from datetime import datetime
 from sqlalchemy.orm import Session
 
 from src.consts import ReservationState
-from src.reservation.domain.dtos import ReservationDetailsDto
+from src.reservation.domain.dtos import ReservationDetailsDto, ReservationDto
 from src.reservation.domain.factories import reservation_details_dto_factory
-from src.reservation.domain.ports import IReservationRepository
-from src.reservation.infrastructure.storage.models import Reservation
+from src.reservation.domain.ports import IReservationRepository, IReservationEventDashboardRepository
+from src.reservation.infrastructure.storage.models import Reservation, ReservationEventDashboard
 
 
 class ReservationRepository(IReservationRepository):
@@ -20,7 +20,6 @@ class ReservationRepository(IReservationRepository):
         offer_id: UUID,
         kids_up_to_3: int,
         kids_up_to_10: int,
-        price: float,
     ) -> ReservationDetailsDto:
         reservation = Reservation(
             id=uuid4(),
@@ -28,7 +27,6 @@ class ReservationRepository(IReservationRepository):
             offer_id=offer_id,
             kids_up_to_3=kids_up_to_3,
             kids_up_to_10=kids_up_to_10,
-            price=price,
         )
         self._session.add(reservation)
         return reservation_details_dto_factory(reservation)
@@ -72,3 +70,19 @@ class ReservationRepository(IReservationRepository):
             )
             .exists()
         ).scalar()
+
+
+class ReservationEventDashboardRepository(IReservationEventDashboardRepository):
+    def __init__(self, session: Session) -> None:
+        self._session = session
+
+    def add_reservation_event(self, reservation_event_id: UUID, timestamp: datetime, reservation_dto: ReservationDto) -> None:
+        self._session.add(
+            ReservationEventDashboard(
+                id=reservation_event_id,
+                reservation_id=reservation_dto.id,
+                offer_id=reservation_dto.offer_id,
+                state=reservation_dto.state,
+                timestamp=timestamp
+            )
+        )

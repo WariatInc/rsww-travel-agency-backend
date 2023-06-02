@@ -20,6 +20,13 @@ class DefaultConfig(Config):
         )
     )
 
+    SQLALCHEMY_CONNECTION_OPTIONS = {
+            "keepalives": 1,
+            "keepalives_idle": 30,
+            "keepalives_interval": 10,
+            "keepalives_count": 5,
+        }
+
     RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST")
     RABBITMQ_PORT = os.environ.get("RABBITMQ_PORT")
     RABBITMQ_USER = os.environ.get("RABBITMQ_USER")

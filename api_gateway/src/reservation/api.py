@@ -30,23 +30,6 @@ class ReservationsResource(Resource):
     @use_kwargs(ReservationPostSchema)
     def post(self, offer_id: UUID, **kwargs):
         actor = actor_dto_factory(current_user)
-
-        try:
-            response = requests.get(
-                url=f"{self.trip_offer_service_root_url}{TripOfferApiEndpoints.get_offer_price.format(offer_id=str(offer_id))}",
-                params=kwargs,
-            )
-        except ConnectionError:
-            return custom_error(
-                TRIP_OFFER_SERVICE_ERROR.trip_offer_service_unavailable,
-                HTTPStatus.SERVICE_UNAVAILABLE,
-            )
-
-        if not response.status_code == HTTPStatus.OK:
-            return make_response(response.json(), response.status_code)
-
-        price = response.json().get("price")
-
         try:
             response = requests.post(
                 url=f"{self.reservation_service_root_url}"
@@ -54,7 +37,6 @@ class ReservationsResource(Resource):
                 json=dict(
                     user_gid=str(actor.gid),
                     offer_id=str(offer_id),
-                    price=price,
                     **kwargs,
                 ),
             )
