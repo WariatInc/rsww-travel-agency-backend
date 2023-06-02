@@ -52,3 +52,19 @@ class ReservationCheckedEvent(Event):
             ),
             rejection_reason=message.get("reason"),
         )
+
+
+@dataclass
+class ReservationEventDashboardUpdate(DomainEvent):
+    reservation_id: UUID
+
+    @classmethod
+    def from_rabbitmq_message(
+            cls, message: dict[str, str]
+    ) -> "ReservationEventDashboardUpdate":
+        return cls(
+            id=UUID(message.get("id")),
+            time=datetime.fromisoformat(message.get("time")),
+            type=message.get("type"),
+            reservation_id=UUID(message.get("reservation_id")),
+        )

@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from typing import Optional
 from uuid import UUID
+from datetime import datetime
 
-from src.reservation.domain.dtos import ReservationDetailsDto, ReservationDto
+from src.reservation.domain.dtos import ReservationDetailsDto, ReservationDto, ReservationEventDashboardDto
 from src.user.domain.ports import IUserRepository
 
 
@@ -14,7 +15,6 @@ class IReservationRepository(ABC):
         offer_id: UUID,
         kids_up_to_3: int,
         kids_up_to_10: int,
-        price: float,
     ) -> ReservationDetailsDto:
         raise NotImplementedError
 
@@ -62,7 +62,6 @@ class ICreateReservationCommand(ABC):
         offer_id: UUID,
         kids_up_to_3: int,
         kids_up_to_10: int,
-        price: float,
     ) -> "ReservationDetailsDto":
         raise NotImplementedError
 
@@ -110,4 +109,41 @@ class IGetUserReservationsQuery(ABC):
 class IDeleteRejectedReservationCommand(ABC):
     @abstractmethod
     def __call__(self, user_gid: UUID, reservation_id: UUID) -> None:
+        raise NotImplementedError
+
+
+class IReservationEventDashboardRepository(ABC):
+    @abstractmethod
+    def add_reservation_event(self, reservation_event_id: UUID, timestamp: datetime, reservation_dto: ReservationDto) -> None:
+        raise NotImplementedError
+
+
+class IReservationEventDashboardUnitOfWork(ABC):
+    reservation_event_dashboard_repository: IReservationEventDashboardRepository
+    reservation_repository: IReservationRepository
+
+    @abstractmethod
+    def commit(self) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def rollback(self) -> None:
+        raise NotImplementedError
+
+
+class IUpdateReservationEventDashboardCommand(ABC):
+    @abstractmethod
+    def __call__(self, reservation_event_id: UUID,  reservation_id: UUID, timestamp: datetime) -> None:
+        raise NotImplementedError
+
+
+class IReservationEventDashboardView(ABC):
+    @abstractmethod
+    def get_list(self, page: int, size: int) -> list[ReservationEventDashboardDto]:
+        raise NotImplementedError
+
+
+class IReservationEventDashboardListQuery(ABC):
+    @abstractmethod
+    def get(self, page: int, size: int) -> list[ReservationEventDashboardDto]:
         raise NotImplementedError

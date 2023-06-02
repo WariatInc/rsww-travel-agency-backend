@@ -12,6 +12,7 @@ from src.reservation.domain.commands import (
     CreateReservationCommand,
     DeleteRejectedReservationCommand,
     UpdateReservationCommand,
+    UpdateReservationEventDashboardCommand
 )
 from src.reservation.domain.ports import (
     ICancelReservationCommand,
@@ -23,6 +24,8 @@ from src.reservation.domain.ports import (
     IReservationUnitOfWork,
     IReservationView,
     IUpdateReservationCommand,
+    IUpdateReservationEventDashboardCommand,
+    IReservationEventDashboardUnitOfWork
 )
 from src.reservation.domain.queries import (
     GetReservationQuery,
@@ -33,6 +36,7 @@ from src.reservation.infrastructure.message_broker.producer import (
 )
 from src.reservation.infrastructure.storage.unit_of_work import (
     ReservationUnitOfWork,
+    ReservationEventDashboardUnitOfWork
 )
 from src.reservation.infrastructure.storage.views import (
     ReservationListView,
@@ -54,6 +58,7 @@ class ReservationModule(Module):
         self.bind(
             IDeleteRejectedReservationCommand, DeleteRejectedReservationCommand
         )
+        self.bind(IUpdateReservationEventDashboardCommand, UpdateReservationEventDashboardCommand)
 
         # Queries
         self.bind(IGetUserReservationsQuery, GetUserReservationsQuery)
@@ -61,6 +66,7 @@ class ReservationModule(Module):
 
         # Unit of works
         self.bind(IReservationUnitOfWork, ReservationUnitOfWork)
+        self.bind(IReservationEventDashboardUnitOfWork, ReservationEventDashboardUnitOfWork)
 
         # Views
         self.bind(IReservationListView, ReservationListView)

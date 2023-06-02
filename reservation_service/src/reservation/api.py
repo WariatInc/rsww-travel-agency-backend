@@ -50,13 +50,12 @@ class ReservationsResource(Resource):
         self,
         user_gid: UUID,
         offer_id: UUID,
-        price: float,
         kids_up_to_3: int = 0,
         kids_up_to_10: int = 0,
     ):
         try:
             reservation = self.create_reservation_command(
-                user_gid, offer_id, kids_up_to_3, kids_up_to_10, price
+                user_gid, offer_id, kids_up_to_3, kids_up_to_10
             )
         except ReservationExistInPendingAcceptedOrPaidStateException:
             return custom_error(
