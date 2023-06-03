@@ -7,6 +7,7 @@ class ReservationApiEndpoints(StrEnum):
     get_reservations = "/reservations?user_gid={user_gid}"
     delete_reservation = "/reservations/{reservation_id}?user_gid={user_gid}"
     get_reservation = "/reservations/{reservation_id}?user_gid={user_gid}"
+    get_reservation_events_dashboard = "/reservations/events"
 
 
 class PaymentApiEndpoints(StrEnum):

@@ -13,7 +13,6 @@ class ReservationCreatedEvent(DomainEvent):
     reservation_id: UUID
     kids_up_to_3: int
     kids_up_to_10: int
-    price: float
 
 
 @dataclass
@@ -37,6 +36,7 @@ class ReservationCheckedEvent(Event):
     reservation_id: UUID
     reservation_state: ReservationState
     rejection_reason: Optional[str]
+    _price: Optional[str]
 
     @classmethod
     def from_rabbitmq_message(
@@ -51,7 +51,13 @@ class ReservationCheckedEvent(Event):
                 message.get("reservation_state")
             ),
             rejection_reason=message.get("reason"),
+            _price=message.get("price"),
         )
+
+    @property
+    def price(self) -> Optional[float]:
+        if _price := self._price:
+            return float(_price)
 
 
 @dataclass
@@ -60,7 +66,7 @@ class ReservationEventDashboardUpdate(DomainEvent):
 
     @classmethod
     def from_rabbitmq_message(
-            cls, message: dict[str, str]
+        cls, message: dict[str, str]
     ) -> "ReservationEventDashboardUpdate":
         return cls(
             id=UUID(message.get("id")),

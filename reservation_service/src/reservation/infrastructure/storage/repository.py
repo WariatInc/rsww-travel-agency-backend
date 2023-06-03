@@ -1,13 +1,21 @@
+from datetime import datetime
+from math import ceil
 from typing import Optional
 from uuid import UUID, uuid4
-from datetime import datetime
+
 from sqlalchemy.orm import Session
 
-from src.consts import ReservationState
+from src.consts import PROVISION, ReservationState
 from src.reservation.domain.dtos import ReservationDetailsDto, ReservationDto
 from src.reservation.domain.factories import reservation_details_dto_factory
-from src.reservation.domain.ports import IReservationRepository, IReservationEventDashboardRepository
-from src.reservation.infrastructure.storage.models import Reservation, ReservationEventDashboard
+from src.reservation.domain.ports import (
+    IReservationEventDashboardRepository,
+    IReservationRepository,
+)
+from src.reservation.infrastructure.storage.models import (
+    Reservation,
+    ReservationEventDashboard,
+)
 
 
 class ReservationRepository(IReservationRepository):
@@ -34,6 +42,9 @@ class ReservationRepository(IReservationRepository):
     def update_reservation(
         self, reservation_id: UUID, **update_kwargs
     ) -> None:
+        if price := update_kwargs.get("price"):
+            update_kwargs["price"] = ceil(price * (PROVISION + 1)) - 0.01
+
         self._session.query(Reservation).filter(
             Reservation.id == reservation_id
         ).update(update_kwargs)
@@ -72,17 +83,24 @@ class ReservationRepository(IReservationRepository):
         ).scalar()
 
 
-class ReservationEventDashboardRepository(IReservationEventDashboardRepository):
+class ReservationEventDashboardRepository(
+    IReservationEventDashboardRepository
+):
     def __init__(self, session: Session) -> None:
         self._session = session
 
-    def add_reservation_event(self, reservation_event_id: UUID, timestamp: datetime, reservation_dto: ReservationDto) -> None:
+    def add_reservation_event(
+        self,
+        reservation_event_id: UUID,
+        timestamp: datetime,
+        reservation_dto: ReservationDto,
+    ) -> None:
         self._session.add(
             ReservationEventDashboard(
                 id=reservation_event_id,
                 reservation_id=reservation_dto.id,
                 offer_id=reservation_dto.offer_id,
                 state=reservation_dto.state,
-                timestamp=timestamp
+                timestamp=timestamp,
             )
         )

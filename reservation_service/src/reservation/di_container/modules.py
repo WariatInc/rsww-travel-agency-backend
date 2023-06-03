@@ -12,22 +12,25 @@ from src.reservation.domain.commands import (
     CreateReservationCommand,
     DeleteRejectedReservationCommand,
     UpdateReservationCommand,
-    UpdateReservationEventDashboardCommand
+    UpdateReservationEventDashboardCommand,
 )
 from src.reservation.domain.ports import (
     ICancelReservationCommand,
     ICreateReservationCommand,
     IDeleteRejectedReservationCommand,
+    IGetReservationEventDashboardListQuery,
     IGetReservationQuery,
     IGetUserReservationsQuery,
+    IReservationEventDashboardListView,
+    IReservationEventDashboardUnitOfWork,
     IReservationListView,
     IReservationUnitOfWork,
     IReservationView,
     IUpdateReservationCommand,
     IUpdateReservationEventDashboardCommand,
-    IReservationEventDashboardUnitOfWork
 )
 from src.reservation.domain.queries import (
+    GetReservationEventDashboardListQuery,
     GetReservationQuery,
     GetUserReservationsQuery,
 )
@@ -35,10 +38,11 @@ from src.reservation.infrastructure.message_broker.producer import (
     ReservationPublisher,
 )
 from src.reservation.infrastructure.storage.unit_of_work import (
+    ReservationEventDashboardUnitOfWork,
     ReservationUnitOfWork,
-    ReservationEventDashboardUnitOfWork
 )
 from src.reservation.infrastructure.storage.views import (
+    ReservationEventDashboardListView,
     ReservationListView,
     ReservationView,
 )
@@ -58,19 +62,33 @@ class ReservationModule(Module):
         self.bind(
             IDeleteRejectedReservationCommand, DeleteRejectedReservationCommand
         )
-        self.bind(IUpdateReservationEventDashboardCommand, UpdateReservationEventDashboardCommand)
+        self.bind(
+            IUpdateReservationEventDashboardCommand,
+            UpdateReservationEventDashboardCommand,
+        )
 
         # Queries
         self.bind(IGetUserReservationsQuery, GetUserReservationsQuery)
         self.bind(IGetReservationQuery, GetReservationQuery)
+        self.bind(
+            IGetReservationEventDashboardListQuery,
+            GetReservationEventDashboardListQuery,
+        )
 
         # Unit of works
         self.bind(IReservationUnitOfWork, ReservationUnitOfWork)
-        self.bind(IReservationEventDashboardUnitOfWork, ReservationEventDashboardUnitOfWork)
+        self.bind(
+            IReservationEventDashboardUnitOfWork,
+            ReservationEventDashboardUnitOfWork,
+        )
 
         # Views
         self.bind(IReservationListView, ReservationListView)
         self.bind(IReservationView, ReservationView)
+        self.bind(
+            IReservationEventDashboardListView,
+            ReservationEventDashboardListView,
+        )
 
     @provider
     @singleton

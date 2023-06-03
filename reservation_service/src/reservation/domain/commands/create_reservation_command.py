@@ -58,7 +58,6 @@ class CreateReservationCommand(ICreateReservationCommand):
             reservation_id=reservation.id,
             kids_up_to_3=reservation.kids_up_to_3,
             kids_up_to_10=reservation.kids_up_to_10,
-            price=reservation.price,
         )
         self._publisher.publish(event)
 

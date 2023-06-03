@@ -15,11 +15,9 @@ class Tour(Base):
     operator = orm.mapped_column(sqla.String(), nullable=False)
     hotel = orm.mapped_column(sqla.String(), nullable=False)
     country = orm.mapped_column(sqla.String(), nullable=False)
-    city = orm.mapped_column(sqla.String(), nullable=False)
-    departure = orm.mapped_column(sqla.String(), nullable=False)
+    departure_city = orm.mapped_column(sqla.String(), nullable=False)
     description = orm.mapped_column(sqla.Text())
     thumbnail_url = orm.mapped_column(sqla.String(), nullable=False)
-    score = orm.mapped_column(sqla.SmallInteger(), nullable=False)
     arrival_date = orm.mapped_column(sqla.DateTime(), nullable=False)
     departure_date = orm.mapped_column(sqla.DateTime(), nullable=False)
     transport = orm.mapped_column(

@@ -1,9 +1,13 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 from typing import Optional
 from uuid import UUID
-from datetime import datetime
 
-from src.reservation.domain.dtos import ReservationDetailsDto, ReservationDto, ReservationEventDashboardDto
+from src.reservation.domain.dtos import (
+    ReservationDetailsDto,
+    ReservationDto,
+    ReservationEventDashboardDto,
+)
 from src.user.domain.ports import IUserRepository
 
 
@@ -114,7 +118,12 @@ class IDeleteRejectedReservationCommand(ABC):
 
 class IReservationEventDashboardRepository(ABC):
     @abstractmethod
-    def add_reservation_event(self, reservation_event_id: UUID, timestamp: datetime, reservation_dto: ReservationDto) -> None:
+    def add_reservation_event(
+        self,
+        reservation_event_id: UUID,
+        timestamp: datetime,
+        reservation_dto: ReservationDto,
+    ) -> None:
         raise NotImplementedError
 
 
@@ -133,17 +142,26 @@ class IReservationEventDashboardUnitOfWork(ABC):
 
 class IUpdateReservationEventDashboardCommand(ABC):
     @abstractmethod
-    def __call__(self, reservation_event_id: UUID,  reservation_id: UUID, timestamp: datetime) -> None:
+    def __call__(
+        self,
+        reservation_event_id: UUID,
+        reservation_id: UUID,
+        timestamp: datetime,
+    ) -> None:
         raise NotImplementedError
 
 
-class IReservationEventDashboardView(ABC):
+class IReservationEventDashboardListView(ABC):
     @abstractmethod
-    def get_list(self, page: int, size: int) -> list[ReservationEventDashboardDto]:
+    def get_list(
+        self, page: int, size: int
+    ) -> tuple[list[ReservationEventDashboardDto], int]:
         raise NotImplementedError
 
 
-class IReservationEventDashboardListQuery(ABC):
+class IGetReservationEventDashboardListQuery(ABC):
     @abstractmethod
-    def get(self, page: int, size: int) -> list[ReservationEventDashboardDto]:
+    def get(
+        self, page: int, size: int
+    ) -> tuple[list[ReservationEventDashboardDto], int]:
         raise NotImplementedError

@@ -1,3 +1,4 @@
+from math import ceil
 from typing import Optional
 from uuid import UUID
 
@@ -5,13 +6,25 @@ import sqlalchemy as sqla
 
 from src.consts import ReservationState
 from src.infrastructure.storage import ReadOnlySessionFactory
-from src.reservation.domain.dtos import ReservationDetailsDto, ReservationDto
+from src.reservation.domain.dtos import (
+    ReservationDetailsDto,
+    ReservationDto,
+    ReservationEventDashboardDto,
+)
 from src.reservation.domain.factories import (
     reservation_details_dto_factory,
     reservation_dto_factory,
+    reservation_event_dashboard_dto_factory,
 )
-from src.reservation.domain.ports import IReservationListView, IReservationView
-from src.reservation.infrastructure.storage.models import Reservation
+from src.reservation.domain.ports import (
+    IReservationEventDashboardListView,
+    IReservationListView,
+    IReservationView,
+)
+from src.reservation.infrastructure.storage.models import (
+    Reservation,
+    ReservationEventDashboard,
+)
 
 
 class ReservationListView(IReservationListView):
@@ -47,3 +60,23 @@ class ReservationView(IReservationView):
             .one_or_none()
         ):
             return reservation_details_dto_factory(reservation)
+
+
+class ReservationEventDashboardListView(IReservationEventDashboardListView):
+    def __init__(self, session_factory: ReadOnlySessionFactory) -> None:
+        self._session = session_factory.create_session()
+
+    def get_list(
+        self, page: int, size: int
+    ) -> tuple[list[ReservationEventDashboardDto], int]:
+        query = self._session.query(ReservationEventDashboard).order_by(
+            sqla.desc(ReservationEventDashboard.timestamp)
+        )
+        return [
+            reservation_event_dashboard_dto_factory(
+                reservation_event_dashboard
+            )
+            for reservation_event_dashboard in query.offset((page - 1) * size)
+            .limit(size)
+            .all()
+        ], ceil(query.count() / size)
