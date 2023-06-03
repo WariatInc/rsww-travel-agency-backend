@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  frontend:
+    restart: always
+    image: jkoniusz/rsww-179919-frontend:v2
+    ports: 
+      - 17999:4200 
