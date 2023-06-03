@@ -42,5 +42,27 @@ class IUpdateOfferCommand(ABC):
 
 class IOfferReservationCommand(ABC):
     @abstractmethod
-    def __call__(self, offer_id: UUID, reservation_id: UUID) -> None:
+    def __call__(
+        self,
+        offer_id: UUID,
+        reservation_id: UUID,
+        kids_up_to_3: int,
+        kids_up_to_10: int,
+    ) -> None:
+        raise NotImplementedError
+
+
+class IOfferPriceView(ABC):
+    @abstractmethod
+    def get_offer_price(
+        self, offer_id: UUID, kids_up_to_3: int, kids_up_to_10: int
+    ) -> float:
+        raise NotImplementedError
+
+
+class IGetOfferPriceQuery(ABC):
+    @abstractmethod
+    def get(
+        self, offer_id: UUID, kids_up_to_3: int, kids_up_to_10: int
+    ) -> float:
         raise NotImplementedError

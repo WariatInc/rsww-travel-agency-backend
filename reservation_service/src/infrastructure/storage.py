@@ -11,7 +11,7 @@ class SQLAlchemyEngine:
             max_overflow=2,
             pool_recycle=300,
             pool_use_lifo=True,
-            connect_args=config["SQLALCHEMY_CONNECTION_OPTIONS"]
+            connect_args=config["SQLALCHEMY_CONNECTION_OPTIONS"],
         )
 
     def __call__(self, *args, **kwargs) -> Engine:
@@ -24,7 +24,7 @@ class SQLAlchemyReadOnlyEngine:
             config["SQLALCHEMY_BINDS"]["readonly"],
             poolclass=NullPool,
             pool_pre_ping=True,
-            connect_args=config["SQLALCHEMY_CONNECTION_OPTIONS"]
+            connect_args=config["SQLALCHEMY_CONNECTION_OPTIONS"],
         )
 
     def __call__(self, *args, **kwargs) -> Engine:

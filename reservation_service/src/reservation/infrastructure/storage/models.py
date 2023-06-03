@@ -38,7 +38,9 @@ class Reservation(db.BaseModel):
 
 class ReservationEventDashboard(db.Model):
     __tablename__ = "reservation_event_dashboard"
-    __table_args__ = (db.PrimaryKeyConstraint("id", name="reservation_event_dashboard_pkey"),)
+    __table_args__ = (
+        db.PrimaryKeyConstraint("id", name="reservation_event_dashboard_pkey"),
+    )
 
     id = db.Column(db.UUID(), nullable=False, default=uuid4)
     reservation_id = db.Column(db.UUID(), nullable=False)

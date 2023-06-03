@@ -1,7 +1,8 @@
 from dataclasses import dataclass
+from datetime import datetime
 from typing import Optional
 from uuid import UUID
-from datetime import datetime
+
 from src.consts import ReservationState
 
 
@@ -27,4 +28,4 @@ class ReservationEventDashboardDto:
     reservation_id: UUID
     offer_id: UUID
     state: ReservationState
-    time: datetime
+    timestamp: datetime

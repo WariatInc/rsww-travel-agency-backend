@@ -20,12 +20,24 @@ class DefaultConfig(Config):
         )
     )
 
+    SQLALCHEMY_BINDS = {
+        "readonly": (
+            "postgresql://{user}_readonly:{password}@{host}:{port}/{db}".format(
+                user=os.environ.get("PG_USER"),
+                password=os.environ.get("PG_PASSWORD"),
+                host=os.environ.get("PG_HOST"),
+                port=os.environ.get("PG_PORT"),
+                db=os.environ.get("PG_DB"),
+            )
+        )
+    }
+
     SQLALCHEMY_CONNECTION_OPTIONS = {
-            "keepalives": 1,
-            "keepalives_idle": 30,
-            "keepalives_interval": 10,
-            "keepalives_count": 5,
-        }
+        "keepalives": 1,
+        "keepalives_idle": 30,
+        "keepalives_interval": 10,
+        "keepalives_count": 5,
+    }
 
     RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST")
     RABBITMQ_PORT = os.environ.get("RABBITMQ_PORT")

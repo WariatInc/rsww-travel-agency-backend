@@ -96,7 +96,7 @@ run_app_daemon: $(STATE_APP_BUILD) $(STATE_DB_INIT)
 	docker-compose --project-name $(PROJECT_NAME) up -d --no-recreate tour_operator
 
 psql: $(STATE_APP_BUILD)
-	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator psql --host=pg_db --dbname=rsww_179919_tour_operator --username=179919_tour_operator
+	docker-compose --project-name $(PROJECT_NAME) run --rm tour_operator psql --host=pg_db --dbname=rsww_179919_tour_operator --username=postgres
 
 install_local: $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 	$(PIP) install -r $(BASE_DEPS)
