@@ -30,7 +30,7 @@ class DefaultConfig(Config):
 
     MONGO_VIEW_COLLECTION_NAME = "offer_view"
 
-    BLUEPRINTS = ["src.offer.api"]
+    BLUEPRINTS = ["src.tours.api"]
 
     RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST")
     RABBITMQ_PORT = os.environ.get("RABBITMQ_PORT")
@@ -48,4 +48,6 @@ class TestConfig(DefaultConfig):
     TESTING = True
 
     MONGO_DB_NAME = "trip_offer_test_mongo"
-    MONGO_URI = "mongodb://trip_offer_test:trip_offer_test@mongo_db:27017/trip_offer_test_mongo"
+    MONGO_URI = (
+        "mongodb://trip_offer_test:trip_offer_test@mongo_db:27017/trip_offer_test_mongo"
+    )
