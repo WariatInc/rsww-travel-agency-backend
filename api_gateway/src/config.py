@@ -49,6 +49,7 @@ class DefaultConfig(Config):
         "src.reservation.api",
         "src.payment.api",
         "src.trip_offer.api",
+        "src.user.api",
     ]
 
 

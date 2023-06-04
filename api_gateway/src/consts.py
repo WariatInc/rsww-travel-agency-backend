@@ -32,3 +32,6 @@ class RoomType(StrEnum):
     family = auto()
     apartment = auto()
     studio = auto()
+
+
+USER_SESSION_EXPIRE_IN = 300
