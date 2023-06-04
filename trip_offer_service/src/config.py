@@ -40,7 +40,7 @@ class DefaultConfig(Config):
 
 class ProductionConfig(DefaultConfig):
     ENVIRONMENT = "prod"
-    CONSUMERS = ["src.offer.infrastructure.message_broker.consumer"]
+    CONSUMERS = ["src.offer_old.infrastructure.message_broker.consumer"]
 
 
 class TestConfig(DefaultConfig):
