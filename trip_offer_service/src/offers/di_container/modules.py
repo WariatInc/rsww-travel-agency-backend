@@ -5,12 +5,14 @@ from src.offers.domain.ports import (
     IQueryCountOffers,
     IQuerySearchOptions,
     IQuerySearchOffers,
+    IQueryOffer,
     IOffersView,
 )
 from src.offers.domain.queries import (
     CountOffersQuery,
     SearchOffersQuery,
     SearchOptionsQuery,
+    InspectOfferQuery,
 )
 from src.offers.infrastructure.storage.views import OffersView
 
@@ -21,3 +23,4 @@ class OffersModule(Module):
         self.bind(IQueryCountOffers, CountOffersQuery)
         self.bind(IQuerySearchOptions, SearchOptionsQuery)
         self.bind(IQuerySearchOffers, SearchOffersQuery)
+        self.bind(IQueryOffer, InspectOfferQuery)
