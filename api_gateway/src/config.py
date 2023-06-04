@@ -48,7 +48,8 @@ class DefaultConfig(Config):
     BLUEPRINTS = [
         "src.reservation.api",
         "src.payment.api",
-        "src.trip_offer.api",
+        "src.trip_offer.api.offers",
+        "src.trip_offer.api.tours",
         "src.user.api",
     ]
 
