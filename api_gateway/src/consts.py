@@ -15,10 +15,11 @@ class PaymentApiEndpoints(StrEnum):
 
 
 class TripOfferApiEndpoints(StrEnum):
-    get_offer = "/offers/{offer_id}"
+    tour_search = "/tours/search"
+    tour_search_options = "/tours/search/options"
     offer_search = "/offers/search"
     offer_search_options = "/offers/search/options"
-    get_offer_price = "/offers/price/{offer_id}"
+    offer_view_get = "/offers/{offer_id}"
 
 
 class TransportType(StrEnum):
