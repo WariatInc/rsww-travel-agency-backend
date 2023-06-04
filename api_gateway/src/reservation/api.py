@@ -10,11 +10,13 @@ from src.api import Resource
 from src.api.blueprint import Blueprint
 from src.api.error import custom_error
 from src.auth.login import auth_required, current_user
-from src.consts import ReservationApiEndpoints, TripOfferApiEndpoints
+from src.consts import ReservationApiEndpoints
 from src.domain.factories import actor_dto_factory
 from src.reservation.error import ERROR
-from src.reservation.schema import ReservationPostSchema
-from src.trip_offer.error import ERROR as TRIP_OFFER_SERVICE_ERROR
+from src.reservation.schema import (
+    ReservationEventDashboardGetSchema,
+    ReservationPostSchema,
+)
 
 
 class ReservationsResource(Resource):
@@ -30,23 +32,6 @@ class ReservationsResource(Resource):
     @use_kwargs(ReservationPostSchema)
     def post(self, offer_id: UUID, **kwargs):
         actor = actor_dto_factory(current_user)
-
-        try:
-            response = requests.get(
-                url=f"{self.trip_offer_service_root_url}{TripOfferApiEndpoints.get_offer_price.format(offer_id=str(offer_id))}",
-                params=kwargs,
-            )
-        except ConnectionError:
-            return custom_error(
-                TRIP_OFFER_SERVICE_ERROR.trip_offer_service_unavailable,
-                HTTPStatus.SERVICE_UNAVAILABLE,
-            )
-
-        if not response.status_code == HTTPStatus.OK:
-            return make_response(response.json(), response.status_code)
-
-        price = response.json().get("price")
-
         try:
             response = requests.post(
                 url=f"{self.reservation_service_root_url}"
@@ -54,7 +39,6 @@ class ReservationsResource(Resource):
                 json=dict(
                     user_gid=str(actor.gid),
                     offer_id=str(offer_id),
-                    price=price,
                     **kwargs,
                 ),
             )
@@ -146,6 +130,29 @@ class ReservationResource(Resource):
         return make_response(response.json(), response.status_code)
 
 
+class ReservationEventDashboardResource(Resource):
+    def __init__(self, config: Config) -> None:
+        self.reservation_service_root_url = config.get(
+            "RESERVATION_SERVICE_ROOT_URL"
+        )
+
+    @auth_required
+    @use_kwargs(ReservationEventDashboardGetSchema, location="query")
+    def get(self, **kwargs):
+        try:
+            response = requests.get(
+                url=f"{self.reservation_service_root_url}"
+                f"{ReservationApiEndpoints.get_reservation_events_dashboard}",
+                params=kwargs,
+            )
+        except ConnectionError:
+            return custom_error(
+                ERROR.reservation_service_unavailable,
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+        return make_response(response.json(), response.status_code)
+
+
 class Api(Blueprint):
     name = "reservations"
     import_name = __name__
@@ -154,4 +161,5 @@ class Api(Blueprint):
         (ReservationsResource, "/"),
         (ReservationCancelResource, "/cancel/<uuid:reservation_id>"),
         (ReservationResource, "/<uuid:reservation_id>"),
+        (ReservationEventDashboardResource, "/events"),
     ]

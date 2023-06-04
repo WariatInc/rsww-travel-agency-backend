@@ -32,6 +32,13 @@ class DefaultConfig(Config):
         )
     }
 
+    SQLALCHEMY_CONNECTION_OPTIONS = {
+        "keepalives": 1,
+        "keepalives_idle": 30,
+        "keepalives_interval": 10,
+        "keepalives_count": 5,
+    }
+
     RESERVATION_SERVICE_ROOT_URL = os.environ.get(
         "RESERVATION_SERVICE_ROOT_URL"
     )
@@ -41,7 +48,9 @@ class DefaultConfig(Config):
     BLUEPRINTS = [
         "src.reservation.api",
         "src.payment.api",
-        "src.trip_offer.api",
+        "src.trip_offer.api.offers",
+        "src.trip_offer.api.tours",
+        "src.user.api",
     ]
 
 

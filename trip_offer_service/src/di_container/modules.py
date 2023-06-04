@@ -1,4 +1,5 @@
 from src.infrastructure.di_container.modules import InfrastructureModule
-from src.offer.di_container.modules import OfferModule
+from src.tours.di_container.modules import ToursModule
+from src.offers.di_container.modules import OffersModule
 
-all_modules = [InfrastructureModule, OfferModule]
+all_modules = [InfrastructureModule, ToursModule, OffersModule]

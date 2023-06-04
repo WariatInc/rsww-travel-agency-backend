@@ -7,6 +7,7 @@ class ReservationApiEndpoints(StrEnum):
     get_reservations = "/reservations?user_gid={user_gid}"
     delete_reservation = "/reservations/{reservation_id}?user_gid={user_gid}"
     get_reservation = "/reservations/{reservation_id}?user_gid={user_gid}"
+    get_reservation_events_dashboard = "/reservations/events"
 
 
 class PaymentApiEndpoints(StrEnum):
@@ -14,10 +15,11 @@ class PaymentApiEndpoints(StrEnum):
 
 
 class TripOfferApiEndpoints(StrEnum):
-    get_offer = "/offers/{offer_id}"
+    tour_search = "/tours/search"
+    tour_search_options = "/tours/search/options"
     offer_search = "/offers/search"
     offer_search_options = "/offers/search/options"
-    get_offer_price = "/offers/price/{offer_id}"
+    offer_view_get = "/offers/{offer_id}"
 
 
 class TransportType(StrEnum):
@@ -31,3 +33,6 @@ class RoomType(StrEnum):
     family = auto()
     apartment = auto()
     studio = auto()
+
+
+USER_SESSION_EXPIRE_IN = 300

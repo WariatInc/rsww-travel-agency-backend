@@ -1,1 +1,1 @@
-3f5056ec1109 Added kids_up_to_3 kids_up_to_10 and price columns to reservation
+9a4cb019db46 alter reservation.price column to nullable

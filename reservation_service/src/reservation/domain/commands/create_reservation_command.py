@@ -32,7 +32,6 @@ class CreateReservationCommand(ICreateReservationCommand):
         offer_id: UUID,
         kids_up_to_3: int,
         kids_up_to_10: int,
-        price: float,
     ) -> "ReservationDetailsDto":
         with self._uow:
             if not (
@@ -50,7 +49,6 @@ class CreateReservationCommand(ICreateReservationCommand):
                 offer_id=offer_id,
                 kids_up_to_3=kids_up_to_3,
                 kids_up_to_10=kids_up_to_10,
-                price=price,
             )
             self._uow.commit()
 
@@ -60,7 +58,6 @@ class CreateReservationCommand(ICreateReservationCommand):
             reservation_id=reservation.id,
             kids_up_to_3=reservation.kids_up_to_3,
             kids_up_to_10=reservation.kids_up_to_10,
-            price=reservation.price,
         )
         self._publisher.publish(event)
 
