@@ -28,9 +28,22 @@ class Reservation(db.BaseModel):
     )
     kids_up_to_3 = db.Column(db.Integer(), nullable=False)
     kids_up_to_10 = db.Column(db.Integer(), nullable=False)
-    price = db.Column(db.Float(), nullable=False)
+    price = db.Column(db.Float(), nullable=True)
 
     user_id = db.Column(db.UUID(), nullable=False)
     user = db.relationship("User", back_populates="reservations")
 
     rejection_reason = db.Column(db.String(), nullable=True)
+
+
+class ReservationEventDashboard(db.Model):
+    __tablename__ = "reservation_event_dashboard"
+    __table_args__ = (
+        db.PrimaryKeyConstraint("id", name="reservation_event_dashboard_pkey"),
+    )
+
+    id = db.Column(db.UUID(), nullable=False, default=uuid4)
+    reservation_id = db.Column(db.UUID(), nullable=False)
+    offer_id = db.Column(db.UUID(), nullable=False)
+    state = db.Column(db.Enum(ReservationState), nullable=False)
+    timestamp = db.Column(db.DateTime(), nullable=False)

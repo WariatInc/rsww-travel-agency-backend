@@ -11,3 +11,12 @@ class ReservationPostSchema(ma.Schema):
     kids_up_to_10 = ma.fields.Integer(
         **possibly_undefined_non_nullable, validate=lambda x: x >= 0
     )
+
+
+class ReservationEventDashboardGetSchema(ma.Schema):
+    page = ma.fields.Integer(
+        validate=lambda x: x > 0, **possibly_undefined_non_nullable
+    )
+    query = ma.fields.Integer(
+        validate=lambda x: x > 0, **possibly_undefined_non_nullable
+    )

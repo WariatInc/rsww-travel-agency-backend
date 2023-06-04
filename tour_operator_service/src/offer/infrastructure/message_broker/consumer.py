@@ -8,7 +8,12 @@ from src.infrastructure.message_broker import (
     RabbitMQConnectionFactory,
     RabbitMQConsumer,
 )
-from src.infrastructure.storage import SessionFactory, SQLAlchemyEngine
+from src.infrastructure.storage import (
+    ReadOnlySessionFactory,
+    SessionFactory,
+    SQLAlchemyEngine,
+    SQLAlchemyReadOnlyEngine,
+)
 from src.offer.domain.commands import (
     OfferReservationCommand,
     UpdateOfferCommand,
@@ -21,11 +26,13 @@ from src.offer.domain.ports import (
     IOfferReservationCommand,
     IUpdateOfferCommand,
 )
+from src.offer.domain.queries import GetOfferPriceQuery
 from src.offer.infrastructure.message_broker.producer import (
     OfferPublisher,
     ReservationPublisher,
 )
 from src.offer.infrastructure.storage.unit_of_work import OfferUnitOfWork
+from src.offer.infrastructure.storage.views import OfferPriceView
 
 if TYPE_CHECKING:
     from pika.adapters.blocking_connection import (
@@ -60,7 +67,12 @@ class ReservationConsumer(RabbitMQConsumer):
     ) -> None:
         event = ReservationCreatedEvent.from_rabbitmq_message(payload)
         logger.info(msg=f"Consuming event: {event.type} with id: {event.id}")
-        self._offer_reservation_command(event.offer_id, event.reservation_id)
+        self._offer_reservation_command(
+            event.offer_id,
+            event.reservation_id,
+            event.kids_up_to_3,
+            event.kids_up_to_10,
+        )
         logger.info(msg=f"Event with id: {event.id} successfully consumed")
 
     def _consume_reservation_cancelled_event(
@@ -94,7 +106,13 @@ def consume(config: Optional[type[Config]] = None) -> None:
 
     connection_factory = RabbitMQConnectionFactory(config)
     session_factory = SessionFactory(SQLAlchemyEngine(config))
+    readonly_session_factory = ReadOnlySessionFactory(
+        SQLAlchemyReadOnlyEngine(config)
+    )
 
+    get_offer_price_query = GetOfferPriceQuery(
+        OfferPriceView(readonly_session_factory)
+    )
     update_offer_command = UpdateOfferCommand(
         uow=OfferUnitOfWork(session_factory),
         publisher=OfferPublisher(connection_factory),
@@ -102,6 +120,7 @@ def consume(config: Optional[type[Config]] = None) -> None:
     offer_reservation_command = OfferReservationCommand(
         uow=OfferUnitOfWork(session_factory),
         update_offer_command=update_offer_command,
+        get_offer_price_query=get_offer_price_query,
         publisher=ReservationPublisher(connection_factory),
     )
     consumer = ReservationConsumer(

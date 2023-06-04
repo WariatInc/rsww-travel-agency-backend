@@ -41,7 +41,10 @@ def upgrade() -> None:
     op.drop_column("offer", "transport")
     op.drop_column("offer", "departure_date")
     op.drop_column("offer", "arrival_date")
-    op.add_column("tour", sa.Column("departure", sa.String(), nullable=False))
+    op.drop_column("tour", "score")
+    op.add_column(
+        "tour", sa.Column("departure_city", sa.String(), nullable=False)
+    )
     op.add_column(
         "tour", sa.Column("arrival_date", sa.DateTime(), nullable=False)
     )
@@ -66,6 +69,10 @@ def downgrade() -> None:
     op.drop_column("tour", "departure_date")
     op.drop_column("tour", "arrival_date")
     op.drop_column("tour", "departure")
+    op.add_column(
+        "tour",
+        sa.Column("score", sa.SmallInteger(), nullable=False, default=0),
+    )
     op.add_column(
         "offer",
         sa.Column(

@@ -85,7 +85,8 @@ def consume(config: Optional[Config] = None) -> None:
     )
 
     consumer = PaymentConsumer(
-        connection_factory.create_connection(), update_reservation_command
+        connection_factory.create_connection(),
+        update_reservation_command,
     )
 
     logger.info(msg="Start consuming")

@@ -32,6 +32,13 @@ class DefaultConfig(Config):
         )
     }
 
+    SQLALCHEMY_CONNECTION_OPTIONS = {
+        "keepalives": 1,
+        "keepalives_idle": 30,
+        "keepalives_interval": 10,
+        "keepalives_count": 5,
+    }
+
     RESERVATION_SERVICE_ROOT_URL = os.environ.get(
         "RESERVATION_SERVICE_ROOT_URL"
     )

@@ -18,6 +18,7 @@ from src.reservation.domain.ports import (
     ICancelReservationCommand,
     ICreateReservationCommand,
     IDeleteRejectedReservationCommand,
+    IGetReservationEventDashboardListQuery,
     IGetReservationQuery,
     IGetUserReservationsQuery,
 )
@@ -27,6 +28,8 @@ from src.reservation.schema import (
     ReservationCancelPostSchema,
     ReservationDeleteSchema,
     ReservationDetailsSchema,
+    ReservationEventDashboardGetSchema,
+    ReservationEventDashboardListSchema,
     ReservationGetSchema,
     ReservationListSchema,
     ReservationPostSchema,
@@ -50,13 +53,12 @@ class ReservationsResource(Resource):
         self,
         user_gid: UUID,
         offer_id: UUID,
-        price: float,
         kids_up_to_3: int = 0,
         kids_up_to_10: int = 0,
     ):
         try:
             reservation = self.create_reservation_command(
-                user_gid, offer_id, kids_up_to_3, kids_up_to_10, price
+                user_gid, offer_id, kids_up_to_3, kids_up_to_10
             )
         except ReservationExistInPendingAcceptedOrPaidStateException:
             return custom_error(
@@ -169,6 +171,25 @@ class ReservationResource(Resource):
         return {}
 
 
+class ReservationEventDashboardResource(Resource):
+    def __init__(
+        self,
+        get_reservation_event_dashboard_list_query: IGetReservationEventDashboardListQuery,
+    ) -> None:
+        self._get_reservation_event_dashboard_list_query = (
+            get_reservation_event_dashboard_list_query
+        )
+
+    @use_schema(ReservationEventDashboardListSchema, HTTPStatus.OK)
+    @use_kwargs(ReservationEventDashboardGetSchema, location="query")
+    def get(self, page: int = 1, size: int = 25):
+        (
+            results,
+            total_pages,
+        ) = self._get_reservation_event_dashboard_list_query.get(page, size)
+        return dict(reservation_events=results, total_pages=total_pages)
+
+
 class Api(Blueprint):
     name = "reservations"
     import_name = __name__
@@ -177,4 +198,5 @@ class Api(Blueprint):
         (ReservationsResource, "/"),
         (ReservationResource, "/<uuid:reservation_id>"),
         (ReservationCancelResource, "/cancel/<uuid:reservation_id>"),
+        (ReservationEventDashboardResource, "/events"),
     ]

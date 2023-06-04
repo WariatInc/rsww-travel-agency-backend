@@ -68,7 +68,6 @@ class ReservationConsumer(RabbitMQConsumer):
         self._reservation_read_store_synchronization_command(
             reservation_id=event.reservation_id,
             state=event.state,
-            price=event.price,
         )
         logger.info(msg=f"Event with id: {event.id} successfully consumed")
 
