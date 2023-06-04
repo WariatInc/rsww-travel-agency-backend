@@ -62,14 +62,14 @@ build_api $(STATE_API_BUILD): $(STATE_DIR) $(BASE_DEPS) $(TEST_DEPS) $(DEV_DEPS)
 init_db $(STATE_DB_INIT): $(STATE_API_BUILD) $(DB_INIT_JS)
 	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api wait-for-it mongo_db:27017
 	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api mongosh --host=mongo_db --port=27017 --username=mongodb_admin --password=mongodb --authenticationDatabase="admin" --file=$(DB_INIT_JS)
+	unzip -o $(DB_DUMP)/mongodb_dump.zip -d $(DB_DUMP)
 	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api mongorestore -d trip_offer_mongo --host=mongo_db --port=27017 --username=179919_trip_offer --password=trip_offer --authenticationDatabase="trip_offer_mongo" $(DB_BOOTSTRAP)
 	touch $(STATE_DB_INIT)
 
-init_test_db $(STATE_TEST_DB_INIT): $(STATE_API_BUILD)  $(DB_TEST_INIT_JS)
+init_test_db $(STATE_TEST_DB_INIT): $(STATE_API_BUILD) $(DB_TEST_INIT_JS)
 	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api wait-for-it mongo_db:27017
 	docker-compose --project-name $(PROJECT_NAME) run --rm trip_offer_api mongosh --host=mongo_db --port=27017 --username=mongodb_admin --password=mongodb --authenticationDatabase="admin" --file=$(DB_TEST_INIT_JS)
 	touch $(STATE_TEST_DB_INIT)
-
 
 run_api: $(STATE_DB_INIT) $(STATE_TEST_DB_INIT)
 	docker-compose --project-name $(PROJECT_NAME) up trip_offer_api
