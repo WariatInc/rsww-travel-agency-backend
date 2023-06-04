@@ -20,4 +20,6 @@ class GetOfferQuery(IGetOfferQuery):
             {"offer_id": str(offer_id)}
         )
 
-        return OfferSchema().load(result, unknown=ma.EXCLUDE) if result else None
+        return (
+            OfferSchema().load(result, unknown=ma.EXCLUDE) if result else None
+        )

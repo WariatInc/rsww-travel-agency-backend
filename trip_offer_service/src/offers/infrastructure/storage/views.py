@@ -19,7 +19,9 @@ if TYPE_CHECKING:
 
 class OffersView(IOffersView):
     def __init__(self, mongo_client: MongoReadOnlyClient) -> None:
-        self.offer_collection: "Collection" = mongo_client.get_db()[Collections.offer]
+        self.offer_collection: "Collection" = mongo_client.get_db()[
+            Collections.offer
+        ]
         self.offer_view_collection: "Collection" = mongo_client.get_db()[
             Collections.offer_view
         ]
@@ -31,7 +33,10 @@ class OffersView(IOffersView):
 
     @staticmethod
     def _build_offer_query(options: SearchOptions) -> dict:
-        query: dict[str, Any] = {"tour_id": str(options.tour_id), "is_available": True}
+        query: dict[str, Any] = {
+            "tour_id": str(options.tour_id),
+            "is_available": True,
+        }
         if options.room_type:
             query["room_type"] = OffersView._ilike_condition(options.room_type)
         if options.all_inclusive:
@@ -79,7 +84,9 @@ class OffersView(IOffersView):
     def search_options(self) -> dict[str, Any]:
         fields = ["room_type"]
 
-        return {field: self.offer_collection.distinct(field) for field in fields}
+        return {
+            field: self.offer_collection.distinct(field) for field in fields
+        }
 
     def inspect(self, offer_id: UUID) -> OfferViewDto:
         query = {"id": str(offer_id)}

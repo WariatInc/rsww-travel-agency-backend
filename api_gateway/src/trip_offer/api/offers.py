@@ -15,7 +15,9 @@ from src.trip_offer.error import ERROR
 
 class SearchOfferResource(Resource):
     def __init__(self, config: Config) -> None:
-        self.trip_offer_service_root_url = config.get("TRIP_OFFER_SERVICE_ROOT_URL")
+        self.trip_offer_service_root_url = config.get(
+            "TRIP_OFFER_SERVICE_ROOT_URL"
+        )
 
     @use_args(OfferSearchOptionsSchema(), location="query")
     def get(self, options):
@@ -36,7 +38,9 @@ class SearchOfferResource(Resource):
 
 class SearchOfferOptionsResource(Resource):
     def __init__(self, config: Config) -> None:
-        self.trip_offer_service_root_url = config.get("TRIP_OFFER_SERVICE_ROOT_URL")
+        self.trip_offer_service_root_url = config.get(
+            "TRIP_OFFER_SERVICE_ROOT_URL"
+        )
 
     def get(self):
         try:
@@ -55,13 +59,17 @@ class SearchOfferOptionsResource(Resource):
 
 class GetOfferResource(Resource):
     def __init__(self, config: Config) -> None:
-        self.trip_offer_service_root_url = config.get("TRIP_OFFER_SERVICE_ROOT_URL")
+        self.trip_offer_service_root_url = config.get(
+            "TRIP_OFFER_SERVICE_ROOT_URL"
+        )
 
     def get(self, id: UUID):
         try:
             response = requests.get(
                 url=f"{self.trip_offer_service_root_url}"
-                f"{TripOfferApiEndpoints.offer_view_get}".format(offer_id=str(id))
+                f"{TripOfferApiEndpoints.offer_view_get}".format(
+                    offer_id=str(id)
+                )
             )
         except ConnectionError:
             return custom_error(

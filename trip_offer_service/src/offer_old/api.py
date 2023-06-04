@@ -81,13 +81,17 @@ class OfferPriceResource(Resource):
 
     @use_kwargs(OfferPriceGetSchema, location="query")
     @use_schema(OfferPriceSchema, HTTPStatus.OK)
-    def get(self, offer_id: UUID, kids_up_to_3: int = 0, kids_up_to_10: int = 0):
+    def get(
+        self, offer_id: UUID, kids_up_to_3: int = 0, kids_up_to_10: int = 0
+    ):
         try:
             price = self._get_offer_price.get_price(
                 offer_id, kids_up_to_3, kids_up_to_10
             )
         except OfferNotFoundException:
-            return custom_error(ERROR.offer_not_found_error, HTTPStatus.NOT_FOUND)
+            return custom_error(
+                ERROR.offer_not_found_error, HTTPStatus.NOT_FOUND
+            )
         except InvalidOfferConfiguration:
             return custom_error(
                 ERROR.invalid_offer_configuration_error, HTTPStatus.BAD_REQUEST

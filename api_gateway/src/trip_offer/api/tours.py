@@ -14,7 +14,9 @@ from src.trip_offer.error import ERROR
 
 class SearchTourResource(Resource):
     def __init__(self, config: Config) -> None:
-        self.trip_offer_service_root_url = config.get("TRIP_OFFER_SERVICE_ROOT_URL")
+        self.trip_offer_service_root_url = config.get(
+            "TRIP_OFFER_SERVICE_ROOT_URL"
+        )
 
     @use_args(TourSearchOptionsSchema(), location="query")
     def get(self, options):
@@ -34,7 +36,9 @@ class SearchTourResource(Resource):
 
 class SearchTourOptionsResource(Resource):
     def __init__(self, config: Config) -> None:
-        self.trip_offer_service_root_url = config.get("TRIP_OFFER_SERVICE_ROOT_URL")
+        self.trip_offer_service_root_url = config.get(
+            "TRIP_OFFER_SERVICE_ROOT_URL"
+        )
 
     def get(self):
         try:
