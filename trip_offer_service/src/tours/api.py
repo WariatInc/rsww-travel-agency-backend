@@ -1,5 +1,3 @@
-from http import HTTPStatus
-from uuid import UUID
 from math import ceil
 
 from flask import jsonify

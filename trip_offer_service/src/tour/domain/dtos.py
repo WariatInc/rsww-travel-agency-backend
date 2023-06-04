@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
 
-from src.consts import RoomType, TransportType
+from src.consts import TransportType
 
 
 @dataclass
