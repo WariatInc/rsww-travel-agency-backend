@@ -11,7 +11,9 @@ class Queues(StrEnum):
 
 
 class Collections(StrEnum):
-    offer_view = auto()
+    tour = "Tour"
+    offer = "Offer"
+    offer_view = "OfferView"
 
 
 class TransportType(StrEnum):
