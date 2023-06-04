@@ -33,5 +33,7 @@ class IOfferRepository(ABC):
 
 class IGetOfferPriceQuery(ABC):
     @abstractmethod
-    def get_price(self, offer_id: UUID, kids_up_to_3: int, kids_up_to_10: int) -> float:
+    def get_price(
+        self, offer_id: UUID, kids_up_to_3: int, kids_up_to_10: int
+    ) -> float:
         raise NotImplementedError

@@ -39,7 +39,9 @@ class DefaultConfig(Config):
         "keepalives_count": 5,
     }
 
-    RESERVATION_SERVICE_ROOT_URL = os.environ.get("RESERVATION_SERVICE_ROOT_URL")
+    RESERVATION_SERVICE_ROOT_URL = os.environ.get(
+        "RESERVATION_SERVICE_ROOT_URL"
+    )
     PAYMENT_SERVICE_ROOT_URL = os.environ.get("PAYMENT_SERVICE_ROOT_URL")
     TRIP_OFFER_SERVICE_ROOT_URL = os.environ.get("TRIP_OFFER_SERVICE_ROOT_URL")
 

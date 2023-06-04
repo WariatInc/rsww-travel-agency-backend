@@ -29,7 +29,9 @@ class Blueprint:
         endpoint = f"{self.name}{url}"
         self._app.add_url_rule(
             self.BLUEPRINT_URL_PREFIX.format(endpoint=endpoint),
-            view_func=resource.as_view(self.name.capitalize() + resource.__name__),
+            view_func=resource.as_view(
+                self.name.capitalize() + resource.__name__
+            ),
         )
 
     def register(self) -> None:

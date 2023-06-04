@@ -13,7 +13,9 @@ class SearchOfferSchema(ma.Schema):
     city = ma.fields.String(**possibly_undefined_non_nullable)
     date_start = ma.fields.Date(**possibly_undefined_non_nullable)
     date_end = ma.fields.Date(**possibly_undefined_non_nullable)
-    transport = ma.fields.Enum(TransportType, **possibly_undefined_non_nullable)
+    transport = ma.fields.Enum(
+        TransportType, **possibly_undefined_non_nullable
+    )
     adults = ma.fields.Integer(
         validate=lambda x: x >= 0, **possibly_undefined_non_nullable
     )
@@ -56,7 +58,9 @@ class TourSearchOptionsSchema(ma.Schema):
     operator = ma.fields.Str(**possibly_undefined_non_nullable)
     date_start = ma.fields.Date(**possibly_undefined_non_nullable)
     date_end = ma.fields.Date(**possibly_undefined_non_nullable)
-    transport = ma.fields.Enum(TransportType, **possibly_undefined_non_nullable)
+    transport = ma.fields.Enum(
+        TransportType, **possibly_undefined_non_nullable
+    )
     adults = ma.fields.Integer(
         validate=lambda x: x >= 0, **possibly_undefined_non_nullable
     )
