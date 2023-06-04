@@ -1,4 +1,3 @@
-from typing import Any
 from uuid import UUID
 
 from src.offers.domain.ports import IOffersView, IQueryOffer
