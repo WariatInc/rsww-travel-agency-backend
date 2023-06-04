@@ -4,11 +4,14 @@ from math import ceil
 
 from flask import jsonify
 from webargs.flaskparser import use_args
+import marshmallow as ma
 
+from src.api.error import custom_error, validation_error
 from src.offers.domain.ports import (
     IQuerySearchOptions,
     IQueryCountOffers,
     IQuerySearchOffers,
+    IQueryOffer,
 )
 from src.offers.schema import SearchOptionsSchema
 from src.offer.schema import OfferSchema
@@ -43,11 +46,25 @@ class SearchOptionsResource(Resource):
         return jsonify(self.get_search_options())
 
 
+class OfferViewResource(Resource):
+    def __init__(self, get_offer: IQueryOffer) -> None:
+        self.get_offer = get_offer
+
+    def get(self, offer_id: UUID):
+        try:
+            return jsonify(self.get_offer(offer_id))
+        except ValueError as err:
+            return custom_error(str(err), HTTPStatus.NOT_FOUND)
+        except ma.ValidationError as err:
+            return validation_error(err.messages)
+
+
 class Api(Blueprint):
     name = "offers"
     import_name = __name__
 
     resources = [
+        (OfferViewResource, "/<uuid:offer_id>"),
         (SearchResource, "/search"),
         (SearchOptionsResource, "/search/options"),
     ]
