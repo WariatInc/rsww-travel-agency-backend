@@ -5,9 +5,9 @@ from typing import Any
 
 from src.consts import Collections
 from src.infrastructure.storage import MongoReadOnlyClient
-from src.offer.domain.dtos import SearchOptions, SimpleOfferDto
-from src.offer.domain.ports import IGetOfferPriceQuery, ISearchOfferQuery
-from src.offer.schema import SimpleOfferSchema
+from src.offer_old.domain.dtos import SearchOptions, SimpleOfferDto
+from src.offer_old.domain.ports import IGetOfferPriceQuery, ISearchOfferQuery
+from src.offer_old.schema import SimpleOfferSchema
 
 
 class SearchOfferQuery(ISearchOfferQuery):
@@ -34,9 +34,7 @@ class SearchOfferQuery(ISearchOfferQuery):
             query["operator"] = self._ilike_condition(options.operator)
         if options.date_start:
             query["departure_date"] = {
-                "$gt": datetime.combine(
-                    options.date_start, datetime.min.time()
-                )
+                "$gt": datetime.combine(options.date_start, datetime.min.time())
             }
         if options.date_end:
             query["arrival_date"] = {
@@ -60,9 +58,7 @@ class SearchOfferQuery(ISearchOfferQuery):
 
     def count_offers(self, options: SearchOptions) -> int:
         query = self._build_query(options)
-        return self.client.get_db()[self.collection_name].count_documents(
-            query
-        )
+        return self.client.get_db()[self.collection_name].count_documents(query)
 
     def search_offers(self, options: SearchOptions) -> list[SimpleOfferDto]:
         query = self._build_query(options)

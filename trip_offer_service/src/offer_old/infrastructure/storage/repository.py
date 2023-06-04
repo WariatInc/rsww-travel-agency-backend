@@ -4,8 +4,8 @@ from pymongo.collection import Collection
 
 from src.consts import Collections
 from src.infrastructure.storage import MongoClient
-from src.offer.domain.ports import IOfferRepository
-from src.offer.infrastructure.storage.documents import Offer
+from src.offer_old.domain.ports import IOfferRepository
+from src.offer_old.infrastructure.storage.documents import Offer
 
 
 class OfferRepository(IOfferRepository):

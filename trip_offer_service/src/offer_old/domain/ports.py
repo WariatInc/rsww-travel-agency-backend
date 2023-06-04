@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from typing import Any, Optional
 from uuid import UUID
 
-from src.offer.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
+from src.offer_old.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
 
 
 class IGetOfferQuery(ABC):
@@ -33,7 +33,5 @@ class IOfferRepository(ABC):
 
 class IGetOfferPriceQuery(ABC):
     @abstractmethod
-    def get_price(
-        self, offer_id: UUID, kids_up_to_3: int, kids_up_to_10: int
-    ) -> float:
+    def get_price(self, offer_id: UUID, kids_up_to_3: int, kids_up_to_10: int) -> float:
         raise NotImplementedError

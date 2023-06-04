@@ -5,9 +5,9 @@ import marshmallow as ma
 
 from src.consts import Collections
 from src.infrastructure.storage import MongoReadOnlyClient
-from src.offer.domain.dtos import OfferDto
-from src.offer.domain.ports import IGetOfferQuery
-from src.offer.schema import OfferSchema
+from src.offer_old.domain.dtos import OfferDto
+from src.offer_old.domain.ports import IGetOfferQuery
+from src.offer_old.schema import OfferSchema
 
 
 class GetOfferQuery(IGetOfferQuery):
@@ -20,6 +20,4 @@ class GetOfferQuery(IGetOfferQuery):
             {"offer_id": str(offer_id)}
         )
 
-        return (
-            OfferSchema().load(result, unknown=ma.EXCLUDE) if result else None
-        )
+        return OfferSchema().load(result, unknown=ma.EXCLUDE) if result else None
