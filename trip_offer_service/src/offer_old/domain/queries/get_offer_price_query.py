@@ -11,12 +11,12 @@ from src.consts import (
     KidsAgeRange,
     TransportType,
 )
-from src.offer.domain.dtos import OfferDto
-from src.offer.domain.exceptions import (
+from src.offer_old.domain.dtos import OfferDto
+from src.offer_old.domain.exceptions import (
     InvalidOfferConfiguration,
     OfferNotFoundException,
 )
-from src.offer.domain.ports import IGetOfferPriceQuery, IGetOfferQuery
+from src.offer_old.domain.ports import IGetOfferPriceQuery, IGetOfferQuery
 
 
 class GetOfferPriceQuery(IGetOfferPriceQuery):

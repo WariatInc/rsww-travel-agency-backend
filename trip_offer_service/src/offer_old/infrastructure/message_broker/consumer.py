@@ -11,8 +11,8 @@ from src.infrastructure.message_broker import (
     RabbitMQConsumer,
 )
 from src.infrastructure.storage import MongoClient
-from src.offer.domain.events import OfferChangedEvent
-from src.offer.infrastructure.storage.repository import OfferRepository
+from src.offer_old.domain.events import OfferChangedEvent
+from src.offer_old.infrastructure.storage.repository import OfferRepository
 
 if TYPE_CHECKING:
     from pika.adapters.blocking_connection import (
@@ -21,7 +21,7 @@ if TYPE_CHECKING:
     )
     from pika.spec import Basic, BasicProperties
 
-    from src.offer.domain.ports import IOfferRepository
+    from src.offer_old.domain.ports import IOfferRepository
 
 
 logging.basicConfig(

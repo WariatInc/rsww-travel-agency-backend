@@ -11,18 +11,18 @@ from src.api import Resource
 from src.api.blueprint import Blueprint
 from src.api.error import custom_error, validation_error
 from src.api.schema import use_schema
-from src.offer.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
-from src.offer.domain.exceptions import (
+from src.offer_old.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
+from src.offer_old.domain.exceptions import (
     InvalidOfferConfiguration,
     OfferNotFoundException,
 )
-from src.offer.domain.ports import (
+from src.offer_old.domain.ports import (
     IGetOfferPriceQuery,
     IGetOfferQuery,
     ISearchOfferQuery,
 )
-from src.offer.error import ERROR
-from src.offer.schema import (
+from src.offer_old.error import ERROR
+from src.offer_old.schema import (
     OfferPriceGetSchema,
     OfferPriceSchema,
     OfferSchema,
@@ -81,17 +81,13 @@ class OfferPriceResource(Resource):
 
     @use_kwargs(OfferPriceGetSchema, location="query")
     @use_schema(OfferPriceSchema, HTTPStatus.OK)
-    def get(
-        self, offer_id: UUID, kids_up_to_3: int = 0, kids_up_to_10: int = 0
-    ):
+    def get(self, offer_id: UUID, kids_up_to_3: int = 0, kids_up_to_10: int = 0):
         try:
             price = self._get_offer_price.get_price(
                 offer_id, kids_up_to_3, kids_up_to_10
             )
         except OfferNotFoundException:
-            return custom_error(
-                ERROR.offer_not_found_error, HTTPStatus.NOT_FOUND
-            )
+            return custom_error(ERROR.offer_not_found_error, HTTPStatus.NOT_FOUND)
         except InvalidOfferConfiguration:
             return custom_error(
                 ERROR.invalid_offer_configuration_error, HTTPStatus.BAD_REQUEST

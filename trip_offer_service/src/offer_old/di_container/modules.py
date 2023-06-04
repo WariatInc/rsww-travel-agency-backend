@@ -1,12 +1,12 @@
 from injector import Binder
 
 from src.di_container.injector import Module
-from src.offer.domain.ports import (
+from src.offer_old.domain.ports import (
     IGetOfferPriceQuery,
     IGetOfferQuery,
     ISearchOfferQuery,
 )
-from src.offer.domain.queries import (
+from src.offer_old.domain.queries import (
     GetOfferPriceQuery,
     GetOfferQuery,
     SearchOfferQuery,

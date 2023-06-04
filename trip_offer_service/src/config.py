@@ -30,7 +30,7 @@ class DefaultConfig(Config):
 
     MONGO_VIEW_COLLECTION_NAME = "offer_view"
 
-    BLUEPRINTS = ["src.tours.api"]
+    BLUEPRINTS = ["src.tours.api", "src.offers.api"]
 
     RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST")
     RABBITMQ_PORT = os.environ.get("RABBITMQ_PORT")

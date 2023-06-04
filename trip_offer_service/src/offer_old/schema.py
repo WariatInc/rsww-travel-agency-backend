@@ -2,7 +2,7 @@ import marshmallow as ma
 
 from src.api.schema import possibly_undefined_non_nullable
 from src.consts import RoomType, TransportType
-from src.offer.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
+from src.offer_old.domain.dtos import OfferDto, SearchOptions, SimpleOfferDto
 
 
 class SearchOptionsSchema(ma.Schema):
@@ -14,9 +14,7 @@ class SearchOptionsSchema(ma.Schema):
     city = ma.fields.Str(**possibly_undefined_non_nullable)
     date_start = ma.fields.Date(**possibly_undefined_non_nullable)
     date_end = ma.fields.Date(**possibly_undefined_non_nullable)
-    transport = ma.fields.Enum(
-        TransportType, **possibly_undefined_non_nullable
-    )
+    transport = ma.fields.Enum(TransportType, **possibly_undefined_non_nullable)
     adults = ma.fields.Integer(
         validate=lambda x: x >= 0, **possibly_undefined_non_nullable
     )
