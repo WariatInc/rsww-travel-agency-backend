@@ -1,5 +1,5 @@
-from src.tours.domain.ports import IQueryCountTours, IToursView
 from src.tours.domain.dtos import SearchOptions
+from src.tours.domain.ports import IQueryCountTours, IToursView
 
 
 class CountToursQuery(IQueryCountTours):

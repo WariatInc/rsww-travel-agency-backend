@@ -9,8 +9,8 @@ from src.tours.domain.ports import (
 )
 from src.tours.domain.queries import (
     CountToursQuery,
-    SearchToursQuery,
     SearchOptionsQuery,
+    SearchToursQuery,
 )
 from src.tours.infrastructure.storage.views import ToursView
 

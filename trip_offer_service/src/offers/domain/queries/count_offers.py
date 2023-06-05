@@ -1,5 +1,5 @@
-from src.offers.domain.ports import IQueryCountOffers, IOffersView
 from src.offers.domain.dtos import SearchOptions
+from src.offers.domain.ports import IOffersView, IQueryCountOffers
 
 
 class CountOffersQuery(IQueryCountOffers):

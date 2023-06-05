@@ -2,17 +2,19 @@ from injector import Binder
 
 from src.di_container.injector import Module
 from src.offers.domain.ports import (
-    IQueryCountOffers,
-    IQuerySearchOptions,
-    IQuerySearchOffers,
-    IQueryOffer,
+    IGetOfferEnrichmentDataQuery,
     IOffersView,
+    IQueryCountOffers,
+    IQueryOffer,
+    IQuerySearchOffers,
+    IQuerySearchOptions,
 )
 from src.offers.domain.queries import (
     CountOffersQuery,
+    GetOfferEnrichmentDataQuery,
+    InspectOfferQuery,
     SearchOffersQuery,
     SearchOptionsQuery,
-    InspectOfferQuery,
 )
 from src.offers.infrastructure.storage.views import OffersView
 
@@ -24,3 +26,4 @@ class OffersModule(Module):
         self.bind(IQuerySearchOptions, SearchOptionsQuery)
         self.bind(IQuerySearchOffers, SearchOffersQuery)
         self.bind(IQueryOffer, InspectOfferQuery)
+        self.bind(IGetOfferEnrichmentDataQuery, GetOfferEnrichmentDataQuery)
