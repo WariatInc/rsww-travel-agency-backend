@@ -1,23 +1,29 @@
 from http import HTTPStatus
-from uuid import UUID
 from math import ceil
+from uuid import UUID
 
-from flask import jsonify
-from webargs.flaskparser import use_args
 import marshmallow as ma
+from flask import jsonify
+from webargs.flaskparser import use_args, use_kwargs
 
+from src.api import Resource
+from src.api.blueprint import Blueprint
 from src.api.error import custom_error, validation_error
-from src.offers.domain.ports import (
-    IQuerySearchOptions,
-    IQueryCountOffers,
-    IQuerySearchOffers,
-    IQueryOffer,
-)
-from src.offers.schema import SearchOptionsSchema
+from src.api.schema import use_schema
 from src.offer.schema import OfferSchema
 from src.offers.domain.dtos import SearchOptions
-from src.api.blueprint import Blueprint
-from src.api import Resource
+from src.offers.domain.ports import (
+    IGetOfferEnrichmentDataQuery,
+    IQueryCountOffers,
+    IQueryOffer,
+    IQuerySearchOffers,
+    IQuerySearchOptions,
+)
+from src.offers.schema import (
+    OfferEnrichmentDataGetSchema,
+    OffersEnrichmentDataDictSchema,
+    SearchOptionsSchema,
+)
 
 
 class SearchResource(Resource):
@@ -59,6 +65,22 @@ class OfferViewResource(Resource):
             return validation_error(err.messages)
 
 
+class OfferEnrichmentResource(Resource):
+    def __init__(
+        self, get_offer_enrichment_data_query: IGetOfferEnrichmentDataQuery
+    ) -> None:
+        self._get_offer_enrichment_data_query = get_offer_enrichment_data_query
+
+    @use_kwargs(OfferEnrichmentDataGetSchema, location="json")
+    @use_schema(OffersEnrichmentDataDictSchema, HTTPStatus.OK)
+    def get(self, offers_ids: list[UUID]):
+        return {
+            "offers_enrichment": self._get_offer_enrichment_data_query.get(
+                offers_ids
+            )
+        }
+
+
 class Api(Blueprint):
     name = "offers"
     import_name = __name__
@@ -67,4 +89,5 @@ class Api(Blueprint):
         (OfferViewResource, "/<uuid:offer_id>"),
         (SearchResource, "/search"),
         (SearchOptionsResource, "/search/options"),
+        (OfferEnrichmentResource, "/enrichment"),
     ]

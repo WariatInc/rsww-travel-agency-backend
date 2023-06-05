@@ -1,6 +1,6 @@
-from src.offers.domain.ports import IQuerySearchOffers, IOffersView
 from src.offer.domain.dtos import OfferDto
 from src.offers.domain.dtos import SearchOptions
+from src.offers.domain.ports import IOffersView, IQuerySearchOffers
 
 
 class SearchOffersQuery(IQuerySearchOffers):

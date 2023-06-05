@@ -7,6 +7,12 @@ from src.reservation.api import (
     ReservationResource,
     ReservationsResource,
 )
+from src.reservation.domian.commands import (
+    EnrichReservationsWithOffersDataCommand,
+)
+from src.reservation.domian.ports import (
+    IEnrichReservationsWithOffersDataCommand,
+)
 
 
 class ReservationModule(Module):
@@ -15,3 +21,7 @@ class ReservationModule(Module):
         self.bind(ReservationCancelResource)
         self.bind(ReservationResource)
         self.bind(ReservationEventDashboardResource)
+        self.bind(
+            IEnrichReservationsWithOffersDataCommand,
+            EnrichReservationsWithOffersDataCommand,
+        )

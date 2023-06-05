@@ -1,14 +1,14 @@
-from typing import TYPE_CHECKING, Any
-from datetime import datetime
 import re
 from dataclasses import fields
+from datetime import datetime
+from typing import TYPE_CHECKING, Any
 
+from src.consts import Collections
+from src.infrastructure.storage import MongoReadOnlyClient
 from src.tour.domain.dtos import TourDto
 from src.tour.schema import TourSchema
 from src.tours.domain.dtos import SearchOptions
 from src.tours.domain.ports import IToursView
-from src.infrastructure.storage import MongoReadOnlyClient
-from src.consts import Collections
 
 if TYPE_CHECKING:
     from pymongo.collection import Collection

@@ -1,7 +1,7 @@
 import marshmallow as ma
 
-from src.tour.domain.dtos import TourDto
 from src.consts import TransportType
+from src.tour.domain.dtos import TourDto
 
 
 class TourSchema(ma.Schema):

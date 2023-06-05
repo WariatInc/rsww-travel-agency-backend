@@ -1,7 +1,7 @@
 from uuid import UUID
 
-from src.offers.domain.ports import IOffersView, IQueryOffer
 from src.offer.domain.dtos import OfferViewDto
+from src.offers.domain.ports import IOffersView, IQueryOffer
 
 
 class InspectOfferQuery(IQueryOffer):

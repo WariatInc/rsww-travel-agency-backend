@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any
 
-from src.tours.domain.dtos import SearchOptions
 from src.tour.domain.dtos import TourDto
+from src.tours.domain.dtos import SearchOptions
 
 
 class IToursView(ABC):

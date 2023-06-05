@@ -3,16 +3,16 @@ from math import ceil
 from flask import jsonify
 from webargs.flaskparser import use_args
 
+from src.api import Resource
+from src.api.blueprint import Blueprint
+from src.tour.schema import TourSchema
+from src.tours.domain.dtos import SearchOptions
 from src.tours.domain.ports import (
-    IQuerySearchOptions,
     IQueryCountTours,
+    IQuerySearchOptions,
     IQuerySearchTours,
 )
 from src.tours.schema import SearchOptionsSchema
-from src.tour.schema import TourSchema
-from src.tours.domain.dtos import SearchOptions
-from src.api.blueprint import Blueprint
-from src.api import Resource
 
 
 class SearchResource(Resource):

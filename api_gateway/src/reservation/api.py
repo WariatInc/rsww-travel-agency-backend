@@ -12,6 +12,10 @@ from src.api.error import custom_error
 from src.auth.login import auth_required, current_user
 from src.consts import ReservationApiEndpoints
 from src.domain.factories import actor_dto_factory
+from src.reservation.domian.exceptions import TripOfferServiceUnavailable
+from src.reservation.domian.ports import (
+    IEnrichReservationsWithOffersDataCommand,
+)
 from src.reservation.error import ERROR
 from src.reservation.schema import (
     ReservationEventDashboardGetSchema,
@@ -20,12 +24,16 @@ from src.reservation.schema import (
 
 
 class ReservationsResource(Resource):
-    def __init__(self, config: Config) -> None:
+    def __init__(
+        self,
+        config: Config,
+        enrich_reservations_with_offers_data_command: IEnrichReservationsWithOffersDataCommand,
+    ) -> None:
         self.reservation_service_root_url = config.get(
             "RESERVATION_SERVICE_ROOT_URL"
         )
-        self.trip_offer_service_root_url = config.get(
-            "TRIP_OFFER_SERVICE_ROOT_URL"
+        self.enrich_reservations_with_offers_data_command = (
+            enrich_reservations_with_offers_data_command
         )
 
     @auth_required
@@ -64,7 +72,18 @@ class ReservationsResource(Resource):
                 HTTPStatus.SERVICE_UNAVAILABLE,
             )
 
-        return make_response(response.json(), response.status_code)
+        try:
+            enriched_reservations = (
+                self.enrich_reservations_with_offers_data_command(
+                    reservations=response.json()["reservations"]
+                )
+            )
+        except TripOfferServiceUnavailable:
+            return custom_error(
+                ERROR.trip_offer_service_unavailable,
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+        return make_response(enriched_reservations, response.status_code)
 
 
 class ReservationCancelResource(Resource):

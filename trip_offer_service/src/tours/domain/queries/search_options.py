@@ -1,5 +1,6 @@
 from typing import Any
-from src.tours.domain.ports import IToursView, IQuerySearchOptions
+
+from src.tours.domain.ports import IQuerySearchOptions, IToursView
 
 
 class SearchOptionsQuery(IQuerySearchOptions):
