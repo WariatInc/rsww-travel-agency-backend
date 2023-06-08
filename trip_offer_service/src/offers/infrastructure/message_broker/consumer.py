@@ -4,15 +4,14 @@ from typing import TYPE_CHECKING, Any, Optional
 
 from flask import Config
 
-from src.config import DefaultConfig
 from src.consts import Queues
 from src.infrastructure.message_broker import (
     RabbitMQConnectionFactory,
     RabbitMQConsumer,
 )
 from src.infrastructure.storage import MongoClient
-from src.offer_old.domain.events import OfferChangedEvent
-from src.offer_old.infrastructure.storage.repository import OfferRepository
+from src.offers.domain.ports import IUpdateOffer
+from src.offers.domain.events import OfferChangedEvent
 
 if TYPE_CHECKING:
     from pika.adapters.blocking_connection import (
@@ -20,8 +19,6 @@ if TYPE_CHECKING:
         BlockingConnection,
     )
     from pika.spec import Basic, BasicProperties
-
-    from src.offer_old.domain.ports import IOfferRepository
 
 
 logging.basicConfig(
@@ -37,9 +34,9 @@ class ReservationConsumer(RabbitMQConsumer):
     def __init__(
         self,
         connection: "BlockingConnection",
-        offer_repository: "IOfferRepository",
+        update_offer: IUpdateOffer,
     ) -> None:
-        self.offer_repository = offer_repository
+        self.update_offer = update_offer
         super().__init__(connection)
 
     def _consume_offer_changed_event(self, payload: dict[str, Any]) -> None:
@@ -48,7 +45,7 @@ class ReservationConsumer(RabbitMQConsumer):
 
         if "available" in event.details.keys():
             event.details["is_available"] = event.details.pop("available")
-        self.offer_repository.upsert_offer(event.offer_id, **event.details)
+        self.update_offer(event.offer_id, **event.details)
 
         logger.info(msg=f"Event with id: {event.id} successfully consumed")
 
@@ -67,16 +64,19 @@ class ReservationConsumer(RabbitMQConsumer):
 
 
 def consume(config: Optional[type[Config]] = None) -> None:
+    from src.offers.infrastructure.storage.repository import OfferRepository
+    from src.offers.domain.upserts.update_offer import UpdateOffer
+    from src.config import DefaultConfig
+
     if not config:
         config = Config("")
         config.from_object(DefaultConfig)
 
     connection_factory = RabbitMQConnectionFactory(config)
     client = MongoClient(config)
-    offer_repository = OfferRepository(client)
 
     consumer = ReservationConsumer(
-        connection_factory.create_connection(), offer_repository
+        connection_factory.create_connection(), UpdateOffer(OfferRepository(client))
     )
 
     logger.info(msg="Start consuming")
