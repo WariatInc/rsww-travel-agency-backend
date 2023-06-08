@@ -5,12 +5,12 @@ import requests
 from flask import Config, make_response
 from webargs.flaskparser import use_args
 
-from src.api.error import custom_error
-from src.trip_offer.schema import OfferSearchOptionsSchema
-from src.api.blueprint import Blueprint
 from src.api import Resource
+from src.api.blueprint import Blueprint
+from src.api.error import custom_error
 from src.consts import TripOfferApiEndpoints
 from src.trip_offer.error import ERROR
+from src.trip_offer.schema import OfferSearchOptionsSchema
 
 
 class SearchOfferResource(Resource):

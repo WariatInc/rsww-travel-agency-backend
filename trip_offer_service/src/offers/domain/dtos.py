@@ -1,6 +1,7 @@
 from dataclasses import dataclass
-from uuid import UUID
+from datetime import datetime
 from typing import Optional
+from uuid import UUID
 
 from src.consts import RoomType
 
@@ -15,3 +16,13 @@ class SearchOptions:
     room_type: Optional[RoomType] = None
     all_inclusive: Optional[bool] = None
     breakfast: Optional[bool] = None
+
+
+@dataclass
+class OfferEnrichmentDataDto:
+    hotel: str
+    country: str
+    city: str
+    thumbnail_url: str
+    arrival_date: datetime
+    departure_date: datetime

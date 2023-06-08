@@ -1,7 +1,7 @@
 import marshmallow as ma
 
-from src.offer.domain.dtos import OfferDto, OfferViewDto
 from src.consts import RoomType, TransportType
+from src.offer.domain.dtos import OfferDto, OfferViewDto
 
 
 class OfferSchema(ma.Schema):

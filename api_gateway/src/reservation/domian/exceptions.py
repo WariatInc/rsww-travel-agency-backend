@@ -1,0 +1,2 @@
+class TripOfferServiceUnavailable(Exception):
+    pass

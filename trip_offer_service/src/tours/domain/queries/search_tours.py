@@ -1,6 +1,6 @@
-from src.tours.domain.ports import IQuerySearchTours, IToursView
 from src.tour.domain.dtos import TourDto
 from src.tours.domain.dtos import SearchOptions
+from src.tours.domain.ports import IQuerySearchTours, IToursView
 
 
 class SearchToursQuery(IQuerySearchTours):

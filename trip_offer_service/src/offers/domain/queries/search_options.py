@@ -1,4 +1,5 @@
 from typing import Any
+
 from src.offers.domain.ports import IOffersView, IQuerySearchOptions
 
 
