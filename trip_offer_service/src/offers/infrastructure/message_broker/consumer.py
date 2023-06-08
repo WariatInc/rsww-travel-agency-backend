@@ -4,6 +4,9 @@ from typing import TYPE_CHECKING, Any, Optional
 
 from flask import Config
 
+from src.offers.infrastructure.storage.repository import OfferRepository
+from src.offers.domain.upserts.update_offer import UpdateOffer
+from src.config import DefaultConfig
 from src.consts import Queues
 from src.infrastructure.message_broker import (
     RabbitMQConnectionFactory,
@@ -64,10 +67,6 @@ class ReservationConsumer(RabbitMQConsumer):
 
 
 def consume(config: Optional[type[Config]] = None) -> None:
-    from src.offers.infrastructure.storage.repository import OfferRepository
-    from src.offers.domain.upserts.update_offer import UpdateOffer
-    from src.config import DefaultConfig
-
     if not config:
         config = Config("")
         config.from_object(DefaultConfig)
@@ -76,7 +75,8 @@ def consume(config: Optional[type[Config]] = None) -> None:
     client = MongoClient(config)
 
     consumer = ReservationConsumer(
-        connection_factory.create_connection(), UpdateOffer(OfferRepository(client))
+        connection_factory.create_connection(),
+        UpdateOffer(OfferRepository(client)),
     )
 
     logger.info(msg="Start consuming")
