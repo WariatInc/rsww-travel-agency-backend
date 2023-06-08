@@ -8,6 +8,8 @@ from src.offers.domain.ports import (
     IQueryOffer,
     IQuerySearchOffers,
     IQuerySearchOptions,
+    IOfferRepository,
+    IUpdateOffer,
 )
 from src.offers.domain.queries import (
     CountOffersQuery,
@@ -16,14 +18,25 @@ from src.offers.domain.queries import (
     SearchOffersQuery,
     SearchOptionsQuery,
 )
+from src.offers.domain.upserts import UpdateOffer
 from src.offers.infrastructure.storage.views import OffersView
+from src.offers.infrastructure.storage.repository import OfferRepository
 
 
 class OffersModule(Module):
     def configure(self, binder: Binder) -> None:
+        # Views
         self.bind(IOffersView, OffersView)
+
+        # Repositories
+        self.bind(IOfferRepository, OfferRepository)
+
+        # Queries
         self.bind(IQueryCountOffers, CountOffersQuery)
         self.bind(IQuerySearchOptions, SearchOptionsQuery)
         self.bind(IQuerySearchOffers, SearchOffersQuery)
         self.bind(IQueryOffer, InspectOfferQuery)
         self.bind(IGetOfferEnrichmentDataQuery, GetOfferEnrichmentDataQuery)
+
+        # Upserts
+        self.bind(IUpdateOffer, UpdateOffer)
