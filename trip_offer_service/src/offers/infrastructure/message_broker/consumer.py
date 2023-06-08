@@ -4,8 +4,6 @@ from typing import TYPE_CHECKING, Any, Optional
 
 from flask import Config
 
-from src.offers.infrastructure.storage.repository import OfferRepository
-from src.offers.domain.upserts.update_offer import UpdateOffer
 from src.config import DefaultConfig
 from src.consts import Queues
 from src.infrastructure.message_broker import (
@@ -13,8 +11,10 @@ from src.infrastructure.message_broker import (
     RabbitMQConsumer,
 )
 from src.infrastructure.storage import MongoClient
-from src.offers.domain.ports import IUpdateOffer
 from src.offers.domain.events import OfferChangedEvent
+from src.offers.domain.ports import IUpdateOffer
+from src.offers.domain.upserts.update_offer import UpdateOffer
+from src.offers.infrastructure.storage.repository import OfferRepository
 
 if TYPE_CHECKING:
     from pika.adapters.blocking_connection import (

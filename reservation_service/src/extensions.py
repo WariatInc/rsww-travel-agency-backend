@@ -1,8 +1,10 @@
+from flask_apscheduler import APScheduler
 from flask_sqlalchemy import SQLAlchemy
 
 from src.utils import extend, get_current_time
 
 db = SQLAlchemy()
+scheduler = APScheduler()
 
 
 @extend(db)
