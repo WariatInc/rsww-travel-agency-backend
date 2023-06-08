@@ -4,14 +4,13 @@ from pymongo.collection import Collection
 
 from src.consts import Collections
 from src.infrastructure.storage import MongoClient
-from src.offer_old.domain.ports import IOfferRepository
-from src.offer_old.infrastructure.storage.documents import Offer
+from src.offers.domain.ports import IOfferRepository
 
 
 class OfferRepository(IOfferRepository):
     def __init__(self, client: MongoClient) -> None:
         self.db = client.get_db()
-        self.collection: Collection[Offer] = self.db[Collections.offer_view]
+        self.collection: Collection = self.db[Collections.offer]
 
     def upsert_offer(self, offer_id: UUID, **upsert_kwargs) -> None:
         self.collection.update_one(

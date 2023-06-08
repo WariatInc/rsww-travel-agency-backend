@@ -23,9 +23,13 @@ class IOffersView(ABC):
     def inspect(self, offer_id: UUID) -> OfferViewDto:
         raise NotImplementedError
 
-    def get_offer_views_by_offer_ids(
-        self, offer_ids: list[str]
-    ) -> list[OfferViewDto]:
+    def get_offer_views_by_offer_ids(self, offer_ids: list[str]) -> list[OfferViewDto]:
+        raise NotImplementedError
+
+
+class IOfferRepository(ABC):
+    @abstractmethod
+    def upsert_offer(self, offer_id: UUID, **upsert_kwargs) -> None:
         raise NotImplementedError
 
 
@@ -56,4 +60,10 @@ class IQueryOffer(ABC):
 class IGetOfferEnrichmentDataQuery(ABC):
     @abstractmethod
     def get(self, offer_ids: list[UUID]) -> dict[UUID, OfferEnrichmentDataDto]:
+        raise NotImplementedError
+
+
+class IUpdateOffer(ABC):
+    @abstractmethod
+    def __call__(self, offer_id: UUID, **fields) -> None:
         raise NotImplementedError
