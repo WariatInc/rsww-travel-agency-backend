@@ -12,7 +12,7 @@ from src.user.domain.dtos import UserDto
 def validate_reservation_ownership(
     user: UserDto, reservation: ReservationDto
 ) -> None:
-    if user.id != reservation.user_id:
+    if user.id != reservation.user.id:
         raise UserIsNotReservationOwner
 
 

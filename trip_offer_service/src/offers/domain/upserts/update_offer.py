@@ -1,5 +1,6 @@
 from uuid import UUID
-from src.offers.domain.ports import IUpdateOffer, IOfferRepository
+
+from src.offers.domain.ports import IOfferRepository, IUpdateOffer
 
 
 class UpdateOffer(IUpdateOffer):

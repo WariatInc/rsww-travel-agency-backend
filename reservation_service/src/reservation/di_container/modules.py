@@ -24,6 +24,7 @@ from src.reservation.domain.ports import (
     IReservationEventDashboardListView,
     IReservationEventDashboardUnitOfWork,
     IReservationListView,
+    IReservationsToCancelView,
     IReservationUnitOfWork,
     IReservationView,
     IUpdateReservationCommand,
@@ -44,6 +45,7 @@ from src.reservation.infrastructure.storage.unit_of_work import (
 from src.reservation.infrastructure.storage.views import (
     ReservationEventDashboardListView,
     ReservationListView,
+    ReservationsToCancelView,
     ReservationView,
 )
 
@@ -89,6 +91,7 @@ class ReservationModule(Module):
             IReservationEventDashboardListView,
             ReservationEventDashboardListView,
         )
+        self.bind(IReservationsToCancelView, ReservationsToCancelView)
 
     @provider
     @singleton

@@ -4,6 +4,7 @@ from typing import Optional
 from uuid import UUID
 
 from src.consts import ReservationState
+from src.user.domain.dtos import UserDto
 
 
 @dataclass
@@ -11,7 +12,7 @@ class ReservationDto:
     id: UUID
     state: ReservationState
     offer_id: UUID
-    user_id: UUID
+    user: Optional[UserDto]
     rejection_reason: Optional[str]
     price: Optional[float]
 
