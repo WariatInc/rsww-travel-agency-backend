@@ -1,17 +1,17 @@
-from typing import TYPE_CHECKING, Any
 import re
 from dataclasses import fields
+from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
 from marshmallow import EXCLUDE
 
-from src.infrastructure.storage import MongoReadOnlyClient
 from src.consts import Collections
-from src.offer.domain.dtos import OfferDto
+from src.infrastructure.storage import MongoReadOnlyClient
+from src.offer.domain.dtos import OfferDto, OfferViewDto
 from src.offer.schema import OfferSchema, OfferViewSchema
 from src.offers.domain.dtos import SearchOptions
+from src.offers.domain.factory import offer_view_dto_factory
 from src.offers.domain.ports import IOffersView
-from src.offer.domain.dtos import OfferViewDto
 
 if TYPE_CHECKING:
     from pymongo.collection import Collection
@@ -98,3 +98,13 @@ class OffersView(IOffersView):
 
         result = self._reorganize_offer_view(results[0])
         return schema.load(result)
+
+    def get_offer_views_by_offer_ids(
+        self, offers_ids: list[str]
+    ) -> list[OfferViewDto]:
+        offer_views = self.offer_view_collection.find(
+            {"id": {"$in": offers_ids}}
+        )
+        return [
+            offer_view_dto_factory(offer_view) for offer_view in offer_views
+        ]
