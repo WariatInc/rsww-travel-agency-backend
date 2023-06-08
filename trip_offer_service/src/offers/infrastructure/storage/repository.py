@@ -14,7 +14,7 @@ class OfferRepository(IOfferRepository):
 
     def upsert_offer(self, offer_id: UUID, **upsert_kwargs) -> None:
         self.collection.update_one(
-            {"offer_id": str(offer_id)},
+            {"id": str(offer_id)},
             {
                 "$set": upsert_kwargs,
                 "$setOnInsert": {"offer_id": str(offer_id)},
