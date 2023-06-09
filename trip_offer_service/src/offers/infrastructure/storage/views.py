@@ -108,10 +108,14 @@ class OffersView(IOffersView):
         return [
             offer_view_dto_factory(offer_view) for offer_view in offer_views
         ]
- 
+
     def get_by_tour_id(self, tour_id: UUID) -> Iterator[OfferDto]:
         schema = OfferSchema()
-        return iter((
-            schema.load(offer_raw, unknown=EXCLUDE)
-            for offer_raw in self.offer_collection.find({"tour_id": str(tour_id)})
-        ))
+        return iter(
+            (
+                schema.load(offer_raw, unknown=EXCLUDE)
+                for offer_raw in self.offer_collection.find(
+                    {"tour_id": str(tour_id)}
+                )
+            )
+        )

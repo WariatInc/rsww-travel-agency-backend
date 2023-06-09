@@ -16,7 +16,9 @@ if TYPE_CHECKING:
 
 
 class ToursView(IToursView):
-    def __init__(self, mongo_client: MongoReadOnlyClient, offers: IOffersView) -> None:
+    def __init__(
+        self, mongo_client: MongoReadOnlyClient, offers: IOffersView
+    ) -> None:
         self.collection: "Collection" = mongo_client.get_db()[Collections.tour]
         self.offers = offers
 
@@ -29,14 +31,18 @@ class ToursView(IToursView):
         query: dict[str, Any] = {}
 
         if options.departure_city:
-            query["departure_city"] = self._ilike_condition(options.departure_city)
+            query["departure_city"] = self._ilike_condition(
+                options.departure_city
+            )
         if options.country:
             query["country"] = self._ilike_condition(options.country)
         if options.operator:
             query["operator"] = self._ilike_condition(options.operator)
         if options.date_start:
             query["departure_date"] = {
-                "$gt": datetime.combine(options.date_start, datetime.min.time())
+                "$gt": datetime.combine(
+                    options.date_start, datetime.min.time()
+                )
             }
         if options.date_end:
             query["arrival_date"] = {
