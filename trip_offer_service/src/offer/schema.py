@@ -13,6 +13,7 @@ class OfferSchema(ma.Schema):
     all_inclusive = ma.fields.Bool()
     breakfast = ma.fields.Bool()
     is_available = ma.fields.Bool()
+    price = ma.fields.Float()
 
     @ma.post_load
     def create_tour(self, data, **_):
@@ -28,6 +29,7 @@ class OfferViewSchema(ma.Schema):
     all_inclusive = ma.fields.Bool()
     breakfast = ma.fields.Bool()
     is_available = ma.fields.Bool()
+    price = ma.fields.Float()
     country = ma.fields.Str()
     operator = ma.fields.Str()
     city = ma.fields.Str()
