@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Iterator
 from uuid import UUID
 
 from src.offer.domain.dtos import OfferDto, OfferViewDto
@@ -23,9 +23,12 @@ class IOffersView(ABC):
     def inspect(self, offer_id: UUID) -> OfferViewDto:
         raise NotImplementedError
 
-    def get_offer_views_by_offer_ids(
-        self, offer_ids: list[str]
-    ) -> list[OfferViewDto]:
+    @abstractmethod
+    def get_offer_views_by_offer_ids(self, offer_ids: list[str]) -> list[OfferViewDto]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_by_tour_id(self, tour_id: UUID) -> Iterator[OfferDto]:
         raise NotImplementedError
 
 

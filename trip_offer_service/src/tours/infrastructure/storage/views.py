@@ -9,14 +9,16 @@ from src.tour.domain.dtos import TourDto
 from src.tour.schema import TourSchema
 from src.tours.domain.dtos import SearchOptions
 from src.tours.domain.ports import IToursView
+from src.offers.domain.ports import IOffersView
 
 if TYPE_CHECKING:
     from pymongo.collection import Collection
 
 
 class ToursView(IToursView):
-    def __init__(self, mongo_client: MongoReadOnlyClient) -> None:
+    def __init__(self, mongo_client: MongoReadOnlyClient, offers: IOffersView) -> None:
         self.collection: "Collection" = mongo_client.get_db()[Collections.tour]
+        self.offers = offers
 
     @staticmethod
     def _ilike_condition(search_term: str) -> dict[str, re.Pattern]:
@@ -27,18 +29,14 @@ class ToursView(IToursView):
         query: dict[str, Any] = {}
 
         if options.departure_city:
-            query["departure_city"] = self._ilike_condition(
-                options.departure_city
-            )
+            query["departure_city"] = self._ilike_condition(options.departure_city)
         if options.country:
             query["country"] = self._ilike_condition(options.country)
         if options.operator:
             query["operator"] = self._ilike_condition(options.operator)
         if options.date_start:
             query["departure_date"] = {
-                "$gt": datetime.combine(
-                    options.date_start, datetime.min.time()
-                )
+                "$gt": datetime.combine(options.date_start, datetime.min.time())
             }
         if options.date_end:
             query["arrival_date"] = {
@@ -69,6 +67,11 @@ class ToursView(IToursView):
         )
 
         tours = TourSchema().load(results, many=True)
+
+        for tour in tours:
+            tour.lowest_price = min(
+                offer.price for offer in self.offers.get_by_tour_id(tour.id)
+            )
         return tours
 
     def search_options(self) -> dict[str, Any]:
