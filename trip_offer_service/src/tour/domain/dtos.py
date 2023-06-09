@@ -17,3 +17,4 @@ class TourDto:
     departure_date: datetime
     transport: TransportType
     departure_city: str
+    lowest_price: float = 0.0

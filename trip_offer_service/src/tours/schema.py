@@ -9,6 +9,9 @@ class SearchOptionsSchema(ma.Schema):
     page = ma.fields.Integer(
         validate=lambda x: x >= 1, **possibly_undefined_non_nullable
     )
+    page_size = ma.fields.Integer(
+        validate=lambda x: x >= 1, **possibly_undefined_non_nullable
+    )
     country = ma.fields.Str(**possibly_undefined_non_nullable)
     operator = ma.fields.Str(**possibly_undefined_non_nullable)
     date_start = ma.fields.Date(**possibly_undefined_non_nullable)
