@@ -15,6 +15,7 @@ class OfferDto:
     all_inclusive: bool
     breakfast: bool
     is_available: bool
+    price: float
 
 
 @dataclass
@@ -37,3 +38,4 @@ class OfferViewDto:
     departure_date: datetime
     transport: TransportType
     departure_city: str
+    price: float
