@@ -23,9 +23,16 @@ class IOffersView(ABC):
     def inspect(self, offer_id: UUID) -> OfferViewDto:
         raise NotImplementedError
 
+    @abstractmethod
     def get_offer_views_by_offer_ids(
         self, offer_ids: list[str]
     ) -> list[OfferViewDto]:
+        raise NotImplementedError
+
+    @abstractmethod
+    def get_minimal_price_by_tour_ids(
+        self, tour_id: list[UUID]
+    ) -> list[tuple[UUID, float]]:
         raise NotImplementedError
 
 

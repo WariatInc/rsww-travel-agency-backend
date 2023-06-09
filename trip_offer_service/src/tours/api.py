@@ -22,7 +22,7 @@ class SearchResource(Resource):
         self.search = search
         self.count_tours = count_tours
 
-    @use_args(SearchOptionsSchema(), location="query")
+    @use_args(SearchOptionsSchema, location="query")
     def get(self, options: SearchOptions):
         tour_schema = TourSchema(many=True)
         tours = tour_schema.dump(self.search(options))

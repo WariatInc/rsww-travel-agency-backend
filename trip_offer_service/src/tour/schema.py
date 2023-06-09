@@ -15,6 +15,7 @@ class TourSchema(ma.Schema):
     departure_date = ma.fields.Raw()
     departure_city = ma.fields.String(allow_none=True)
     transport = ma.fields.Enum(TransportType)
+    lowest_price = ma.fields.Float(required=False)
 
     @ma.post_load
     def create_tour(self, data, **_):

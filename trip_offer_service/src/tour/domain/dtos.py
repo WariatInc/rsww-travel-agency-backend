@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID
+from typing import Optional
 
 from src.consts import TransportType
 
@@ -17,3 +18,4 @@ class TourDto:
     departure_date: datetime
     transport: TransportType
     departure_city: str
+    lowest_price: Optional[float] = None

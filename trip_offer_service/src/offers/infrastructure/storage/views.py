@@ -108,3 +108,19 @@ class OffersView(IOffersView):
         return [
             offer_view_dto_factory(offer_view) for offer_view in offer_views
         ]
+
+    def get_minimal_price_by_tour_ids(
+        self, tour_ids: list[UUID]
+    ) -> list[tuple[UUID, float]]:
+        r = self.offer_collection.aggregate(
+            [
+                {"$match": {"tour_id": {"$in": [str(i) for i in tour_ids]}}},
+                {
+                    "$group": {
+                        "_id": "$tour_id",
+                        "min_price": {"$min": "$price"},
+                    }
+                },
+            ]
+        )
+        return [(UUID(res["_id"]), float(res["min_price"])) for res in r]
