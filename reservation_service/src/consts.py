@@ -19,3 +19,5 @@ class Queues(StrEnum):
 
 
 PROVISION = 0.1
+
+ACCEPTED_RESERVATION_TIMEOUT = 120

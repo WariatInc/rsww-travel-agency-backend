@@ -7,6 +7,4 @@ if TYPE_CHECKING:
 
 
 def user_dto_factory(user: "User") -> UserDto:
-    return UserDto(
-        id=user.id,
-    )
+    return UserDto(id=user.id, gid=user.gid)

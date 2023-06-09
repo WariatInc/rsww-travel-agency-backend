@@ -1,3 +1,4 @@
+import inspect
 from http import HTTPStatus
 from threading import Thread
 from typing import Optional
@@ -36,6 +37,7 @@ def create_app(
     configure_blueprints(app)
     configure_extensions(app)
     configure_handlers(app)
+    configure_tasks(app)
 
     if app.config.get("ENVIRONMENT") == "prod":
         configure_consumers(app)
@@ -56,6 +58,9 @@ def configure_extensions(app: Flask) -> None:
     Migrate(app, ext.db)
 
     FlaskInjector(app, injector=app.injector)
+
+    ext.scheduler.init_app(app)
+    ext.scheduler.start()
 
 
 def configure_injector(app: Flask) -> Injector:
@@ -85,3 +90,23 @@ def configure_consumers(app: Flask) -> None:
         consume_func = import_from(module, "consume")
         consumer = Thread(target=consume_func, args=(app.config,), daemon=True)
         consumer.start()
+
+
+def configure_tasks(app: Flask) -> None:
+    for module, tasks_configurations in app.config.get("TASKS").items():
+        for configuration in tasks_configurations:
+            task_name, trigger, minutes = configuration
+            task = import_from(module, task_name)
+            kwargs = {
+                arg_name: app.injector.get(arg_type.annotation)
+                for arg_name, arg_type in inspect.signature(
+                    task
+                ).parameters.items()
+            }
+            ext.scheduler.add_job(
+                id=task_name,
+                func=task,
+                trigger=trigger,
+                minutes=minutes,
+                kwargs=kwargs,
+            )
