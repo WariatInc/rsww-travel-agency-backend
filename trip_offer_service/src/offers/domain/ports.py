@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Iterator
+from typing import Any
 from uuid import UUID
 
 from src.offer.domain.dtos import OfferDto, OfferViewDto
@@ -30,7 +30,9 @@ class IOffersView(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_by_tour_id(self, tour_id: UUID) -> Iterator[OfferDto]:
+    def get_minimal_price_by_tour_ids(
+        self, tour_id: list[UUID]
+    ) -> list[tuple[UUID, float]]:
         raise NotImplementedError
 
 
