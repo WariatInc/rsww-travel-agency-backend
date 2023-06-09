@@ -72,12 +72,14 @@ class ToursView(IToursView):
             .limit(options.page_size)
         )
 
-        tours = TourSchema().load(results, many=True)
+        tours: list[TourDto] = TourSchema().load(results, many=True)
 
-        for tour in tours:
-            tour.lowest_price = min(
-                offer.price for offer in self.offers.get_by_tour_id(tour.id)
-            )
+        tours_by_uuid = {tour.id: tour for tour in tours}
+        for uuid, price in self.offers.get_minimal_price_by_tour_ids(
+            list(tours_by_uuid.keys())
+        ):
+            tours_by_uuid[uuid].lowest_price = price
+
         return tours
 
     def search_options(self) -> dict[str, Any]:
