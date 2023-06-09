@@ -24,7 +24,9 @@ class IOffersView(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def get_offer_views_by_offer_ids(self, offer_ids: list[str]) -> list[OfferViewDto]:
+    def get_offer_views_by_offer_ids(
+        self, offer_ids: list[str]
+    ) -> list[OfferViewDto]:
         raise NotImplementedError
 
     @abstractmethod
