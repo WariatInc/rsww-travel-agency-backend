@@ -3,12 +3,12 @@ from injector import Binder
 from src.di_container.injector import Module
 from src.offers.domain.ports import (
     IGetOfferEnrichmentDataQuery,
+    IOfferRepository,
     IOffersView,
     IQueryCountOffers,
     IQueryOffer,
     IQuerySearchOffers,
     IQuerySearchOptions,
-    IOfferRepository,
     IUpdateOffer,
 )
 from src.offers.domain.queries import (
@@ -19,8 +19,8 @@ from src.offers.domain.queries import (
     SearchOptionsQuery,
 )
 from src.offers.domain.upserts import UpdateOffer
-from src.offers.infrastructure.storage.views import OffersView
 from src.offers.infrastructure.storage.repository import OfferRepository
+from src.offers.infrastructure.storage.views import OffersView
 
 
 class OffersModule(Module):

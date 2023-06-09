@@ -165,3 +165,9 @@ class IGetReservationEventDashboardListQuery(ABC):
         self, page: int, size: int
     ) -> tuple[list[ReservationEventDashboardDto], int]:
         raise NotImplementedError
+
+
+class IReservationsToCancelView(ABC):
+    @abstractmethod
+    def get(self) -> list[ReservationDto]:
+        raise NotImplementedError

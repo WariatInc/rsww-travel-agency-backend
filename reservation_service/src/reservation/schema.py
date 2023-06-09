@@ -6,6 +6,7 @@ from src.api.schema import (
     possibly_undefined_non_nullable,
 )
 from src.consts import ReservationState
+from src.user.schema import UserSchema
 
 
 class ReservationPostSchema(ma.Schema):
@@ -22,7 +23,7 @@ class ReservationPostSchema(ma.Schema):
 class ReservationSchema(ma.Schema):
     id = ma.fields.UUID(**non_nullable)
     offer_id = ma.fields.UUID(**non_nullable)
-    user_id = ma.fields.UUID(**non_nullable)
+    user = ma.fields.Nested(UserSchema, **non_nullable)
     state = ma.fields.Enum(ReservationState, **non_nullable)
     rejection_reason = ma.fields.Str(**implicitly_nullable)
     price = ma.fields.Float(**non_nullable)
@@ -31,7 +32,7 @@ class ReservationSchema(ma.Schema):
 class ReservationDetailsSchema(ma.Schema):
     id = ma.fields.UUID(**non_nullable)
     offer_id = ma.fields.UUID(**non_nullable)
-    user_id = ma.fields.UUID(**non_nullable)
+    user = ma.fields.Nested(UserSchema, **non_nullable)
     state = ma.fields.Enum(ReservationState, **non_nullable)
     rejection_reason = ma.fields.String(**implicitly_nullable)
     kids_up_to_3 = ma.fields.Integer(**non_nullable)

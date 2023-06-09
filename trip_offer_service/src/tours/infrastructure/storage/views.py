@@ -9,14 +9,18 @@ from src.tour.domain.dtos import TourDto
 from src.tour.schema import TourSchema
 from src.tours.domain.dtos import SearchOptions
 from src.tours.domain.ports import IToursView
+from src.offers.domain.ports import IOffersView
 
 if TYPE_CHECKING:
     from pymongo.collection import Collection
 
 
 class ToursView(IToursView):
-    def __init__(self, mongo_client: MongoReadOnlyClient) -> None:
+    def __init__(
+        self, mongo_client: MongoReadOnlyClient, offers: IOffersView
+    ) -> None:
         self.collection: "Collection" = mongo_client.get_db()[Collections.tour]
+        self.offers = offers
 
     @staticmethod
     def _ilike_condition(search_term: str) -> dict[str, re.Pattern]:
@@ -68,7 +72,14 @@ class ToursView(IToursView):
             .limit(options.page_size)
         )
 
-        tours = TourSchema().load(results, many=True)
+        tours: list[TourDto] = TourSchema().load(results, many=True)
+
+        tours_by_uuid = {tour.id: tour for tour in tours}
+        for uuid, price in self.offers.get_minimal_price_by_tour_ids(
+            list(tours_by_uuid.keys())
+        ):
+            tours_by_uuid[uuid].lowest_price = price
+
         return tours
 
     def search_options(self) -> dict[str, Any]:

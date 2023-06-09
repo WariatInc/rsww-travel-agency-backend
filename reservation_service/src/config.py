@@ -41,6 +41,12 @@ class DefaultConfig(Config):
 
     BLUEPRINTS = ["src.reservation.api"]
 
+    TASKS = {
+        "src.reservation.domain.tasks": [
+            ("cancel_accepted_reservations_after_timeout", "interval", 2)
+        ]
+    }
+
     RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST")
     RABBITMQ_PORT = os.environ.get("RABBITMQ_PORT")
     RABBITMQ_USER = os.environ.get("RABBITMQ_USER")

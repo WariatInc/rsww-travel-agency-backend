@@ -1,10 +1,11 @@
+from datetime import datetime, timedelta
 from math import ceil
 from typing import Optional
 from uuid import UUID
 
 import sqlalchemy as sqla
 
-from src.consts import ReservationState
+from src.consts import ACCEPTED_RESERVATION_TIMEOUT, ReservationState
 from src.infrastructure.storage import ReadOnlySessionFactory
 from src.reservation.domain.dtos import (
     ReservationDetailsDto,
@@ -19,6 +20,7 @@ from src.reservation.domain.factories import (
 from src.reservation.domain.ports import (
     IReservationEventDashboardListView,
     IReservationListView,
+    IReservationsToCancelView,
     IReservationView,
 )
 from src.reservation.infrastructure.storage.models import (
@@ -80,3 +82,21 @@ class ReservationEventDashboardListView(IReservationEventDashboardListView):
             .limit(size)
             .all()
         ], ceil(query.count() / size)
+
+
+class ReservationsToCancelView(IReservationsToCancelView):
+    def __init__(self, session_factory: ReadOnlySessionFactory) -> None:
+        self._session = session_factory.create_session()
+
+    def get(self) -> list[ReservationDto]:
+        return [
+            reservation_dto_factory(reservation)
+            for reservation in self._session.query(Reservation)
+            .filter(
+                Reservation.state == ReservationState.accepted,
+                Reservation.updated_at
+                < datetime.now()
+                - timedelta(seconds=ACCEPTED_RESERVATION_TIMEOUT),
+            )
+            .all()
+        ]
