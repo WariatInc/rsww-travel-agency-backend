@@ -63,12 +63,12 @@ class GetOfferResource(Resource):
             "TRIP_OFFER_SERVICE_ROOT_URL"
         )
 
-    def get(self, id: UUID):
+    def get(self, offer_id: UUID):
         try:
             response = requests.get(
                 url=f"{self.trip_offer_service_root_url}"
                 f"{TripOfferApiEndpoints.offer_view_get}".format(
-                    offer_id=str(id)
+                    offer_id=str(offer_id)
                 )
             )
         except ConnectionError:
@@ -87,5 +87,5 @@ class Api(Blueprint):
     resources = [
         (SearchOfferResource, "/search"),
         (SearchOfferOptionsResource, "/search/options"),
-        (GetOfferResource, "/<uuid:id>"),
+        (GetOfferResource, "/<uuid:offer_id>"),
     ]

@@ -7,3 +7,7 @@ class OfferNotFoundException(DomainException):
 
 class InvalidOfferConfiguration(DomainException):
     pass
+
+
+class TourNotFoundException(DomainException):
+    pass

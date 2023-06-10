@@ -42,10 +42,6 @@ if TYPE_CHECKING:
     from pika.spec import Basic, BasicProperties
 
 
-logging.basicConfig(
-    format="%(name)s - %(levelname)s - %(asctime)s - %(message)s",
-    level=logging.INFO,
-)
 logger = logging.getLogger("Reservation Consumer")
 
 
@@ -116,6 +112,7 @@ def consume(config: Optional[type[Config]] = None) -> None:
     update_offer_command = UpdateOfferCommand(
         uow=OfferUnitOfWork(session_factory),
         publisher=OfferPublisher(connection_factory),
+        get_offer_price_query=get_offer_price_query,
     )
     offer_reservation_command = OfferReservationCommand(
         uow=OfferUnitOfWork(session_factory),
