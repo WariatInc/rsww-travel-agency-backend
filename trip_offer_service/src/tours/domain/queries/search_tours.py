@@ -1,5 +1,4 @@
-from src.tour.domain.dtos import TourDto
-from src.tours.domain.dtos import SearchOptions
+from src.tours.domain.dtos import SearchOptions, TourDto
 from src.tours.domain.ports import IQuerySearchTours, IToursView
 
 

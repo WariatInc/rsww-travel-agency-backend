@@ -1,8 +1,8 @@
 from abc import ABC, abstractmethod
-from typing import Any
+from typing import Any, Optional
+from uuid import UUID
 
-from src.tour.domain.dtos import TourDto
-from src.tours.domain.dtos import SearchOptions
+from src.tours.domain.dtos import SearchOptions, TourDto
 
 
 class IToursView(ABC):
@@ -34,4 +34,16 @@ class IQueryCountTours(ABC):
 class IQuerySearchOptions(ABC):
     @abstractmethod
     def __call__(self) -> dict[str, Any]:
+        raise NotImplementedError
+
+
+class ITourView(ABC):
+    @abstractmethod
+    def get(self, tour_id: UUID) -> Optional[TourDto]:
+        raise NotImplementedError
+
+
+class IGetTourQuery(ABC):
+    @abstractmethod
+    def get(self, tour_id: UUID) -> TourDto:
         raise NotImplementedError

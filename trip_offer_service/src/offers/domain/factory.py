@@ -25,4 +25,5 @@ def offer_view_dto_factory(offer_view: dict[str, Any]) -> OfferViewDto:
         departure_date=offer_view["tour"].get("departure_date"),
         transport=TransportType(offer_view["tour"].get("transport")),
         departure_city=offer_view["tour"].get("departure_city"),
+        price=offer_view.get("price"),
     )
