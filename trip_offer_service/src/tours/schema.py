@@ -1,7 +1,7 @@
 import marshmallow as ma
 
-from src.api.schema import possibly_undefined_non_nullable
-from src.consts import TransportType, TourSort, SortOrder
+from src.api.schema import non_nullable, possibly_undefined_non_nullable
+from src.consts import SortOrder, TourSort, TransportType
 from src.tours.domain.dtos import SearchOptions, TourDto
 
 
@@ -50,3 +50,8 @@ class SearchOptionsSchema(ma.Schema):
     @ma.post_load
     def create_search_options(self, data, **_):
         return SearchOptions(**data)
+
+
+class ToursSearchSchema(ma.Schema):
+    result = ma.fields.Nested(TourSchema, many=True, **non_nullable)
+    max_page = ma.fields.Integer(**non_nullable)

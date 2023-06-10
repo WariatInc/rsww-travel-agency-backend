@@ -7,11 +7,7 @@ from src.tours.domain.dtos import SearchOptions, TourDto
 
 class IToursView(ABC):
     @abstractmethod
-    def count(self, options: SearchOptions) -> int:
-        raise NotImplementedError
-
-    @abstractmethod
-    def search(self, options: SearchOptions) -> list[TourDto]:
+    def search(self, options: SearchOptions) -> tuple[list[TourDto], int]:
         raise NotImplementedError
 
     @abstractmethod
@@ -21,7 +17,7 @@ class IToursView(ABC):
 
 class IQuerySearchTours(ABC):
     @abstractmethod
-    def __call__(self, options: SearchOptions) -> list[TourDto]:
+    def __call__(self, options: SearchOptions) -> tuple[list[TourDto], int]:
         raise NotImplementedError
 
 

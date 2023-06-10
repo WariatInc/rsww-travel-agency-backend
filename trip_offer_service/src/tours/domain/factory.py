@@ -13,7 +13,7 @@ def tour_dto_factory(tour: dict) -> TourDto:
         arrival_date=tour.get("arrival_date"),
         departure_date=tour.get("departure_date"),
         transport=tour.get("transports"),
-        lowest_price=tour.get("price"),
+        lowest_price=tour.get("lowest_price"),
         departure_city=tour.get("departure_city"),
         thumbnail_url=tour.get("thumbnail_url"),
     )

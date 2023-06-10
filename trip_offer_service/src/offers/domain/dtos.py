@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-from src.consts import RoomType
+from src.consts import OfferSort, RoomType, SortOrder
 
 
 @dataclass
@@ -16,6 +16,8 @@ class SearchOptions:
     room_type: Optional[RoomType] = None
     all_inclusive: Optional[bool] = None
     breakfast: Optional[bool] = None
+    sort_by: Optional[OfferSort] = None
+    sort_order: SortOrder = SortOrder.asc
 
 
 @dataclass

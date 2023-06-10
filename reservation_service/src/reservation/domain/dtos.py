@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-from src.consts import ReservationState
+from src.consts import CancelReason, ReservationState
 from src.user.domain.dtos import UserDto
 
 
@@ -14,6 +14,7 @@ class ReservationDto:
     offer_id: UUID
     user: Optional[UserDto]
     rejection_reason: Optional[str]
+    cancel_reason: Optional[CancelReason]
     price: Optional[float]
 
 

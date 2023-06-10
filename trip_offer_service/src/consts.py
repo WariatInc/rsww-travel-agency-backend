@@ -30,7 +30,7 @@ class RoomType(StrEnum):
 
 
 class TourSort(StrEnum):
-    departure_date = auto()
+    arrival_date = auto()
     price = auto()
 
 

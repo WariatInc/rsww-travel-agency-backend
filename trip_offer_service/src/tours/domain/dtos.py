@@ -3,8 +3,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
-from src.consts import TransportType
-from src.consts import TourSort, SortOrder
+from src.consts import SortOrder, TourSort, TransportType
 
 
 @dataclass
@@ -34,5 +33,5 @@ class SearchOptions:
     adults: Optional[str] = None
     kids: Optional[str] = None
     departure_city: Optional[str] = None
-    sort_by: TourSort = TourSort.departure_date
+    sort_by: TourSort = TourSort.arrival_date
     sort_order: SortOrder = SortOrder.asc

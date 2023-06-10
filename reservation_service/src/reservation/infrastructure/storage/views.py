@@ -5,7 +5,11 @@ from uuid import UUID
 
 import sqlalchemy as sqla
 
-from src.consts import ACCEPTED_RESERVATION_TIMEOUT, ReservationState
+from src.consts import (
+    ACCEPTED_RESERVATION_TIMEOUT,
+    TIME_TO_SEE_CANCELLED_OR_REJECTED_RESERVATIONS,
+    ReservationState,
+)
 from src.infrastructure.storage import ReadOnlySessionFactory
 from src.reservation.domain.dtos import (
     ReservationDetailsDto,
@@ -39,7 +43,17 @@ class ReservationListView(IReservationListView):
             for reservation in self._session.query(Reservation)
             .filter(
                 Reservation.user_id == user_id,
-                Reservation.state != ReservationState.cancelled,
+                ~sqla.and_(
+                    sqla.or_(
+                        Reservation.state == ReservationState.cancelled,
+                        Reservation.state == ReservationState.rejected,
+                    ),
+                    Reservation.updated_at
+                    < datetime.now()
+                    - timedelta(
+                        seconds=TIME_TO_SEE_CANCELLED_OR_REJECTED_RESERVATIONS
+                    ),
+                ),
             )
             .order_by(sqla.desc(Reservation.created_at))
             .all()

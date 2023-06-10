@@ -3,9 +3,10 @@ from dataclasses import fields
 from typing import TYPE_CHECKING, Any
 from uuid import UUID
 
+import pymongo
 from marshmallow import EXCLUDE
 
-from src.consts import Collections
+from src.consts import Collections, OfferSort, SortOrder
 from src.infrastructure.storage import MongoReadOnlyClient
 from src.offer.domain.dtos import OfferDto, OfferViewDto
 from src.offer.schema import OfferSchema, OfferViewSchema
@@ -68,12 +69,26 @@ class OffersView(IOffersView):
         query = self._build_offer_query(options)
         return self.offer_collection.count_documents(query)
 
+    @staticmethod
+    def _sort(
+        query: pymongo.cursor.Cursor, sort_by: OfferSort, order: int
+    ) -> pymongo.cursor.Cursor:
+        if sort_by == OfferSort.price:
+            return query.sort("price", order)
+        return query
+
     def search(self, options: SearchOptions) -> list[OfferDto]:
         query = self._build_offer_query(options)
         projection = self._build_offer_projection()
+        order = (
+            pymongo.ASCENDING
+            if options.sort_order == SortOrder.asc
+            else pymongo.DESCENDING
+        )
 
+        results = self.offer_collection.find(query, projection)
         results = (
-            self.offer_collection.find(query, projection)
+            self._sort(results, options.sort_by, order)
             .skip((options.page - 1) * options.page_size)
             .limit(options.page_size)
         )
