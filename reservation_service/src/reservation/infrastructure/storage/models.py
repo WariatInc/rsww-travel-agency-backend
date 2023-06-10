@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from src.consts import ReservationState
+from src.consts import CancelReason, ReservationState
 from src.extensions import db
 
 
@@ -34,6 +34,7 @@ class Reservation(db.BaseModel):
     user = db.relationship("User", back_populates="reservations")
 
     rejection_reason = db.Column(db.String(), nullable=True)
+    cancel_reason = db.Column(db.Enum(CancelReason), nullable=True)
 
 
 class ReservationEventDashboard(db.Model):

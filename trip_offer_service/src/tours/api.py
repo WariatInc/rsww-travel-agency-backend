@@ -13,28 +13,23 @@ from src.tours.domain.dtos import SearchOptions
 from src.tours.domain.exceptions import TourNotFoundException
 from src.tours.domain.ports import (
     IGetTourQuery,
-    IQueryCountTours,
     IQuerySearchOptions,
     IQuerySearchTours,
 )
 from src.tours.errors import ERROR
-from src.tours.schema import SearchOptionsSchema, TourSchema
+from src.tours.schema import SearchOptionsSchema, TourSchema, ToursSearchSchema
 
 
 class SearchResource(Resource):
-    def __init__(
-        self, search: IQuerySearchTours, count_tours: IQueryCountTours
-    ) -> None:
+    def __init__(self, search: IQuerySearchTours) -> None:
         self.search = search
-        self.count_tours = count_tours
 
+    @use_schema(ToursSearchSchema, HTTPStatus.OK)
     @use_args(SearchOptionsSchema, location="query")
     def get(self, options: SearchOptions):
-        tour_schema = TourSchema(many=True)
-        tours = tour_schema.dump(self.search(options))
-        number_of_tours = self.count_tours(options)
-        return jsonify(
-            max_page=ceil(number_of_tours / options.page_size),
+        tours, total_results = self.search(options)
+        return dict(
+            max_page=ceil(total_results / options.page_size),
             result=tours,
         )
 

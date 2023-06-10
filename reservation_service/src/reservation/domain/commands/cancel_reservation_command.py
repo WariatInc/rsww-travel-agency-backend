@@ -1,6 +1,6 @@
 from uuid import UUID
 
-from src.consts import ReservationState
+from src.consts import CancelReason, ReservationState
 from src.domain.events import event_factory
 from src.reservation.domain.events import ReservationCancelledEvent
 from src.reservation.domain.exceptions import ReservationNotFound
@@ -30,7 +30,9 @@ class CancelReservationCommand(ICancelReservationCommand):
         self._update_reservation_command = update_reservation_command
         self._publisher = publisher
 
-    def __call__(self, user_gid: UUID, reservation_id: UUID) -> None:
+    def __call__(
+        self, user_gid: UUID, reservation_id: UUID, cancel_reason: CancelReason
+    ) -> None:
         with self._uow:
             user = self._uow.user_repository.get_user_by_gid(user_gid=user_gid)
             reservation = self._uow.reservation_repository.get_reservation(
@@ -47,7 +49,9 @@ class CancelReservationCommand(ICancelReservationCommand):
         validate_if_reservation_can_be_cancelled(reservation)
 
         self._update_reservation_command(
-            reservation_id=reservation.id, state=ReservationState.cancelled
+            reservation_id=reservation.id,
+            state=ReservationState.cancelled,
+            cancel_reason=cancel_reason,
         )
 
         event = event_factory(

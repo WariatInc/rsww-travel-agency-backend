@@ -4,7 +4,9 @@ from datetime import datetime
 from typing import TYPE_CHECKING, Any, Optional
 from uuid import UUID
 
-from src.consts import Collections, TourSort, SortOrder
+import pymongo
+
+from src.consts import Collections, SortOrder, TourSort
 from src.infrastructure.storage import MongoReadOnlyClient
 from src.offers.domain.ports import IOffersView
 from src.tours.domain.dtos import SearchOptions, TourDto
@@ -19,8 +21,12 @@ class ToursView(IToursView):
     def __init__(
         self, mongo_client: MongoReadOnlyClient, offers: IOffersView
     ) -> None:
-        self.tour_collection: "Collection" = mongo_client.get_db()[Collections.tour]
-        self.offer_collection: "Collection" = mongo_client.get_db()[Collections.offer]
+        self.tour_collection: "Collection" = mongo_client.get_db()[
+            Collections.tour
+        ]
+        self.offer_collection: "Collection" = mongo_client.get_db()[
+            Collections.offer
+        ]
         self.offers = offers
 
     @staticmethod
@@ -51,6 +57,13 @@ class ToursView(IToursView):
             }
         if options.transport:
             query["tour.transport"] = options.transport
+
+        if options.kids:
+            query["number_of_kids"] = options.kids
+
+        if options.adults:
+            query["number_of_adults"] = options.adults
+
         return query
 
     @staticmethod
@@ -60,63 +73,67 @@ class ToursView(IToursView):
         projection["min_price"] = 1
         return projection
 
-    def count(self, options: SearchOptions) -> int:
-        query = self._build_query(options)
-        return self.tour_collection.count_documents(query)
-
     @staticmethod
     def _sort(sort_by: TourSort, order: int) -> dict:
-        if sort_by.departure_date:
+        if sort_by == TourSort.arrival_date:
             return {"tour.departure_date": order}
-        if sort_by.price:
+        if sort_by == TourSort.price:
             return {"min_price": order}
         return {}
 
     def _build_pipeline(self, options) -> list[dict]:
-        projection = self._build_projection()
-        filters = self._build_query(options)
-        order = pymongo.ASCENDING if options.sort_order == SortOrder.asc else pymongo.DESCENDING
+        order = (
+            pymongo.ASCENDING
+            if options.sort_order == SortOrder.asc
+            else pymongo.DESCENDING
+        )
         return [
+            {"$match": self._build_query(options)},
             {
                 "$lookup": {
                     "from": Collections.tour,
                     "localField": "tour_id",
                     "foreignField": "id",
-                    "as": "tour"
+                    "as": "tour",
                 }
             },
             {
                 "$group": {
+                    "_id": "$tour_id",
                     "tour": {"$first": "$tour"},
-                    "min_price": {"$min": "$price"}
+                    "min_price": {"$min": "$price"},
                 }
             },
+            {"$project": self._build_projection()},
+            {"$sort": self._sort(options.sort_by, order)},
             {
-                "$match": filters
+                "$facet": {
+                    "tours": [
+                        {"$skip": (options.page - 1) * options.page_size},
+                        {"$limit": options.page_size},
+                    ],
+                    "count": [{"$count": "total_results"}],
+                }
             },
-            {
-                "$sort": self._sort(options.sort_by, order)
-            },
-            {
-                "$project": projection
-            },
-            {
-                "$skip": options.page-1
-            },
-            {
-                "$limit": options.page_size
-            }
         ]
 
-    def search(self, options: SearchOptions) -> list[TourDto]:
-        results = self.offer_collection.aggregate(self._build_pipeline(options))
-        tours: list[TourDto] = [tour_dto_factory(tour) for tour in results]
-        return tours
+    def search(self, options: SearchOptions) -> tuple[list[TourDto], int]:
+        results = list(
+            self.offer_collection.aggregate(self._build_pipeline(options))
+        )
+        return [
+            tour_dto_factory(
+                result["tour"][0] | {"lowest_price": result["min_price"]}
+            )
+            for result in results[0]["tours"]
+        ], results[0]["count"][0]["total_results"]
 
     def search_options(self) -> dict[str, Any]:
         fields = ["city", "country", "operator", "transport", "room_type"]
 
-        return {field: self.tour_collection.distinct(field) for field in fields}
+        return {
+            field: self.tour_collection.distinct(field) for field in fields
+        }
 
 
 class TourView(ITourView):

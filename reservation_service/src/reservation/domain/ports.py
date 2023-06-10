@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
+from src.consts import CancelReason
 from src.reservation.domain.dtos import (
     ReservationDetailsDto,
     ReservationDto,
@@ -72,7 +73,9 @@ class ICreateReservationCommand(ABC):
 
 class ICancelReservationCommand(ABC):
     @abstractmethod
-    def __call__(self, user_gid: UUID, reservation_id: UUID) -> None:
+    def __call__(
+        self, user_gid: UUID, reservation_id: UUID, cancel_reason: CancelReason
+    ) -> None:
         raise NotImplementedError
 
 
