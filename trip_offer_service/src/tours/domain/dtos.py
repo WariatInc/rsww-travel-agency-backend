@@ -4,6 +4,7 @@ from typing import Optional
 from uuid import UUID
 
 from src.consts import TransportType
+from src.consts import TourSort, SortOrder
 
 
 @dataclass
@@ -33,3 +34,5 @@ class SearchOptions:
     adults: Optional[str] = None
     kids: Optional[str] = None
     departure_city: Optional[str] = None
+    sort_by: TourSort = TourSort.departure_date
+    sort_order: SortOrder = SortOrder.asc

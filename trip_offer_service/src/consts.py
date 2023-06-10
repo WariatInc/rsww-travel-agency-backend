@@ -27,3 +27,17 @@ class RoomType(StrEnum):
     family = auto()
     apartment = auto()
     studio = auto()
+
+
+class TourSort(StrEnum):
+    departure_date = auto()
+    price = auto()
+
+
+class OfferSort(StrEnum):
+    price = auto()
+
+
+class SortOrder(StrEnum):
+    asc = auto()
+    desc = auto()
