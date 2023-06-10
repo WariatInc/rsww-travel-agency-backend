@@ -43,3 +43,15 @@ class IGetTourQuery(ABC):
     @abstractmethod
     def get(self, tour_id: UUID) -> TourDto:
         raise NotImplementedError
+
+
+class ITourRepository(ABC):
+    @abstractmethod
+    def upsert_tour(self, tour_id: UUID, **upsert_kwargs) -> None:
+        raise NotImplementedError
+
+
+class IUpsertTourCommand(ABC):
+    @abstractmethod
+    def __call__(self, **kwargs) -> None:
+        raise NotImplementedError

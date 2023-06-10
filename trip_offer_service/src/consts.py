@@ -41,3 +41,6 @@ class OfferSort(StrEnum):
 class SortOrder(StrEnum):
     asc = auto()
     desc = auto()
+
+
+PROVISION = 0.1
