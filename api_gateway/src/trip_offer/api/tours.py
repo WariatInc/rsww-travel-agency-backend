@@ -1,4 +1,5 @@
 from http import HTTPStatus
+from uuid import UUID
 
 import requests
 from flask import Config, make_response
@@ -55,11 +56,33 @@ class SearchTourOptionsResource(Resource):
         return make_response(response.json(), response.status_code)
 
 
+class TourResource(Resource):
+    def __init__(self, config: Config) -> None:
+        self.trip_offer_service_root_url = config.get(
+            "TRIP_OFFER_SERVICE_ROOT_URL"
+        )
+
+    def get(self, tour_id: UUID):
+        try:
+            response = requests.get(
+                url=f"{self.trip_offer_service_root_url}"
+                f"{TripOfferApiEndpoints.tour.format(tour_id=str(tour_id))}",
+            )
+        except ConnectionError:
+            return custom_error(
+                ERROR.trip_offer_service_unavailable,
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+
+        return make_response(response.json(), response.status_code)
+
+
 class Api(Blueprint):
     name = "tours"
     import_name = __name__
 
     resources = [
+        (TourResource, "/<uuid:tour_id>"),
         (SearchTourResource, "/search"),
         (SearchTourOptionsResource, "/search/options"),
     ]
