@@ -1,7 +1,7 @@
 import marshmallow as ma
 
 from src.api.schema import possibly_undefined_non_nullable
-from src.consts import TransportType
+from src.consts import TransportType, TourSort, SortOrder
 from src.tours.domain.dtos import SearchOptions, TourDto
 
 
@@ -44,6 +44,8 @@ class SearchOptionsSchema(ma.Schema):
         validate=lambda x: x >= 0, **possibly_undefined_non_nullable
     )
     departure_city = ma.fields.Str(**possibly_undefined_non_nullable)
+    sort_by = ma.fields.Enum(TourSort, **possibly_undefined_non_nullable)
+    sort_order = ma.fields.Enum(SortOrder, **possibly_undefined_non_nullable)
 
     @ma.post_load
     def create_search_options(self, data, **_):
