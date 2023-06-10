@@ -1,15 +1,15 @@
 import re
 from dataclasses import fields
 from datetime import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Optional
+from uuid import UUID
 
 from src.consts import Collections
 from src.infrastructure.storage import MongoReadOnlyClient
-from src.tour.domain.dtos import TourDto
-from src.tour.schema import TourSchema
-from src.tours.domain.dtos import SearchOptions
-from src.tours.domain.ports import IToursView
 from src.offers.domain.ports import IOffersView
+from src.tours.domain.dtos import SearchOptions, TourDto
+from src.tours.domain.factory import tour_dto_factory
+from src.tours.domain.ports import IToursView, ITourView
 
 if TYPE_CHECKING:
     from pymongo.collection import Collection
@@ -72,8 +72,7 @@ class ToursView(IToursView):
             .limit(options.page_size)
         )
 
-        tours: list[TourDto] = TourSchema().load(results, many=True)
-
+        tours: list[TourDto] = [tour_dto_factory(tour) for tour in results]
         tours_by_uuid = {tour.id: tour for tour in tours}
         for uuid, price in self.offers.get_minimal_price_by_tour_ids(
             list(tours_by_uuid.keys())
@@ -86,3 +85,17 @@ class ToursView(IToursView):
         fields = ["city", "country", "operator", "transport", "room_type"]
 
         return {field: self.collection.distinct(field) for field in fields}
+
+
+class TourView(ITourView):
+    def __init__(self, mongo_client: MongoReadOnlyClient) -> None:
+        self.tour_collection: "Collection" = mongo_client.get_db()[
+            Collections.tour
+        ]
+
+    def get(self, tour_id: UUID) -> Optional[TourDto]:
+        try:
+            tour = list(self.tour_collection.find({"id": str(tour_id)}))[0]
+            return tour_dto_factory(tour)
+        except IndexError:
+            return None
