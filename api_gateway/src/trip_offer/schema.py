@@ -8,6 +8,9 @@ class SearchOfferSchema(ma.Schema):
     page = ma.fields.Integer(
         validate=lambda x: x >= 1, **possibly_undefined_non_nullable
     )
+    page_size = ma.fields.Integer(
+        validate=lambda x: x >= 1, **possibly_undefined_non_nullable
+    )
     operator = ma.fields.String(**possibly_undefined_non_nullable)
     country = ma.fields.String(**possibly_undefined_non_nullable)
     city = ma.fields.String(**possibly_undefined_non_nullable)
@@ -38,6 +41,9 @@ class OfferSearchOptionsSchema(ma.Schema):
     page = ma.fields.Integer(
         validate=lambda x: x >= 1, **possibly_undefined_non_nullable
     )
+    page_size = ma.fields.Integer(
+        validate=lambda x: x >= 1, **possibly_undefined_non_nullable
+    )
     tour_id = ma.fields.UUID(required=True)
     room_type = ma.fields.Enum(RoomType, **possibly_undefined_non_nullable)
     adults = ma.fields.Integer(
@@ -48,10 +54,15 @@ class OfferSearchOptionsSchema(ma.Schema):
     )
     all_inclusive = ma.fields.Bool(**possibly_undefined_non_nullable)
     breakfast = ma.fields.Bool(**possibly_undefined_non_nullable)
+    sort_by = ma.fields.String(**possibly_undefined_non_nullable)
+    sort_order = ma.fields.String(**possibly_undefined_non_nullable)
 
 
 class TourSearchOptionsSchema(ma.Schema):
     page = ma.fields.Integer(
+        validate=lambda x: x >= 1, **possibly_undefined_non_nullable
+    )
+    page_size = ma.fields.Integer(
         validate=lambda x: x >= 1, **possibly_undefined_non_nullable
     )
     country = ma.fields.Str(**possibly_undefined_non_nullable)
@@ -68,3 +79,5 @@ class TourSearchOptionsSchema(ma.Schema):
         validate=lambda x: x >= 0, **possibly_undefined_non_nullable
     )
     departure_city = ma.fields.Str(**possibly_undefined_non_nullable)
+    sort_by = ma.fields.String(**possibly_undefined_non_nullable)
+    sort_order = ma.fields.String(**possibly_undefined_non_nullable)
