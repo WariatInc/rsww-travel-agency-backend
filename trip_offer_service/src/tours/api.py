@@ -1,18 +1,24 @@
+from http import HTTPStatus
 from math import ceil
+from uuid import UUID
 
 from flask import jsonify
 from webargs.flaskparser import use_args
 
 from src.api import Resource
 from src.api.blueprint import Blueprint
-from src.tour.schema import TourSchema
+from src.api.error import custom_error
+from src.api.schema import use_schema
 from src.tours.domain.dtos import SearchOptions
+from src.tours.domain.exceptions import TourNotFoundException
 from src.tours.domain.ports import (
+    IGetTourQuery,
     IQueryCountTours,
     IQuerySearchOptions,
     IQuerySearchTours,
 )
-from src.tours.schema import SearchOptionsSchema
+from src.tours.errors import ERROR
+from src.tours.schema import SearchOptionsSchema, TourSchema
 
 
 class SearchResource(Resource):
@@ -41,11 +47,26 @@ class SearchOptionsResource(Resource):
         return jsonify(self.get_search_options())
 
 
+class TourResource(Resource):
+    def __init__(self, get_tour_query: IGetTourQuery) -> None:
+        self.get_tour_query = get_tour_query
+
+    @use_schema(TourSchema, HTTPStatus.OK)
+    def get(self, tour_id: UUID):
+        try:
+            return self.get_tour_query.get(tour_id)
+        except TourNotFoundException:
+            return custom_error(
+                ERROR.tour_not_found_error, HTTPStatus.NOT_FOUND
+            )
+
+
 class Api(Blueprint):
     name = "tours"
     import_name = __name__
 
     resources = [
+        (TourResource, "/<uuid:tour_id>"),
         (SearchResource, "/search"),
         (SearchOptionsResource, "/search/options"),
     ]
