@@ -14,6 +14,12 @@ class OfferChangedEvent(DomainEvent):
 
 
 @dataclass
+class TourChangedEvent(DomainEvent):
+    tour_id: UUID
+    details: dict[str, Any]
+
+
+@dataclass
 class ReservationCheckedEvent(DomainEvent):
     reservation_id: UUID
     reservation_state: ReservationState
