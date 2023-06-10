@@ -1,1 +1,1 @@
-9a4cb019db46 alter reservation.price column to nullable
+f02dea045b85 add cancel_reason column to reservation table

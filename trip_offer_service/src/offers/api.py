@@ -33,7 +33,7 @@ class SearchResource(Resource):
         self.search = search
         self.count_offers = count_offers
 
-    @use_args(SearchOptionsSchema(), location="query")
+    @use_args(SearchOptionsSchema, location="query")
     def get(self, options: SearchOptions):
         offer_schema = OfferSchema(many=True)
         offers = offer_schema.dump(self.search(options))

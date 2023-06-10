@@ -1,12 +1,15 @@
 import marshmallow as ma
 
 from src.api.schema import non_nullable, possibly_undefined_non_nullable
-from src.consts import RoomType
+from src.consts import OfferSort, RoomType, SortOrder
 from src.offers.domain.dtos import SearchOptions
 
 
 class SearchOptionsSchema(ma.Schema):
     page = ma.fields.Integer(
+        validate=lambda x: x >= 1, **possibly_undefined_non_nullable
+    )
+    page_size = ma.fields.Integer(
         validate=lambda x: x >= 1, **possibly_undefined_non_nullable
     )
     tour_id = ma.fields.UUID(required=True)
@@ -19,6 +22,8 @@ class SearchOptionsSchema(ma.Schema):
     )
     all_inclusive = ma.fields.Bool(**possibly_undefined_non_nullable)
     breakfast = ma.fields.Bool(**possibly_undefined_non_nullable)
+    sort_order = ma.fields.Enum(SortOrder, **possibly_undefined_non_nullable)
+    sort_by = ma.fields.Enum(OfferSort, **possibly_undefined_non_nullable)
 
     @ma.post_load
     def create_search_options(self, data, **_):

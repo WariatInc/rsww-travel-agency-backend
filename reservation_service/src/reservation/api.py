@@ -6,6 +6,7 @@ from webargs.flaskparser import use_kwargs
 from src.api.blueprint import Blueprint, Resource
 from src.api.error import custom_error
 from src.api.schema import EmptySchema, use_schema
+from src.consts import CancelReason
 from src.reservation.domain.exceptions import (
     ReservationAlreadyCancelled,
     ReservationCannotBeDeleted,
@@ -88,7 +89,11 @@ class ReservationCancelResource(Resource):
     @use_kwargs(ReservationCancelPostSchema, location="json")
     def post(self, user_gid: UUID, reservation_id: UUID):
         try:
-            self.cancel_reservation_command(user_gid, reservation_id)
+            self.cancel_reservation_command(
+                user_gid,
+                reservation_id,
+                cancel_reason=CancelReason.cancelled_by_user,
+            )
         except ReservationAlreadyCancelled:
             return custom_error(
                 ERROR.reservation_already_cancelled_error,

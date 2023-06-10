@@ -21,6 +21,7 @@ def reservation_dto_factory(reservation: "Reservation") -> ReservationDto:
         offer_id=reservation.offer_id,
         user=user_dto_factory(reservation.user) if reservation.user else None,
         rejection_reason=reservation.rejection_reason,
+        cancel_reason=reservation.cancel_reason,
         price=reservation.price,
     )
 
@@ -34,6 +35,7 @@ def reservation_details_dto_factory(
         offer_id=reservation.offer_id,
         user=user_dto_factory(reservation.user) if reservation.user else None,
         rejection_reason=reservation.rejection_reason,
+        cancel_reason=reservation.cancel_reason,
         kids_up_to_3=reservation.kids_up_to_3,
         kids_up_to_10=reservation.kids_up_to_10,
         price=reservation.price,
