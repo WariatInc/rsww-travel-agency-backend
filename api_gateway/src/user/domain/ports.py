@@ -7,9 +7,7 @@ from src.user.domain.dtos import UserSessionDto
 
 class IUserSessionRepository(ABC):
     @abstractmethod
-    def get_session_by_ip_address(
-        self, ip_address: str
-    ) -> Optional[UserSessionDto]:
+    def get_session(self, session_id: UUID) -> Optional[UserSessionDto]:
         raise NotImplementedError
 
     @abstractmethod
@@ -17,7 +15,7 @@ class IUserSessionRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def create_session(self, ip_address: str, webapp_page: str) -> None:
+    def create_session(self, ip_address: str, webapp_page: str) -> UUID:
         raise NotImplementedError
 
     @abstractmethod
@@ -45,13 +43,18 @@ class IUserOnGivenPageCountView(ABC):
 
 class IUpdateUserSessionCommand(ABC):
     @abstractmethod
-    def __call__(self, ip_address: str, webapp_page: str) -> None:
+    def __call__(
+        self,
+        ip_address: str,
+        webapp_page: str,
+        session_id: Optional[UUID] = None,
+    ) -> UUID:
         raise NotImplementedError
 
 
 class IRevokeUserSessionCommand(ABC):
     @abstractmethod
-    def __call__(self, ip_address: str) -> None:
+    def __call__(self, session_id: UUID) -> None:
         raise NotImplementedError
 
 
