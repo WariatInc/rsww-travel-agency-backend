@@ -1,4 +1,6 @@
 from http import HTTPStatus
+from typing import Optional
+from uuid import UUID
 
 from flask import Response, make_response, request
 from webargs.flaskparser import use_kwargs
@@ -13,6 +15,7 @@ from src.user.domain.ports import (
 from src.user.schema import (
     UpdateUserSessionPostSchema,
     UserSessionOnGivenPageGetSchema,
+    UserSessionRevokeDeleteSchema,
     UserSessionsOnGivenPageSchema,
 )
 
@@ -27,20 +30,22 @@ class UserSessionResource(Resource):
         self._revoke_user_session_command = revoke_user_session_command
 
     @use_kwargs(UpdateUserSessionPostSchema, location="json")
-    def post(self, webapp_page: str) -> Response:
+    def post(
+        self, webapp_page: str, session_id: Optional[UUID] = None
+    ) -> Response:
         ip_address = request.environ.get(
             "HTTP_X_FORWARDED_FOR", request.remote_addr
         )
-        self._update_user_session_command(
-            ip_address=ip_address, webapp_page=webapp_page
+        session_id = self._update_user_session_command(
+            ip_address=ip_address,
+            webapp_page=webapp_page,
+            session_id=session_id,
         )
-        return make_response({}, HTTPStatus.OK)
+        return make_response({"session_id": session_id}, HTTPStatus.OK)
 
-    def delete(self) -> Response:
-        ip_address = request.environ.get(
-            "HTTP_X_FORWARDED_FOR", request.remote_addr
-        )
-        self._revoke_user_session_command(ip_address=ip_address)
+    @use_kwargs(UserSessionRevokeDeleteSchema, location="json")
+    def delete(self, session_id: UUID) -> Response:
+        self._revoke_user_session_command(session_id)
         return make_response({}, HTTPStatus.OK)
 
 

@@ -26,7 +26,7 @@ class OfferPriceView(IOfferPriceView):
             0.15 * offer.tour.average_night_cost if offer.all_inclusive else 0
         )
         breakfast_cost_per_day = (
-            0.5 * offer.tour.average_night_cost if offer.breakfast else 0
+            0.05 * offer.tour.average_night_cost if offer.breakfast else 0
         )
 
         return all_inclusive_cost_per_day + breakfast_cost_per_day
