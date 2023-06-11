@@ -28,13 +28,19 @@ class UserSessionResource(Resource):
 
     @use_kwargs(UpdateUserSessionPostSchema, location="json")
     def post(self, webapp_page: str) -> Response:
+        ip_address = request.environ.get(
+            "HTTP_X_FORWARDED_FOR", request.remote_addr
+        )
         self._update_user_session_command(
-            ip_address=request.remote_addr, webapp_page=webapp_page
+            ip_address=ip_address, webapp_page=webapp_page
         )
         return make_response({}, HTTPStatus.OK)
 
     def delete(self) -> Response:
-        self._revoke_user_session_command(ip_address=request.remote_addr)
+        ip_address = request.environ.get(
+            "HTTP_X_FORWARDED_FOR", request.remote_addr
+        )
+        self._revoke_user_session_command(ip_address=ip_address)
         return make_response({}, HTTPStatus.OK)
 
 
