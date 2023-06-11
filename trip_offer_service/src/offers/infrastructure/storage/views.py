@@ -44,10 +44,10 @@ class OffersView(IOffersView):
             query["all_inclusive"] = options.all_inclusive
         if options.breakfast:
             query["breakfast"] = options.breakfast
-        if options.adults:
+        if options.adults is not None:
             query["number_of_adults"] = options.adults
-        if options.kids:
-            query["number_of_kids"] = options
+        if options.kids is not None:
+            query["number_of_kids"] = options.kids
         return query
 
     @staticmethod
