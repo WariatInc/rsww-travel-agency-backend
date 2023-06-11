@@ -47,11 +47,11 @@ class ToursView(IToursView):
             query["tour.operator"] = self._ilike_condition(options.operator)
         if options.date_end:
             query["tour.departure_date"] = {
-                "$gt": datetime.combine(options.date_end, datetime.min.time())
+                "$lt": datetime.combine(options.date_end, datetime.min.time())
             }
         if options.date_start:
             query["tour.arrival_date"] = {
-                "$lt": datetime.combine(
+                "$gt": datetime.combine(
                     options.date_start, datetime.min.time()
                 )
             }
