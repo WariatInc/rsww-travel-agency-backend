@@ -45,15 +45,15 @@ class ToursView(IToursView):
             query["tour.country"] = self._ilike_condition(options.country)
         if options.operator:
             query["tour.operator"] = self._ilike_condition(options.operator)
-        if options.date_end:
-            query["tour.departure_date"] = {
-                "$gt": datetime.combine(options.date_end, datetime.min.time())
-            }
         if options.date_start:
-            query["tour.arrival_date"] = {
-                "$lt": datetime.combine(
+            query["tour.departure_date"] = {
+                "$gt": datetime.combine(
                     options.date_start, datetime.min.time()
                 )
+            }
+        if options.date_end:
+            query["tour.arrival_date"] = {
+                "$lt": datetime.combine(options.date_end, datetime.min.time())
             }
         if options.transport:
             query["tour.transport"] = options.transport
@@ -76,7 +76,7 @@ class ToursView(IToursView):
     @staticmethod
     def _sort(sort_by: TourSort, order: int) -> dict:
         if sort_by == TourSort.arrival_date:
-            return {"tour.arrival_date": order}
+            return {"tour.departure_date": order}
         if sort_by == TourSort.price:
             return {"min_price": order}
         return {}
@@ -104,11 +104,11 @@ class ToursView(IToursView):
                     "min_price": {"$min": "$price"},
                 }
             },
+            {"$project": self._build_projection()},
             {"$sort": self._sort(options.sort_by, order)},
             {
                 "$facet": {
                     "tours": [
-                        {"$project": self._build_projection()},
                         {"$skip": (options.page - 1) * options.page_size},
                         {"$limit": options.page_size},
                     ],
