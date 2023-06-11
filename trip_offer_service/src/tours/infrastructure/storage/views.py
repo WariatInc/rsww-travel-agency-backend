@@ -1,12 +1,11 @@
 import re
-from dataclasses import fields
 from datetime import datetime
 from typing import TYPE_CHECKING, Any, Optional
 from uuid import UUID
 
 import pymongo
 
-from src.consts import Collections, SortOrder, TourSort
+from src.consts import Collections, SortOrder, TourSort, TransportType
 from src.infrastructure.storage import MongoReadOnlyClient
 from src.offers.domain.ports import IOffersView
 from src.tours.domain.dtos import SearchOptions, TourDto
@@ -34,101 +33,106 @@ class ToursView(IToursView):
         regex = re.compile(search_term, re.IGNORECASE)
         return {"$regex": regex}
 
-    def _build_query(self, options: SearchOptions) -> dict:
-        query: dict[str, Any] = {}
+    def _search_offers(
+        self,
+        number_of_adults: Optional[int] = None,
+        number_of_kids: Optional[int] = None,
+    ) -> dict:
+        query = {"is_available": True}
 
-        if options.departure_city:
-            query["tour.departure_city"] = self._ilike_condition(
-                options.departure_city
-            )
-        if options.country:
-            query["tour.country"] = self._ilike_condition(options.country)
-        if options.operator:
-            query["tour.operator"] = self._ilike_condition(options.operator)
-        if options.date_end:
-            query["tour.departure_date"] = {
-                "$lt": datetime.combine(options.date_end, datetime.min.time())
-            }
-        if options.date_start:
-            query["tour.arrival_date"] = {
-                "$gt": datetime.combine(
-                    options.date_start, datetime.min.time()
+        if number_of_adults is not None:
+            query["number_of_adults"] = number_of_adults
+        if number_of_kids is not None:
+            query["number_of_kids"] = number_of_kids
+
+        return {
+            result.get("_id"): result.get("min_price")
+            for result in list(
+                self.offer_collection.aggregate(
+                    [
+                        {"$match": query},
+                        {
+                            "$group": {
+                                "_id": "$tour_id",
+                                "min_price": {"$min": "$price"},
+                            }
+                        },
+                    ]
                 )
+            )
+        }
+
+    def _search_tours(
+        self,
+        tours_ids: list[str],
+        departure_city: Optional[str] = None,
+        date_end: Optional[datetime] = None,
+        date_start: Optional[datetime] = None,
+        country: Optional[str] = None,
+        operator: Optional[str] = None,
+        transport: Optional[TransportType] = None,
+        sort_by: Optional[TourSort] = None,
+        sort_order: SortOrder = SortOrder.asc,
+    ):
+        query = {"id": {"$in": tours_ids}}
+
+        if departure_city:
+            query["departure_city"] = self._ilike_condition(departure_city)
+        if country:
+            query["country"] = self._ilike_condition(country)
+        if operator:
+            query["operator"] = self._ilike_condition(operator)
+        if date_end:
+            query["departure_date"] = {
+                "$lt": datetime.combine(date_end, datetime.min.time())
             }
-        if options.transport:
-            query["tour.transport"] = options.transport
+        if date_start:
+            query["arrival_date"] = {
+                "$gt": datetime.combine(date_start, datetime.min.time())
+            }
+        if transport:
+            query["transport"] = transport
 
-        if options.kids:
-            query["number_of_kids"] = options.kids
+        result = self.tour_collection.find(query)
 
-        if options.adults:
-            query["number_of_adults"] = options.adults
-
-        return query
-
-    @staticmethod
-    def _build_projection() -> dict:
-        projection = {f"tour.{field.name}": 1 for field in fields(TourDto)}
-        projection["_id"] = 0
-        projection["min_price"] = 1
-        return projection
-
-    @staticmethod
-    def _sort(sort_by: TourSort, order: int) -> dict:
-        if sort_by == TourSort.arrival_date:
-            return {"tour.arrival_date": order}
-        if sort_by == TourSort.price:
-            return {"min_price": order}
-        return {}
-
-    def _build_pipeline(self, options) -> list[dict]:
         order = (
             pymongo.ASCENDING
-            if options.sort_order == SortOrder.asc
+            if sort_order == SortOrder.asc
             else pymongo.DESCENDING
         )
-        return [
-            {
-                "$lookup": {
-                    "from": Collections.tour,
-                    "localField": "tour_id",
-                    "foreignField": "id",
-                    "as": "tour",
-                }
-            },
-            {"$match": self._build_query(options)},
-            {
-                "$group": {
-                    "_id": "$tour_id",
-                    "tour": {"$first": "$tour"},
-                    "min_price": {"$min": "$price"},
-                }
-            },
-            {"$sort": self._sort(options.sort_by, order)},
-            {
-                "$facet": {
-                    "tours": [
-                        {"$project": self._build_projection()},
-                        {"$skip": (options.page - 1) * options.page_size},
-                        {"$limit": options.page_size},
-                    ],
-                    "count": [{"$count": "total_results"}],
-                }
-            },
-        ]
+        if sort_by == TourSort.arrival_date:
+            result = result.sort("arrival_date", order)
+
+        return list(result)
 
     def search(self, options: SearchOptions) -> tuple[list[TourDto], int]:
-        results = list(
-            self.offer_collection.aggregate(self._build_pipeline(options))
+        tour_min_price_map = self._search_offers(options.adults, options.kids)
+        tours = self._search_tours(
+            list(tour_min_price_map),
+            departure_city=options.departure_city,
+            date_end=options.date_end,
+            date_start=options.date_start,
+            operator=options.operator,
+            country=options.country,
+            transport=options.transport,
+            sort_by=options.sort_by,
         )
-        return [
+        tours_dto = [
             tour_dto_factory(
-                result["tour"][0] | {"lowest_price": result["min_price"]}
+                tour | {"lowest_price": tour_min_price_map[tour["id"]]}
             )
-            for result in results[0]["tours"]
-        ], results[0]["count"][0]["total_results"] if results[0][
-            "count"
-        ] else 0
+            for tour in tours
+        ]
+        if options.sort_by == TourSort.price:
+            order = SortOrder.desc == options.sort_order
+            tours_dto = sorted(
+                tours_dto, key=lambda x: x.lowest_price, reverse=order
+            )
+
+        start_index = (options.page - 1) * options.page_size
+        return tours_dto[start_index: start_index + options.page_size], len(
+            tours
+        )
 
     def search_options(self) -> dict[str, Any]:
         fields = ["city", "country", "operator", "transport", "room_type"]
