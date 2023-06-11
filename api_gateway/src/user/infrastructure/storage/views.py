@@ -10,6 +10,6 @@ class UserOnGivenPageCountView(IUserOnGivenPageCountView):
     def get(self, page: str) -> int:
         return (
             self._session.query(UserSession)
-            .filter(UserSession.webapp_page == page)
+            .filter(UserSession.webapp_page == page, ~UserSession.revoked)
             .count()
         )
