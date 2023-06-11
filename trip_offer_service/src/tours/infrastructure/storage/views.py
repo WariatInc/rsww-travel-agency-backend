@@ -88,7 +88,6 @@ class ToursView(IToursView):
             else pymongo.DESCENDING
         )
         return [
-            {"$match": self._build_query(options)},
             {
                 "$lookup": {
                     "from": Collections.tour,
@@ -97,6 +96,7 @@ class ToursView(IToursView):
                     "as": "tour",
                 }
             },
+            {"$match": self._build_query(options)},
             {
                 "$group": {
                     "_id": "$tour_id",
@@ -126,7 +126,9 @@ class ToursView(IToursView):
                 result["tour"][0] | {"lowest_price": result["min_price"]}
             )
             for result in results[0]["tours"]
-        ], results[0]["count"][0]["total_results"]
+        ], results[0]["count"][0]["total_results"] if results[0][
+            "count"
+        ] else 0
 
     def search_options(self) -> dict[str, Any]:
         fields = ["city", "country", "operator", "transport", "room_type"]
