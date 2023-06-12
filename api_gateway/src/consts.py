@@ -8,6 +8,7 @@ class ReservationApiEndpoints(StrEnum):
     delete_reservation = "/reservations/{reservation_id}?user_gid={user_gid}"
     get_reservation = "/reservations/{reservation_id}?user_gid={user_gid}"
     get_reservation_events_dashboard = "/reservations/events"
+    get_reserved_offers_ids = "/reservations/offers"
 
 
 class PaymentApiEndpoints(StrEnum):
@@ -38,3 +39,4 @@ class RoomType(StrEnum):
 
 
 USER_SESSION_EXPIRE_IN = 300
+USER_PREFERENCES_LIST_LENGTH = 5

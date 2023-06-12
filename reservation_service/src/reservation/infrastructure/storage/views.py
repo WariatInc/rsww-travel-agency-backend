@@ -26,6 +26,7 @@ from src.reservation.domain.ports import (
     IReservationListView,
     IReservationsToCancelView,
     IReservationView,
+    IReservedOffersView,
 )
 from src.reservation.infrastructure.storage.models import (
     Reservation,
@@ -114,3 +115,20 @@ class ReservationsToCancelView(IReservationsToCancelView):
             )
             .all()
         ]
+
+
+class ReservedOffersView(IReservedOffersView):
+    def __init__(self, session_factory: ReadOnlySessionFactory) -> None:
+        self._session = session_factory.create_session()
+
+    def get_reserved_offers(self) -> list[ReservationDto]:
+        return (
+            self._session.query(Reservation)
+            .filter(
+                sqla.or_(
+                    Reservation.state == ReservationState.paid,
+                    Reservation.state == ReservationState.accepted,
+                )
+            )
+            .all()
+        )

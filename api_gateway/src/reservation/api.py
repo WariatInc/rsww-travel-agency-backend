@@ -12,9 +12,10 @@ from src.api.error import custom_error
 from src.auth.login import auth_required, current_user
 from src.consts import ReservationApiEndpoints
 from src.domain.factories import actor_dto_factory
-from src.reservation.domian.exceptions import TripOfferServiceUnavailable
-from src.reservation.domian.ports import (
+from src.reservation.domain.exceptions import TripOfferServiceUnavailable
+from src.reservation.domain.ports import (
     IEnrichReservationsWithOffersDataCommand,
+    IGetUsersPreferencesQuery,
 )
 from src.reservation.error import ERROR
 from src.reservation.schema import (
@@ -172,6 +173,45 @@ class ReservationEventDashboardResource(Resource):
         return make_response(response.json(), response.status_code)
 
 
+class UserPreferencesResource(Resource):
+    def __init__(
+        self,
+        config: Config,
+        get_users_preferences_query: IGetUsersPreferencesQuery,
+    ) -> None:
+        self.reservation_service_root_url = config.get(
+            "RESERVATION_SERVICE_ROOT_URL"
+        )
+        self.get_users_preferences_query = get_users_preferences_query
+
+    def get(self):
+        try:
+            response = requests.get(
+                url=f"{self.reservation_service_root_url}"
+                f"{ReservationApiEndpoints.get_reserved_offers_ids}",
+            )
+        except ConnectionError:
+            return custom_error(
+                ERROR.reservation_service_unavailable,
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+
+        try:
+            preferences = self.get_users_preferences_query.get(
+                response.json()["offers_ids"]
+            )
+        except TripOfferServiceUnavailable:
+            return custom_error(
+                ERROR.trip_offer_service_unavailable,
+                HTTPStatus.SERVICE_UNAVAILABLE,
+            )
+
+        return make_response(
+            preferences,
+            response.status_code,
+        )
+
+
 class Api(Blueprint):
     name = "reservations"
     import_name = __name__
@@ -181,4 +221,5 @@ class Api(Blueprint):
         (ReservationCancelResource, "/cancel/<uuid:reservation_id>"),
         (ReservationResource, "/<uuid:reservation_id>"),
         (ReservationEventDashboardResource, "/events"),
+        (UserPreferencesResource, "/preferences"),
     ]

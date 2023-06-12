@@ -7,12 +7,14 @@ from src.reservation.api import (
     ReservationResource,
     ReservationsResource,
 )
-from src.reservation.domian.commands import (
+from src.reservation.domain.commands import (
     EnrichReservationsWithOffersDataCommand,
 )
-from src.reservation.domian.ports import (
+from src.reservation.domain.ports import (
     IEnrichReservationsWithOffersDataCommand,
+    IGetUsersPreferencesQuery,
 )
+from src.reservation.domain.queries import GetUsersPreferencesQuery
 
 
 class ReservationModule(Module):
@@ -25,3 +27,4 @@ class ReservationModule(Module):
             IEnrichReservationsWithOffersDataCommand,
             EnrichReservationsWithOffersDataCommand,
         )
+        self.bind(IGetUsersPreferencesQuery, GetUsersPreferencesQuery)

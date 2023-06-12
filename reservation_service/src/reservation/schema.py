@@ -90,3 +90,7 @@ class ReservationEventDashboardListSchema(ma.Schema):
         ReservationEventDashboardSchema, many=True, **non_nullable
     )
     total_pages = ma.fields.Integer(**non_nullable)
+
+
+class ReservedOffersIdsListSchema(ma.Schema):
+    offers_ids = ma.fields.List(ma.fields.UUID(**non_nullable), **non_nullable)
