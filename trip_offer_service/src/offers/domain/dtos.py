@@ -28,3 +28,4 @@ class OfferEnrichmentDataDto:
     thumbnail_url: str
     arrival_date: datetime
     departure_date: datetime
+    room_type: RoomType
