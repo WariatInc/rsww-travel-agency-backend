@@ -45,6 +45,7 @@ class OfferEnrichmentDataSchema(ma.Schema):
     thumbnail_url = ma.fields.String(**non_nullable)
     arrival_date = ma.fields.Date(**non_nullable)
     departure_date = ma.fields.Date(**non_nullable)
+    room_type = ma.fields.Enum(RoomType, **non_nullable)
 
 
 class OffersEnrichmentDataDictSchema(ma.Schema):

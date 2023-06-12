@@ -5,8 +5,8 @@ from flask import Config
 from requests.exceptions import ConnectionError
 
 from src.consts import TripOfferApiEndpoints
-from src.reservation.domian.exceptions import TripOfferServiceUnavailable
-from src.reservation.domian.ports import (
+from src.reservation.domain.exceptions import TripOfferServiceUnavailable
+from src.reservation.domain.ports import (
     IEnrichReservationsWithOffersDataCommand,
 )
 

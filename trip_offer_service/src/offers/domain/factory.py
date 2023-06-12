@@ -1,7 +1,7 @@
 from typing import Any
 from uuid import UUID
 
-from src.consts import TransportType
+from src.consts import RoomType, TransportType
 from src.offer.domain.dtos import OfferViewDto
 
 
@@ -11,7 +11,7 @@ def offer_view_dto_factory(offer_view: dict[str, Any]) -> OfferViewDto:
         tour_id=UUID(offer_view.get("tour_id")),
         number_of_adults=offer_view.get("number_of_adults"),
         number_of_kids=offer_view.get("number_of_kids"),
-        room_type=offer_view.get("room_type"),
+        room_type=RoomType(offer_view.get("room_type")),
         all_inclusive=offer_view.get("all_inclusive"),
         breakfast=offer_view.get("breakfast"),
         is_available=offer_view.get("is_available"),

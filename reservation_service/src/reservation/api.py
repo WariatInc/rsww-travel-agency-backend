@@ -21,6 +21,7 @@ from src.reservation.domain.ports import (
     IDeleteRejectedReservationCommand,
     IGetReservationEventDashboardListQuery,
     IGetReservationQuery,
+    IGetReservedOffersQuery,
     IGetUserReservationsQuery,
 )
 from src.reservation.error import ERROR
@@ -35,6 +36,7 @@ from src.reservation.schema import (
     ReservationListSchema,
     ReservationPostSchema,
     ReservationsGetSchema,
+    ReservedOffersIdsListSchema,
 )
 from src.user.domain.exceptions import UserNotFoundException
 
@@ -195,6 +197,17 @@ class ReservationEventDashboardResource(Resource):
         return dict(reservation_events=results, total_pages=total_pages)
 
 
+class ReservedOffersResource(Resource):
+    def __init__(
+        self, get_reserved_offers_query: IGetReservedOffersQuery
+    ) -> None:
+        self.get_reserved_offers_query = get_reserved_offers_query
+
+    @use_schema(ReservedOffersIdsListSchema, HTTPStatus.OK)
+    def get(self):
+        return {"offers_ids": self.get_reserved_offers_query.get()}
+
+
 class Api(Blueprint):
     name = "reservations"
     import_name = __name__
@@ -204,4 +217,5 @@ class Api(Blueprint):
         (ReservationResource, "/<uuid:reservation_id>"),
         (ReservationCancelResource, "/cancel/<uuid:reservation_id>"),
         (ReservationEventDashboardResource, "/events"),
+        (ReservedOffersResource, "/offers"),
     ]

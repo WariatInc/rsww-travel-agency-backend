@@ -130,7 +130,7 @@ class ToursView(IToursView):
             )
 
         start_index = (options.page - 1) * options.page_size
-        return tours_dto[start_index: start_index + options.page_size], len(
+        return tours_dto[start_index : start_index + options.page_size], len(
             tours
         )
 

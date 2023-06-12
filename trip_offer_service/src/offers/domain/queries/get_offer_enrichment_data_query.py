@@ -22,6 +22,7 @@ class GetOfferEnrichmentDataQuery(IGetOfferEnrichmentDataQuery):
                 departure_date=offer.departure_date,
                 thumbnail_url=offer.thumbnail_url,
                 country=offer.country,
+                room_type=offer.room_type,
             )
             for offer in offers
         }

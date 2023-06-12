@@ -174,3 +174,15 @@ class IReservationsToCancelView(ABC):
     @abstractmethod
     def get(self) -> list[ReservationDto]:
         raise NotImplementedError
+
+
+class IReservedOffersView(ABC):
+    @abstractmethod
+    def get_reserved_offers(self) -> list[ReservationDto]:
+        raise NotImplementedError
+
+
+class IGetReservedOffersQuery(ABC):
+    @abstractmethod
+    def get(self) -> list[UUID]:
+        raise NotImplementedError

@@ -6,6 +6,7 @@ from src.reservation.api import (
     ReservationCancelResource,
     ReservationResource,
     ReservationsResource,
+    ReservedOffersResource,
 )
 from src.reservation.domain.commands import (
     CancelReservationCommand,
@@ -20,6 +21,7 @@ from src.reservation.domain.ports import (
     IDeleteRejectedReservationCommand,
     IGetReservationEventDashboardListQuery,
     IGetReservationQuery,
+    IGetReservedOffersQuery,
     IGetUserReservationsQuery,
     IReservationEventDashboardListView,
     IReservationEventDashboardUnitOfWork,
@@ -27,12 +29,14 @@ from src.reservation.domain.ports import (
     IReservationsToCancelView,
     IReservationUnitOfWork,
     IReservationView,
+    IReservedOffersView,
     IUpdateReservationCommand,
     IUpdateReservationEventDashboardCommand,
 )
 from src.reservation.domain.queries import (
     GetReservationEventDashboardListQuery,
     GetReservationQuery,
+    GetReservedOffersQuery,
     GetUserReservationsQuery,
 )
 from src.reservation.infrastructure.message_broker.producer import (
@@ -47,6 +51,7 @@ from src.reservation.infrastructure.storage.views import (
     ReservationListView,
     ReservationsToCancelView,
     ReservationView,
+    ReservedOffersView,
 )
 
 
@@ -76,6 +81,7 @@ class ReservationModule(Module):
             IGetReservationEventDashboardListQuery,
             GetReservationEventDashboardListQuery,
         )
+        self.bind(IGetReservedOffersQuery, GetReservedOffersQuery)
 
         # Unit of works
         self.bind(IReservationUnitOfWork, ReservationUnitOfWork)
@@ -92,6 +98,7 @@ class ReservationModule(Module):
             ReservationEventDashboardListView,
         )
         self.bind(IReservationsToCancelView, ReservationsToCancelView)
+        self.bind(IReservedOffersView, ReservedOffersView)
 
     @provider
     @singleton
